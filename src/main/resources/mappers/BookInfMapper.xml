@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ecust.sharebook.mapper.BookInfMapper" >
+  <resultMap id="BaseResultMap" type="com.ecust.sharebook.pojo.BookInf" >
+    <id column="ISBN" property="isbn" jdbcType="CHAR" />
+    <result column="BOOK_NAME" property="bookName" jdbcType="VARCHAR" />
+    <result column="AUTHOR" property="author" jdbcType="VARCHAR" />
+    <result column="TRANSLATOR" property="translator" jdbcType="VARCHAR" />
+    <result column="PUBLISHER" property="publisher" jdbcType="VARCHAR" />
+    <result column="PUB_TIME" property="pubTime" jdbcType="VARCHAR" />
+    <result column="PRICE" property="price" jdbcType="VARCHAR" />
+    <result column="PIC_PATH" property="picPath" jdbcType="VARCHAR" />
+    <result column="BRIEF_INTRO" property="briefIntro" jdbcType="VARCHAR" />
+    <result column="CONTENTS" property="contents" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ISBN, BOOK_NAME, AUTHOR, TRANSLATOR, PUBLISHER, PUB_TIME, PRICE, PIC_PATH, BRIEF_INTRO, 
+    CONTENTS
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from book_inf
+    where ISBN = #{isbn,jdbcType=CHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from book_inf
+    where ISBN = #{isbn,jdbcType=CHAR}
+  </delete>
+  <insert id="insert" parameterType="com.ecust.sharebook.pojo.BookInf" >
+    <selectKey resultType="java.lang.String" keyProperty="isbn" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into book_inf (BOOK_NAME, AUTHOR, TRANSLATOR, 
+      PUBLISHER, PUB_TIME, PRICE, 
+      PIC_PATH, BRIEF_INTRO, CONTENTS
+      )
+    values (#{bookName,jdbcType=VARCHAR}, #{author,jdbcType=VARCHAR}, #{translator,jdbcType=VARCHAR}, 
+      #{publisher,jdbcType=VARCHAR}, #{pubTime,jdbcType=VARCHAR}, #{price,jdbcType=VARCHAR}, 
+      #{picPath,jdbcType=VARCHAR}, #{briefIntro,jdbcType=VARCHAR}, #{contents,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.ecust.sharebook.pojo.BookInf" >
+    <selectKey resultType="java.lang.String" keyProperty="isbn" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into book_inf
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="bookName != null" >
+        BOOK_NAME,
+      </if>
+      <if test="author != null" >
+        AUTHOR,
+      </if>
+      <if test="translator != null" >
+        TRANSLATOR,
+      </if>
+      <if test="publisher != null" >
+        PUBLISHER,
+      </if>
+      <if test="pubTime != null" >
+        PUB_TIME,
+      </if>
+      <if test="price != null" >
+        PRICE,
+      </if>
+      <if test="picPath != null" >
+        PIC_PATH,
+      </if>
+      <if test="briefIntro != null" >
+        BRIEF_INTRO,
+      </if>
+      <if test="contents != null" >
+        CONTENTS,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="bookName != null" >
+        #{bookName,jdbcType=VARCHAR},
+      </if>
+      <if test="author != null" >
+        #{author,jdbcType=VARCHAR},
+      </if>
+      <if test="translator != null" >
+        #{translator,jdbcType=VARCHAR},
+      </if>
+      <if test="publisher != null" >
+        #{publisher,jdbcType=VARCHAR},
+      </if>
+      <if test="pubTime != null" >
+        #{pubTime,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=VARCHAR},
+      </if>
+      <if test="picPath != null" >
+        #{picPath,jdbcType=VARCHAR},
+      </if>
+      <if test="briefIntro != null" >
+        #{briefIntro,jdbcType=VARCHAR},
+      </if>
+      <if test="contents != null" >
+        #{contents,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ecust.sharebook.pojo.BookInf" >
+    update book_inf
+    <set >
+      <if test="bookName != null" >
+        BOOK_NAME = #{bookName,jdbcType=VARCHAR},
+      </if>
+      <if test="author != null" >
+        AUTHOR = #{author,jdbcType=VARCHAR},
+      </if>
+      <if test="translator != null" >
+        TRANSLATOR = #{translator,jdbcType=VARCHAR},
+      </if>
+      <if test="publisher != null" >
+        PUBLISHER = #{publisher,jdbcType=VARCHAR},
+      </if>
+      <if test="pubTime != null" >
+        PUB_TIME = #{pubTime,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        PRICE = #{price,jdbcType=VARCHAR},
+      </if>
+      <if test="picPath != null" >
+        PIC_PATH = #{picPath,jdbcType=VARCHAR},
+      </if>
+      <if test="briefIntro != null" >
+        BRIEF_INTRO = #{briefIntro,jdbcType=VARCHAR},
+      </if>
+      <if test="contents != null" >
+        CONTENTS = #{contents,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ISBN = #{isbn,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ecust.sharebook.pojo.BookInf" >
+    update book_inf
+    set BOOK_NAME = #{bookName,jdbcType=VARCHAR},
+      AUTHOR = #{author,jdbcType=VARCHAR},
+      TRANSLATOR = #{translator,jdbcType=VARCHAR},
+      PUBLISHER = #{publisher,jdbcType=VARCHAR},
+      PUB_TIME = #{pubTime,jdbcType=VARCHAR},
+      PRICE = #{price,jdbcType=VARCHAR},
+      PIC_PATH = #{picPath,jdbcType=VARCHAR},
+      BRIEF_INTRO = #{briefIntro,jdbcType=VARCHAR},
+      CONTENTS = #{contents,jdbcType=VARCHAR}
+    where ISBN = #{isbn,jdbcType=CHAR}
+  </update>
+</mapper>

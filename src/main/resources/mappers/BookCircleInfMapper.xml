@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ecust.sharebook.mapper.BookCircleInfMapper" >
+  <resultMap id="BaseResultMap" type="com.ecust.sharebook.pojo.BookCircleInf" >
+    <id column="BOOK_CIRCLE_ID" property="bookCircleId" jdbcType="INTEGER" />
+    <result column="BC_NAME" property="bcName" jdbcType="VARCHAR" />
+    <result column="CREATER_ID" property="createrId" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    BOOK_CIRCLE_ID, BC_NAME, CREATER_ID
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from book_circle_inf
+    where BOOK_CIRCLE_ID = #{bookCircleId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from book_circle_inf
+    where BOOK_CIRCLE_ID = #{bookCircleId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ecust.sharebook.pojo.BookCircleInf" >
+    <selectKey resultType="java.lang.Integer" keyProperty="bookCircleId" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into book_circle_inf (BC_NAME, CREATER_ID)
+    values (#{bcName,jdbcType=VARCHAR}, #{createrId,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ecust.sharebook.pojo.BookCircleInf" >
+    <selectKey resultType="java.lang.Integer" keyProperty="bookCircleId" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into book_circle_inf
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="bcName != null" >
+        BC_NAME,
+      </if>
+      <if test="createrId != null" >
+        CREATER_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="bcName != null" >
+        #{bcName,jdbcType=VARCHAR},
+      </if>
+      <if test="createrId != null" >
+        #{createrId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ecust.sharebook.pojo.BookCircleInf" >
+    update book_circle_inf
+    <set >
+      <if test="bcName != null" >
+        BC_NAME = #{bcName,jdbcType=VARCHAR},
+      </if>
+      <if test="createrId != null" >
+        CREATER_ID = #{createrId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where BOOK_CIRCLE_ID = #{bookCircleId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ecust.sharebook.pojo.BookCircleInf" >
+    update book_circle_inf
+    set BC_NAME = #{bcName,jdbcType=VARCHAR},
+      CREATER_ID = #{createrId,jdbcType=INTEGER}
+    where BOOK_CIRCLE_ID = #{bookCircleId,jdbcType=INTEGER}
+  </update>
+</mapper>

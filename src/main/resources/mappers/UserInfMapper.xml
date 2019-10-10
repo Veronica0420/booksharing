@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ecust.sharebook.mapper.UserInfMapper" >
+  <resultMap id="BaseResultMap" type="com.ecust.sharebook.pojo.UserInf" >
+    <id column="USER_ID" property="userId" jdbcType="INTEGER" />
+    <result column="OPEN_ID" property="openId" jdbcType="VARCHAR" />
+    <result column="SESSION_KEY" property="sessionKey" jdbcType="VARCHAR" />
+    <result column="UNION_ID" property="unionId" jdbcType="VARCHAR" />
+    <result column="NICK_NAME" property="nickName" jdbcType="VARCHAR" />
+    <result column="GENDER" property="gender" jdbcType="BIT" />
+    <result column="CITY" property="city" jdbcType="VARCHAR" />
+    <result column="PROVINCE" property="province" jdbcType="VARCHAR" />
+    <result column="COUNTRY" property="country" jdbcType="VARCHAR" />
+    <result column="TEL" property="tel" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    USER_ID, OPEN_ID, SESSION_KEY, UNION_ID, NICK_NAME, GENDER, CITY, PROVINCE, COUNTRY, 
+    TEL
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from user_inf
+    where USER_ID = #{userId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from user_inf
+    where USER_ID = #{userId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ecust.sharebook.pojo.UserInf" >
+    <selectKey resultType="java.lang.Integer" keyProperty="userId" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into user_inf (OPEN_ID, SESSION_KEY, UNION_ID, 
+      NICK_NAME, GENDER, CITY, 
+      PROVINCE, COUNTRY, TEL
+      )
+    values (#{openId,jdbcType=VARCHAR}, #{sessionKey,jdbcType=VARCHAR}, #{unionId,jdbcType=VARCHAR}, 
+      #{nickName,jdbcType=VARCHAR}, #{gender,jdbcType=BIT}, #{city,jdbcType=VARCHAR}, 
+      #{province,jdbcType=VARCHAR}, #{country,jdbcType=VARCHAR}, #{tel,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.ecust.sharebook.pojo.UserInf" >
+    <selectKey resultType="java.lang.Integer" keyProperty="userId" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into user_inf
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="openId != null" >
+        OPEN_ID,
+      </if>
+      <if test="sessionKey != null" >
+        SESSION_KEY,
+      </if>
+      <if test="unionId != null" >
+        UNION_ID,
+      </if>
+      <if test="nickName != null" >
+        NICK_NAME,
+      </if>
+      <if test="gender != null" >
+        GENDER,
+      </if>
+      <if test="city != null" >
+        CITY,
+      </if>
+      <if test="province != null" >
+        PROVINCE,
+      </if>
+      <if test="country != null" >
+        COUNTRY,
+      </if>
+      <if test="tel != null" >
+        TEL,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="openId != null" >
+        #{openId,jdbcType=VARCHAR},
+      </if>
+      <if test="sessionKey != null" >
+        #{sessionKey,jdbcType=VARCHAR},
+      </if>
+      <if test="unionId != null" >
+        #{unionId,jdbcType=VARCHAR},
+      </if>
+      <if test="nickName != null" >
+        #{nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="gender != null" >
+        #{gender,jdbcType=BIT},
+      </if>
+      <if test="city != null" >
+        #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null" >
+        #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="country != null" >
+        #{country,jdbcType=VARCHAR},
+      </if>
+      <if test="tel != null" >
+        #{tel,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ecust.sharebook.pojo.UserInf" >
+    update user_inf
+    <set >
+      <if test="openId != null" >
+        OPEN_ID = #{openId,jdbcType=VARCHAR},
+      </if>
+      <if test="sessionKey != null" >
+        SESSION_KEY = #{sessionKey,jdbcType=VARCHAR},
+      </if>
+      <if test="unionId != null" >
+        UNION_ID = #{unionId,jdbcType=VARCHAR},
+      </if>
+      <if test="nickName != null" >
+        NICK_NAME = #{nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="gender != null" >
+        GENDER = #{gender,jdbcType=BIT},
+      </if>
+      <if test="city != null" >
+        CITY = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null" >
+        PROVINCE = #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="country != null" >
+        COUNTRY = #{country,jdbcType=VARCHAR},
+      </if>
+      <if test="tel != null" >
+        TEL = #{tel,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where USER_ID = #{userId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ecust.sharebook.pojo.UserInf" >
+    update user_inf
+    set OPEN_ID = #{openId,jdbcType=VARCHAR},
+      SESSION_KEY = #{sessionKey,jdbcType=VARCHAR},
+      UNION_ID = #{unionId,jdbcType=VARCHAR},
+      NICK_NAME = #{nickName,jdbcType=VARCHAR},
+      GENDER = #{gender,jdbcType=BIT},
+      CITY = #{city,jdbcType=VARCHAR},
+      PROVINCE = #{province,jdbcType=VARCHAR},
+      COUNTRY = #{country,jdbcType=VARCHAR},
+      TEL = #{tel,jdbcType=VARCHAR}
+    where USER_ID = #{userId,jdbcType=INTEGER}
+  </update>
+
+  <select id="list" resultType="com.ecust.sharebook.pojo.UserInf">
+    select `USER_ID`,`OPEN_ID`,`SESSION_KEY`,`UNION_ID`,`NICK_NAME`,`GENDER`,`CITY`,`PROVINCE`,`COUNTRY`,`TEL` from user_inf
+    where OPEN_ID= #{openId}
+
+  </select>
+
+  <select id="get" resultType="com.ecust.sharebook.pojo.UserInf">
+		select `USER_ID`,`OPEN_ID`,`SESSION_KEY`,`UNION_ID`,`NICK_NAME`,`GENDER`,`CITY`,`PROVINCE`,`COUNTRY`,`TEL` from user_inf
+		where USER_ID = #{userId}
+	</select>
+
+  <insert id="save" parameterType="com.ecust.sharebook.pojo.UserInf" useGeneratedKeys="true" keyProperty="userId">
+		insert into user_inf
+		(
+		`OPEN_ID`,
+		`SESSION_KEY`,
+		`UNION_ID`,
+		`NICK_NAME`,
+		`GENDER`,
+		`CITY`,
+		`PROVINCE`,
+		`COUNTRY`,
+		`TEL`
+		)
+		values
+		(
+		#{openId},
+		#{sessionKey},
+		#{unionId},
+		#{nickName},
+		#{gender},
+		#{city},
+		#{province},
+		#{country},
+		#{tel}
+		)
+	</insert>
+
+</mapper>

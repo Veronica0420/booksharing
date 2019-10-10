@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ecust.sharebook.mapper.rBookCategoryMapper" >
+  <resultMap id="BaseResultMap" type="com.ecust.sharebook.pojo.rBookCategory" >
+    <id column="B_CATG_ID" property="bCatgId" jdbcType="INTEGER" />
+    <result column="ISBN" property="isbn" jdbcType="CHAR" />
+    <result column="CATG_ID" property="catgId" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    B_CATG_ID, ISBN, CATG_ID
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from r_book_category
+    where B_CATG_ID = #{bCatgId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from r_book_category
+    where B_CATG_ID = #{bCatgId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ecust.sharebook.pojo.rBookCategory" >
+    <selectKey resultType="java.lang.Integer" keyProperty="bCatgId" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into r_book_category (ISBN, CATG_ID)
+    values (#{isbn,jdbcType=CHAR}, #{catgId,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ecust.sharebook.pojo.rBookCategory" >
+    <selectKey resultType="java.lang.Integer" keyProperty="bCatgId" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into r_book_category
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="isbn != null" >
+        ISBN,
+      </if>
+      <if test="catgId != null" >
+        CATG_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="isbn != null" >
+        #{isbn,jdbcType=CHAR},
+      </if>
+      <if test="catgId != null" >
+        #{catgId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ecust.sharebook.pojo.rBookCategory" >
+    update r_book_category
+    <set >
+      <if test="isbn != null" >
+        ISBN = #{isbn,jdbcType=CHAR},
+      </if>
+      <if test="catgId != null" >
+        CATG_ID = #{catgId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where B_CATG_ID = #{bCatgId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ecust.sharebook.pojo.rBookCategory" >
+    update r_book_category
+    set ISBN = #{isbn,jdbcType=CHAR},
+      CATG_ID = #{catgId,jdbcType=INTEGER}
+    where B_CATG_ID = #{bCatgId,jdbcType=INTEGER}
+  </update>
+
+  <select id="findCatgbyIsbn" resultType="com.ecust.sharebook.pojo.rBookCategory">
+    select `CATG_ID` from r_book_category
+    where ISBN = #{isbn} and CATG_ID = #{catgId}
+
+</select>
+</mapper>

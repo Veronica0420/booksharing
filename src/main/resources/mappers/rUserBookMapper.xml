@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ecust.sharebook.mapper.rUserBookMapper" >
+  <resultMap id="BaseResultMap" type="com.ecust.sharebook.pojo.rUserBook" >
+    <id column="BOOK_ID" property="bookId" jdbcType="INTEGER" />
+    <result column="ISBN" property="isbn" jdbcType="CHAR" />
+    <result column="OWNER_ID" property="ownerId" jdbcType="INTEGER" />
+    <result column="PRIVACY" property="privacy" jdbcType="BIT" />
+    <result column="BORROW_STATE" property="borrowState" jdbcType="BIT" />
+    <result column="ADD_TIME" property="addTime" jdbcType="TIMESTAMP" />
+    <result column="DELETE_BOOK" property="deleteBook" jdbcType="BIT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    BOOK_ID, ISBN, OWNER_ID, PRIVACY, BORROW_STATE, ADD_TIME, DELETE_BOOK
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from r_user_book
+    where BOOK_ID = #{bookId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from r_user_book
+    where BOOK_ID = #{bookId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ecust.sharebook.pojo.rUserBook" >
+    <selectKey resultType="java.lang.Integer" keyProperty="bookId" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into r_user_book (ISBN, OWNER_ID, PRIVACY, 
+      BORROW_STATE, ADD_TIME, DELETE_BOOK
+      )
+    values (#{isbn,jdbcType=CHAR}, #{ownerId,jdbcType=INTEGER}, #{privacy,jdbcType=BIT}, 
+      #{borrowState,jdbcType=BIT}, #{addTime,jdbcType=TIMESTAMP}, #{deleteBook,jdbcType=BIT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.ecust.sharebook.pojo.rUserBook" >
+    <selectKey resultType="java.lang.Integer" keyProperty="bookId" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into r_user_book
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="isbn != null" >
+        ISBN,
+      </if>
+      <if test="ownerId != null" >
+        OWNER_ID,
+      </if>
+      <if test="privacy != null" >
+        PRIVACY,
+      </if>
+      <if test="borrowState != null" >
+        BORROW_STATE,
+      </if>
+      <if test="addTime != null" >
+        ADD_TIME,
+      </if>
+      <if test="deleteBook != null" >
+        DELETE_BOOK,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="isbn != null" >
+        #{isbn,jdbcType=CHAR},
+      </if>
+      <if test="ownerId != null" >
+        #{ownerId,jdbcType=INTEGER},
+      </if>
+      <if test="privacy != null" >
+        #{privacy,jdbcType=BIT},
+      </if>
+      <if test="borrowState != null" >
+        #{borrowState,jdbcType=BIT},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteBook != null" >
+        #{deleteBook,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ecust.sharebook.pojo.rUserBook" >
+    update r_user_book
+    <set >
+      <if test="isbn != null" >
+        ISBN = #{isbn,jdbcType=CHAR},
+      </if>
+      <if test="ownerId != null" >
+        OWNER_ID = #{ownerId,jdbcType=INTEGER},
+      </if>
+      <if test="privacy != null" >
+        PRIVACY = #{privacy,jdbcType=BIT},
+      </if>
+      <if test="borrowState != null" >
+        BORROW_STATE = #{borrowState,jdbcType=BIT},
+      </if>
+      <if test="addTime != null" >
+        ADD_TIME = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteBook != null" >
+        DELETE_BOOK = #{deleteBook,jdbcType=BIT},
+      </if>
+    </set>
+    where BOOK_ID = #{bookId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ecust.sharebook.pojo.rUserBook" >
+    update r_user_book
+    set ISBN = #{isbn,jdbcType=CHAR},
+      OWNER_ID = #{ownerId,jdbcType=INTEGER},
+      PRIVACY = #{privacy,jdbcType=BIT},
+      BORROW_STATE = #{borrowState,jdbcType=BIT},
+      ADD_TIME = #{addTime,jdbcType=TIMESTAMP},
+      DELETE_BOOK = #{deleteBook,jdbcType=BIT}
+    where BOOK_ID = #{bookId,jdbcType=INTEGER}
+  </update>
+
+  <select id="list" resultType="java.lang.String">
+    select `ISBN` from r_user_book
+    where OWNER_ID = #{ownerId}
+</select>
+
+</mapper>

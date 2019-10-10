@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ecust.sharebook.mapper.MessageInfMapper" >
+  <resultMap id="BaseResultMap" type="com.ecust.sharebook.pojo.MessageInf" >
+    <id column="MESSAGE_ID" property="messageId" jdbcType="INTEGER" />
+    <result column="SENDER_ID" property="senderId" jdbcType="INTEGER" />
+    <result column="RECEIVER_ID" property="receiverId" jdbcType="INTEGER" />
+    <result column="CONTENT" property="content" jdbcType="VARCHAR" />
+    <result column="DATE_TIME" property="dateTime" jdbcType="TIMESTAMP" />
+    <result column="REASON" property="reason" jdbcType="VARCHAR" />
+    <result column="BORROW_RES" property="borrowRes" jdbcType="BIT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    MESSAGE_ID, SENDER_ID, RECEIVER_ID, CONTENT, DATE_TIME, REASON, BORROW_RES
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from message_inf
+    where MESSAGE_ID = #{messageId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from message_inf
+    where MESSAGE_ID = #{messageId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ecust.sharebook.pojo.MessageInf" >
+    <selectKey resultType="java.lang.Integer" keyProperty="messageId" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into message_inf (SENDER_ID, RECEIVER_ID, CONTENT, 
+      DATE_TIME, REASON, BORROW_RES
+      )
+    values (#{senderId,jdbcType=INTEGER}, #{receiverId,jdbcType=INTEGER}, #{content,jdbcType=VARCHAR}, 
+      #{dateTime,jdbcType=TIMESTAMP}, #{reason,jdbcType=VARCHAR}, #{borrowRes,jdbcType=BIT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.ecust.sharebook.pojo.MessageInf" >
+    <selectKey resultType="java.lang.Integer" keyProperty="messageId" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into message_inf
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="senderId != null" >
+        SENDER_ID,
+      </if>
+      <if test="receiverId != null" >
+        RECEIVER_ID,
+      </if>
+      <if test="content != null" >
+        CONTENT,
+      </if>
+      <if test="dateTime != null" >
+        DATE_TIME,
+      </if>
+      <if test="reason != null" >
+        REASON,
+      </if>
+      <if test="borrowRes != null" >
+        BORROW_RES,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="senderId != null" >
+        #{senderId,jdbcType=INTEGER},
+      </if>
+      <if test="receiverId != null" >
+        #{receiverId,jdbcType=INTEGER},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="dateTime != null" >
+        #{dateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="reason != null" >
+        #{reason,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowRes != null" >
+        #{borrowRes,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ecust.sharebook.pojo.MessageInf" >
+    update message_inf
+    <set >
+      <if test="senderId != null" >
+        SENDER_ID = #{senderId,jdbcType=INTEGER},
+      </if>
+      <if test="receiverId != null" >
+        RECEIVER_ID = #{receiverId,jdbcType=INTEGER},
+      </if>
+      <if test="content != null" >
+        CONTENT = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="dateTime != null" >
+        DATE_TIME = #{dateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="reason != null" >
+        REASON = #{reason,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowRes != null" >
+        BORROW_RES = #{borrowRes,jdbcType=BIT},
+      </if>
+    </set>
+    where MESSAGE_ID = #{messageId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ecust.sharebook.pojo.MessageInf" >
+    update message_inf
+    set SENDER_ID = #{senderId,jdbcType=INTEGER},
+      RECEIVER_ID = #{receiverId,jdbcType=INTEGER},
+      CONTENT = #{content,jdbcType=VARCHAR},
+      DATE_TIME = #{dateTime,jdbcType=TIMESTAMP},
+      REASON = #{reason,jdbcType=VARCHAR},
+      BORROW_RES = #{borrowRes,jdbcType=BIT}
+    where MESSAGE_ID = #{messageId,jdbcType=INTEGER}
+  </update>
+</mapper>
