@@ -128,6 +128,7 @@ public class AppIndexController {
                 }
             }
             BookInf bk = tBookService.selectByIsbn(isbn);
+            
             r.put("data",bk);
             System.out.println(bk);
         }catch (Exception e){
