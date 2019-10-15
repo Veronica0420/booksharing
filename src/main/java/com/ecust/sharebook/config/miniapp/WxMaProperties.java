@@ -1,5 +1,6 @@
-package com.ecust.sharebook.config;
+package com.ecust.sharebook.config.miniapp;
 
+import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -7,6 +8,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 /**
  * @author <a href="https://github.com/binarywang">Binary Wang</a>
  */
+
 @ConfigurationProperties(prefix = "wechat.miniapp")
 public class WxMaProperties {
     /**

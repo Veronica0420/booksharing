@@ -8,7 +8,7 @@ import java.util.List;
 
 public class CatgBook {
     private Integer catgId;
-    List<BookInf> catg_book_list;
+    private List<BookInf> catg_book_list;
 
     public CatgBook(){
         this.catg_book_list = new ArrayList<BookInf>();

@@ -30,8 +30,6 @@ public class TMemberServiceImpl implements TMemberService {
 	}
 
 
-
-
 	@Override
 	public UserInf selectOne(Map<String, Object> params) {
 		List<UserInf> list = userInfMapper.list(params);
@@ -40,4 +38,21 @@ public class TMemberServiceImpl implements TMemberService {
 		}
 		return null;
 	}
+
+
+	@Override
+	public UserInf login(Map<String, Object> params) {
+		List<UserInf> list = userInfMapper.list(params);
+		if (list!=null && list.size()>0){
+			return  list.get(0);
+		}
+		return null;
+	}
+
+	@Override
+	public int updateByPrimaryKeySelective(UserInf record) {
+		return userInfMapper.updateByPrimaryKeySelective( record);
+	}
+
+
 }

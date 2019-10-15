@@ -1,4 +1,4 @@
-package com.ecust.sharebook.utils;
+package com.ecust.sharebook.utils.common;
 import org.apache.shiro.crypto.hash.SimpleHash;
 import org.apache.shiro.util.ByteSource;
 

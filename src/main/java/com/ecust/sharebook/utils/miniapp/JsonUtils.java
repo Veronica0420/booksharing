@@ -1,4 +1,4 @@
-package com.ecust.sharebook.utils.common;
+package com.ecust.sharebook.utils.miniapp;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonProcessingException;

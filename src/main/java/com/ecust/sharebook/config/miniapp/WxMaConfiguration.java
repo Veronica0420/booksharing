@@ -1,4 +1,4 @@
-package com.ecust.sharebook.config;
+package com.ecust.sharebook.config.miniapp;
 
 import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.api.impl.WxMaServiceImpl;
@@ -9,6 +9,7 @@ import cn.binarywang.wx.miniapp.config.WxMaInMemoryConfig;
 import cn.binarywang.wx.miniapp.message.WxMaMessageHandler;
 import cn.binarywang.wx.miniapp.message.WxMaMessageRouter;
 import com.google.common.collect.Lists;
+import jdk.nashorn.internal.ir.annotations.Ignore;
 import me.chanjar.weixin.common.bean.result.WxMediaUploadResult;
 import me.chanjar.weixin.common.exception.WxErrorException;
 import org.springframework.beans.factory.annotation.Autowired;

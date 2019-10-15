@@ -1,64 +1,63 @@
 package com.ecust.sharebook.utils.shiro;
 
 import com.ecust.sharebook.mapper.AdminMapper;
-import com.ecust.sharebook.pojo.Admin;
-import com.ecust.sharebook.utils.R;
+import com.ecust.sharebook.utils.Jwt.JwtToken;
+import com.ecust.sharebook.utils.Jwt.JwtUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.io.Console;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import javax.annotation.Resource;
 
 public class UserRealm extends AuthorizingRealm {
 
     @Autowired
     AdminMapper adminMapper;
 
+    @Resource
+    private JwtUtil jwtUtil;
 
+
+    /**
+     * 必须重写此方法，不然Shiro会报错
+     */
     @Override
-    protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection arg0) {
-        // 从 principals获取主身份信息
-       // Integer userId = ShiroUtils.getUserId();
-       // Set<String> perms = menuService.listPerms(userId);
-       // SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
-        // 将上边查询到授权信息填充到simpleAuthorizationInfo对象中
-      //  info.setStringPermissions(perms);
-      //  return info;
-        return  null;
+    public boolean supports(AuthenticationToken token) {
+        return token instanceof JwtToken;
+    }
 
+    /**
+     * 只有当需要检测用户权限的时候才会调用此方法，例如checkRole,checkPermission之类的
+     */
+    @Override
+    protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
+        //String username = JwtUtil.getUsername(principals.toString());
+        //SysUser user = sysUserService.findByUserName(username);
+        SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
+        return simpleAuthorizationInfo;
+    }
+
+    /**
+     * 默认使用此方法进行用户名正确与否验证，错误抛出异常即可。
+     */
+    @Override
+    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token)throws AuthenticationException {
+        String jwtToken = (String) token.getCredentials();
+        String wxOpenId = jwtUtil.getWxOpenIdByToken(jwtToken);
+        String sessionKey = jwtUtil.getSessionKeyByToken(jwtToken);
+        if (StringUtils.isEmpty(wxOpenId))
+            throw new AuthenticationException("user account not exits , please check your token");
+        if (StringUtils.isEmpty(sessionKey))
+            throw new AuthenticationException("sessionKey is invalid , please check your token");
+        if (!jwtUtil.verifyToken(jwtToken))
+            throw new AuthenticationException("token is invalid , please check your token");
+        return new SimpleAuthenticationInfo(token, token, getName());
     }
 
 
-    @Override
-    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
-        String username = (String) token.getPrincipal();
-        Map<String, Object> map = new HashMap<>();
-        map.put("adminName", username);
-        String password = new String((char[]) token.getCredentials());
 
-        R.ok("realm");
-        // 查询用户信息
-        Admin admin = adminMapper.list(map);
-
-        // 账号不存在
-        if (admin == null) {
-            throw new UnknownAccountException("账号或密码不正确");
-        }
-
-        // 密码错误
-        if (!password.equals(admin.getPasswd())) {
-            throw new IncorrectCredentialsException("账号或密码不正确");
-        }
-
-        SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(admin, password, getName());
-        return info;
-    }
 }

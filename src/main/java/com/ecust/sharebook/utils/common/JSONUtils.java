@@ -1,4 +1,4 @@
-package com.ecust.sharebook.utils;
+package com.ecust.sharebook.utils.common;
 
 import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSON;

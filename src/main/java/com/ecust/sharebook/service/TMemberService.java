@@ -15,4 +15,8 @@ public interface TMemberService {
 
 
 	UserInf selectOne(Map<String, Object> params);
+
+	public UserInf login(Map<String, Object> params);
+
+	int updateByPrimaryKeySelective(UserInf record);
 }
