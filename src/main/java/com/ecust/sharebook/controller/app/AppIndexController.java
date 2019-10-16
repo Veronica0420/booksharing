@@ -75,7 +75,7 @@ public class AppIndexController {
               param.clear();
               if(seMember!=null){
                   param.put("ownerId",seMember.getUserId());
-                  System.out.println(param);
+                  System.out.println("ownerId="+param);
                   List<String> isbn = tUserBookService.selectISBNbyID(param);
                   if(isbn != null){
                      for(String is :isbn){
@@ -104,10 +104,11 @@ public class AppIndexController {
 
 
           data.setCat_list(cat_list);
+            System.out.println("data.setCat_list="+cat_list);
           data.setCatg_book_list(catg_book_list);
-
+            System.out.println("catg_book_list="+catg_book_list);
             r.put("data",data);
-            System.out.println(data);
+            System.out.println("data="+data);
         }catch (Exception e){
             e.printStackTrace();
             return R.error();

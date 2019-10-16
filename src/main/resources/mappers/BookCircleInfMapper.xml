@@ -5,15 +5,22 @@
     <id column="BOOK_CIRCLE_ID" property="bookCircleId" jdbcType="INTEGER" />
     <result column="BC_NAME" property="bcName" jdbcType="VARCHAR" />
     <result column="CREATER_ID" property="createrId" jdbcType="INTEGER" />
+    <result column="CIRCLE_PIC_PATH" property="circlePicPath" jdbcType="VARCHAR"/>
   </resultMap>
   <sql id="Base_Column_List" >
-    BOOK_CIRCLE_ID, BC_NAME, CREATER_ID
+    BOOK_CIRCLE_ID, BC_NAME, CREATER_ID,CIRCLE_PIC_PATH
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
     from book_circle_inf
     where BOOK_CIRCLE_ID = #{bookCircleId,jdbcType=INTEGER}
+  </select>
+  <select id="listBycreaterID" resultMap="BaseResultMap"  >
+    select
+    <include refid="Base_Column_List" />
+    from book_circle_inf
+    where CREATER_ID = #{createrId}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from book_circle_inf

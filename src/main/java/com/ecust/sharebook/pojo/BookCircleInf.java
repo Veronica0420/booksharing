@@ -7,6 +7,16 @@ public class BookCircleInf {
 
     private Integer createrId;
 
+    private String circlePicPath;
+
+    public String getCirclePicPath() {
+        return circlePicPath;
+    }
+
+    public void setCirclePicPath(String circlePicPath) {
+        this.circlePicPath = circlePicPath;
+    }
+
     public Integer getBookCircleId() {
         return bookCircleId;
     }
