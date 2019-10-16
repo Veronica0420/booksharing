@@ -49,8 +49,8 @@ mybatis:
 
 wechat:
   miniapp:
-    appid: wx2bc9a08ee68d7dcc
-    secret: a59e4cd20f9b3fd6a42ee7529f091988
+    appid: wx17ef709d2cf59c9c
+    secret: a8991ff3a6d63c961f759ce9c8d65890
     token: weixin
     aesKey: 111
     msgDataFormat: JSON
