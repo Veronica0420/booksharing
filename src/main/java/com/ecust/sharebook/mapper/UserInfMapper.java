@@ -20,9 +20,11 @@ public interface UserInfMapper {
 
     //自定义
 
-    List<UserInf> list(Map<String, Object> map);
+    UserInf selectUserByOepnid(Map<String, Object> map);
 
     UserInf get(int id);
 
     int save(UserInf tMember);
+
+    int updateSkeyByOpid(Map<String, Object> map);
 }

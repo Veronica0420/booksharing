@@ -4,16 +4,13 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTDecodeException;
-import com.auth0.jwt.interfaces.DecodedJWT;
 import com.ecust.sharebook.pojo.UserInf;
-import com.ecust.sharebook.utils.weichat.EhCacheUtil;
+import com.ecust.sharebook.utils.EhCache.EhCacheUtil;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.util.Date;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 @Component
 public class JwtUtil {
@@ -34,16 +31,16 @@ public class JwtUtil {
      * 注 : 这里的token会被缓存到redis中,用作为二次验证
      * redis里面缓存的时间应该和jwt token的过期时间设置相同
      *
-     * @param wxAccount 微信用户信息
+     * @param jwtAccout 微信用户信息
      * @return 返回 jwt token
      */
-    public String createTokenByWxAccount(UserInf wxAccount) {
+    public String createTokenByWxAccount( UserInf jwtAccout) {
         String jwtId = UUID.randomUUID().toString();                 //JWT 随机ID,做为验证的key
         //1 . 加密算法进行签名得到token
         Algorithm algorithm = Algorithm.HMAC256(SECRET_KEY);
         String token = JWT.create()
-                .withClaim("wxOpenId", wxAccount.getOpenId())
-                .withClaim("sessionKey", wxAccount.getSessionKey())
+                .withClaim("wxOpenId",jwtAccout.getOpenId() )
+                .withClaim("sessionKey", jwtAccout.getSessionKey())
                 .withClaim("jwt-id", jwtId)
                 .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRE_TIME * 1000))  //JWT 配置过期时间的正确姿势
                 .sign(algorithm);

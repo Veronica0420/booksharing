@@ -9,9 +9,9 @@ public class rUserBook {
 
     private Integer ownerId;
 
-    private Boolean privacy;
+    private Integer privacy;
 
-    private Boolean borrowState;
+    private Integer borrowState;
 
     private Date addTime;
 
@@ -41,19 +41,19 @@ public class rUserBook {
         this.ownerId = ownerId;
     }
 
-    public Boolean getPrivacy() {
+    public Integer getPrivacy() {
         return privacy;
     }
 
-    public void setPrivacy(Boolean privacy) {
+    public void setPrivacy(Integer privacy) {
         this.privacy = privacy;
     }
 
-    public Boolean getBorrowState() {
+    public Integer getBorrowState() {
         return borrowState;
     }
 
-    public void setBorrowState(Boolean borrowState) {
+    public void setBorrowState(Integer borrowState) {
         this.borrowState = borrowState;
     }
 

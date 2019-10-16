@@ -32,26 +32,23 @@ public class TMemberServiceImpl implements TMemberService {
 
 	@Override
 	public UserInf selectOne(Map<String, Object> params) {
-		List<UserInf> list = userInfMapper.list(params);
-		if (list!=null && list.size()>0){
-			return  list.get(0);
+		UserInf list = userInfMapper.selectUserByOepnid(params);
+		if (list!=null ){
+			return  list;
 		}
 		return null;
 	}
 
 
-	@Override
-	public UserInf login(Map<String, Object> params) {
-		List<UserInf> list = userInfMapper.list(params);
-		if (list!=null && list.size()>0){
-			return  list.get(0);
-		}
-		return null;
-	}
 
 	@Override
 	public int updateByPrimaryKeySelective(UserInf record) {
 		return userInfMapper.updateByPrimaryKeySelective( record);
+	}
+
+	@Override
+	public int updateSkeyByOpid(Map<String, Object> map) {
+		return userInfMapper.updateSkeyByOpid(map);
 	}
 
 
