@@ -1,6 +1,7 @@
 package com.ecust.sharebook.mapper;
 
 import com.ecust.sharebook.pojo.rUserBook;
+import org.apache.catalina.User;
 
 import java.util.List;
 import java.util.Map;
@@ -20,4 +21,9 @@ public interface rUserBookMapper {
 
     //自定义
     List<String> list(Map<String, Object> map);
+
+
+    List<rUserBook>SelectByIsbn(Map<String, Object> map);
+
+    int updatePrivacy(Map<String, Object> map);
 }

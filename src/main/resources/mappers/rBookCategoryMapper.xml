@@ -72,4 +72,10 @@
     where ISBN = #{isbn} and CATG_ID = #{catgId}
 
 </select>
+
+  <select id="findbyIsbn" resultType="com.ecust.sharebook.pojo.rBookCategory">
+    select `B_CATG_ID`, `ISBN`,`CATG_ID` from r_book_category
+    where ISBN = #{isbn}
+
+</select>
 </mapper>

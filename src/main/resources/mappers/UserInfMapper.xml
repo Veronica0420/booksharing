@@ -151,7 +151,7 @@
     where USER_ID = #{userId,jdbcType=INTEGER}
   </update>
 
-  <select id="list" resultType="com.ecust.sharebook.pojo.UserInf">
+  <select id="selectUserByOepnid" resultType="com.ecust.sharebook.pojo.UserInf">
     select `USER_ID`,`OPEN_ID`,`SESSION_KEY`,`UNION_ID`,`NICK_NAME`,`GENDER`,`CITY`,`PROVINCE`,`COUNTRY`,`TEL` from user_inf
     where OPEN_ID= #{openId}
 
@@ -188,5 +188,14 @@
 		#{tel}
 		)
 	</insert>
+
+
+  <update id="updateSkeyByOpid" >
+    update user_inf
+    <set>
+      <if test="sessionKey != null">`SESSION_KEY`= #{sessionKey}, </if>
+    </set>
+    where OPEN_ID = #{openId}
+  </update>
 
 </mapper>

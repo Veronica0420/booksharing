@@ -13,18 +13,22 @@ import java.util.Map;
 public class TCataServiceIml implements TCateService {
 
     @Autowired
-    private CategoryInfMapper tCategoryInfDao;
+    private CategoryInfMapper tCategoryInfMapper;
 
     @Override
     public CategoryInf get(Long id) {
-            return tCategoryInfDao.get(id);
+            return tCategoryInfMapper.get(id);
     }
 
     @Override
     public List<CategoryInf> list(){
-            return tCategoryInfDao.list();
+            return tCategoryInfMapper.list();
     }
 
+    @Override
+    public CategoryInf getById(Integer catgId) {
+        return tCategoryInfMapper.selectByPrimaryKey(catgId);
+    }
 
 
 }

@@ -120,4 +120,16 @@
     where OWNER_ID = #{ownerId}
 </select>
 
+  <select id="SelectByIsbn" resultType="com.ecust.sharebook.pojo.rUserBook">
+    select * from r_user_book
+    where ISBN = #{isbn}
+</select>
+
+  <update id="updatePrivacy" >
+    update r_user_book
+    <set>
+      <if test="privacy != null">`PRIVACY`= #{privacy}, </if>
+    </set>
+    where OWNER_ID = #{ownerId} and ISBN = #{isbn}
+  </update>
 </mapper>

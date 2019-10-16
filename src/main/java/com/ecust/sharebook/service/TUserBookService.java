@@ -9,4 +9,8 @@ import java.util.Map;
 public interface TUserBookService {
 
     List<String> selectISBNbyID(Map<String, Object> params);
+
+    rUserBook SelectByIsbn(Map<String, Object> map);
+
+    int updatePrivacy(Map<String, Object> map);
 }

@@ -4,6 +4,9 @@ package com.ecust.sharebook.controller.app;
 import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import com.ecust.sharebook.pojo.*;
+import com.ecust.sharebook.pojo.util.BDself;
+import com.ecust.sharebook.pojo.util.CatgBook;
+import com.ecust.sharebook.pojo.util.IndexData;
 import com.ecust.sharebook.service.*;
 import com.ecust.sharebook.utils.Jwt.JwtUtil;
 import com.ecust.sharebook.utils.common.JSONUtils;
@@ -41,33 +44,24 @@ public class AppIndexController {
     @ResponseBody
     @GetMapping("/myshelf")
     public R index(@RequestParam Map<String, Object> params){
-        System.out.println("myshelf");
+        System.out.println("/myshelf");
         IndexData data = new IndexData();
         R r=new R();
         try {
             //查询目录
             List<CategoryInf> cat_list  = tCateService.list();;
             List<CatgBook> catg_book_list = new ArrayList<>();
-
             for(CategoryInf ci:cat_list){
                 CatgBook cb = new CatgBook();
                 cb.setCatgId(ci.getCatgId());
                 catg_book_list.add(cb);
             }
-
             CatgBook cb = new CatgBook();
             cb.setCatgId(0); //所有
             catg_book_list.add(cb);
-
-
             //查询所有书籍
             String openId = new String();
-            for(String key : params.keySet()){
-                if(key.equals("access_token")){
-                   /// openId = params.get(key).toString();
-                    openId = jwtUtil.getWxOpenIdByToken(params.get(key).toString());
-                }
-            }
+            openId=jwtUtil.getWxOpenIdByToken( params.get("access_token").toString());
           if(openId != null){
               Map<String, Object> param = new HashMap<>();
               param.put("openId",openId);
@@ -75,7 +69,10 @@ public class AppIndexController {
               param.clear();
               if(seMember!=null){
                   param.put("ownerId",seMember.getUserId());
+<<<<<<< HEAD
                   System.out.println("ownerId="+param);
+=======
+>>>>>>> 359025bd61b9752344415f5e2cd4bf166f5ca3e3
                   List<String> isbn = tUserBookService.selectISBNbyID(param);
                   if(isbn != null){
                      for(String is :isbn){
@@ -88,7 +85,6 @@ public class AppIndexController {
                              param.clear();
                              param.put("isbn",is);
                              param.put("catgId",cbk.getCatgId());
-
                              rBookCategory rbg = tBookCategoryService.findCatgbyIsbn(param);
                              if(rbg !=null){
                                  cbk.getCatg_book_list().add(bk);
@@ -96,11 +92,10 @@ public class AppIndexController {
                          }
                      }
                   }
-
-
               }
 
           }
+<<<<<<< HEAD
 
 
           data.setCat_list(cat_list);
@@ -109,6 +104,11 @@ public class AppIndexController {
             System.out.println("catg_book_list="+catg_book_list);
             r.put("data",data);
             System.out.println("data="+data);
+=======
+           data.setCat_list(cat_list);
+           data.setCatg_book_list(catg_book_list);
+           r.put("data",data);
+>>>>>>> 359025bd61b9752344415f5e2cd4bf166f5ca3e3
         }catch (Exception e){
             e.printStackTrace();
             return R.error();
@@ -117,21 +117,91 @@ public class AppIndexController {
     }
 
     @ResponseBody
-    @GetMapping({"/scan/book" ,"/asecond/bdetail"})
+    @GetMapping({"/asecond/bdself"})
     public R queryBook(@RequestParam Map<String, Object> params){
-      //  System.out.println("params;;;;"+params);
         R r=new R();
+        System.out.println("/asecond/bdself");
         try {
             String isbn = new String();
+            BDself bDself = new BDself();
+            Map<String, Object> result = new HashMap<>();
             for(String key : params.keySet()){
                 if(key.equals("isbn")){
                     isbn = params.get(key).toString();
                 }
             }
             BookInf bk = tBookService.selectByIsbn(isbn);
-            
-            r.put("data",bk);
-            System.out.println(bk);
+            if(bk!=null){
+                result.put("is_exist",1);
+                rUserBook rub=tUserBookService.SelectByIsbn(params);
+                List<rBookCategory> rbg = tBookCategoryService.findbyIsbn(params);//0,1...
+                List<String> catg = new ArrayList<>();
+                //根据目录id 找出目录name
+                if(rbg!=null) {
+                    for (int i = 0; i < rbg.size(); i++) {
+                        rBookCategory cg = rbg.get(i);
+                        catg.add(tCateService.getById(cg.getCatgId()).getCatgName());
+                    }
+                }
+                else
+                {
+                    catg.add("无");
+
+                }
+                bDself.setCatg(catg);
+                bDself.setIsbn(isbn);
+                bDself.setBookName(bk.getBookName());
+                bDself.setBriefIntro(bk.getBriefIntro());
+                bDself.setPicPath(bk.getPicPath());
+                bDself.setPrivacy(rub.getPrivacy());
+                bDself.setBorrowState(rub.getBorrowState());
+                r.put("data",bDself);
+            }
+            else{
+                result.put("is_exist",0);
+            }
+
+            r.put("status",result);
+
+        }catch (Exception e){
+            e.printStackTrace();
+            return R.error();
+        }
+        return r;
+    }
+
+    @ResponseBody
+    @GetMapping({"/asecond/privacy"})
+    public R setPrivacy(@RequestParam Map<String, Object> params){
+        System.out.println("/asecond/privacy");
+        R r=new R();
+        try {
+            Map<String, Object> result = new HashMap<>();
+            result.put("save_sucess", -1);
+            String openId = new String();
+            String isbn = new String();
+            String privacy = new String();
+            openId=jwtUtil.getWxOpenIdByToken( params.get("access_token").toString());
+            isbn=params.get("isbn").toString();
+            privacy=params.get("privacy").toString();
+            System.out.println(openId+':'+isbn+":"+privacy);
+            params.put("openId",openId);
+
+            if(openId!=null&&isbn!=null&&privacy!=null){
+                UserInf seMember = tMemberService.selectOne(params);
+                if(seMember!=null){
+                    params.put("ownerId",seMember.getUserId());
+                    int i = tUserBookService.updatePrivacy(params);
+                    if(i==0) {
+                        result.put("save_sucess", 0); //更新失败
+                    }else{
+                        result.put("save_sucess", 1); //更新成功
+                    }
+                }
+
+            }
+            r.put("data",result);
+
         }catch (Exception e){
             e.printStackTrace();
             return R.error();
@@ -140,143 +210,123 @@ public class AppIndexController {
     }
 
 
+
     @ResponseBody
-    @RequestMapping("/login")
-    public R login(HttpServletRequest req)throws Exception{
-        System.out.println("login");
-
-        Map<String, Object> params = new HashMap<>();
-        Map<String, Object> result = new HashMap<>();
-        String code = req.getParameter("code");
-     //   String signature = req.getParameter("signature");
-     //   String rawData = req.getParameter("userInfo");
-      //  String encryptedData = req.getParameter("encrypted_data");
-        //String iv  = req.getParameter("iv");
+    @GetMapping("/scan/book")
+    public R scanQueryBook(@RequestParam Map<String, Object> params){
+          System.out.println("/scan/book");
         R r=new R();
+        try {
+            String isbn = new String();
+            isbn=params.get("isbn").toString();
 
-        if (StringUtils.isBlank(code)) {
-            System.out.println("code is empty");
-            result.put("errcode","0");
-            return  r.put("data",result);
+            BookInf bk = tBookService.selectByIsbn(isbn);
+            Map<String, Object> result = new HashMap<>();
+            if(bk!=null){
+                result.put("is_exist",1);
+                r.put("book",bk);
+                r.put("status",result);
+            }
+            else{
+                result.put("is_exist",0);
+                r.put("status",result);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            return R.error();
         }
-        WxMaJscode2SessionResult session = this.wxService.getUserService().getSessionInfo(code);
-        String openId =session.getOpenid();
-        String unionId =session.getUnionid();
-        String sessionKey =session.getSessionKey();
-        System.out.println("uuid"+unionId);
-        params.put("openId",openId);
-        UserInf seMember = tMemberService.selectOne(params);
-        if (seMember == null){
-            System.out.println("用户不存在");
-
-            //不存在就新建用户
-            String userInfo = req.getParameter("userInfo");
-            Map<String,Object> me = JSONUtils.jsonToMap(userInfo);
-            seMember =new UserInf();
-            if ("1".equals(me.get("gender").toString())){
-                seMember.setGender(true);
-            }else{
-                seMember.setGender(false);
-            }
-            seMember.setOpenId(openId);
-            seMember.setUnionId(unionId);
-            seMember.setSessionKey(sessionKey);
-            seMember.setCountry(me.get("country").toString());
-            seMember.setProvince(me.get("province").toString());
-            seMember.setCity(me.get("city").toString());
-            seMember.setNickName(me.get("nickName").toString());
-            seMember.setTel(null);
-
-
-            try {
-                int i =tMemberService.save(seMember);
-                //5 . JWT 返回自定义登陆态 Token
-                String token = jwtUtil.createTokenByWxAccount(seMember);
-                System.out.println("token" +token+"unnid"+unionId);
-                result.put("token", token);
-                r.put("data",result);
-
-            }catch (Exception e){
-                e.printStackTrace();
-                return R.error();
-            }
-        }else{
-            System.out.println("用户存在");
-            //更新用户sessinkey
-            try {
-                int i = tMemberService.updateByPrimaryKeySelective(seMember);
-                String token = jwtUtil.createTokenByWxAccount(seMember);
-                result.put("token", token);
-
-            }catch (Exception e){
-                e.printStackTrace();
-                return R.error();
-            }
-
-            System.out.println("授权");
-            r.put("data",result);
-        }
-
-
-
         return r;
     }
 
 
 
     @ResponseBody
-    @RequestMapping("/tlogin")
-    public R tlogin(HttpServletRequest req) throws Exception{
-        System.out.println("tlogin");
+    @RequestMapping("/login")
+    public R login(HttpServletRequest req) throws Exception{
+        System.out.println("/login");
 
         Map<String, Object> params = new HashMap<>();
         Map<String, Object> result = new HashMap<>();
         String code = req.getParameter("code");
-        //   String signature = req.getParameter("signature");
-        //   String rawData = req.getParameter("userInfo");
-        //  String encryptedData = req.getParameter("encrypted_data");
-        //String iv  = req.getParameter("iv");
+        String mode = req.getParameter("mode");
         R r = new R();
 
         if (StringUtils.isBlank(code)) {
             System.out.println("code is empty");
-            result.put("errcode", "0");
+            result.put("result", "-1");
             return r.put("data", result);
         }
         WxMaJscode2SessionResult session = this.wxService.getUserService().getSessionInfo(code);
-
-
         String openId = session.getOpenid();
-        String unionId = session.getUnionid();
         String sessionKey = session.getSessionKey();
-        System.out.println("uuid" + unionId);
+        String unionId =session.getUnionid(); //null
+        //jwt 加密 token
+        UserInf jwtAccout = new UserInf();
+        jwtAccout.setOpenId(openId);
+        jwtAccout.setSessionKey(sessionKey);
+        String token = jwtUtil.createTokenByWxAccount(jwtAccout);
+
         params.put("openId", openId);
+
         UserInf seMember = tMemberService.selectOne(params);
         if (seMember == null) {
             System.out.println("用户不存在");
+            if(mode.equals("login")) {
+                System.out.println("mode is login");
+                //不存在就新建用户
+                String userInfo = req.getParameter("userInfo");
+                Map<String, Object> me = JSONUtils.jsonToMap(userInfo);
+                seMember = new UserInf();
+                if ("1".equals(me.get("gender").toString())) {
+                    seMember.setGender(true);
+                } else {
+                    seMember.setGender(false);
+                }
+                seMember.setOpenId(openId);
+                seMember.setUnionId(unionId);
+                seMember.setSessionKey(sessionKey);
+                seMember.setCountry(me.get("country").toString());
+                seMember.setProvince(me.get("province").toString());
+                seMember.setCity(me.get("city").toString());
+                seMember.setNickName(me.get("nickName").toString());
+                seMember.setTel(null);
+                int i = tMemberService.save(seMember);
+                if(i==0) {
+                    result.put("save_sucess", 0); //更新失败
+                }else{
+                    result.put("save_sucess", 1); //更新成功
+                }
+                result.put("token", token);
+            }else{
+                System.out.println("mode is tlogin");
+            }
+
             result.put("result", 0);
-
-            r.put("data", result);
-
         } else {
             System.out.println("用户存在");
             try {
-                String token = jwtUtil.createTokenByWxAccount(seMember);
+                if(mode.equals("login")){
+                    System.out.println("mode is login");
+                }
+                else{
+                    params.put("sessionKey",sessionKey);
+                    int i = tMemberService.updateSkeyByOpid(params);
+                    if(i==0) {
+                        result.put("save_sucess", 0); //更新失败
+                    }else{
+                        result.put("save_sucess", 1); //更新成功
+                    }
+                }
                 result.put("token", token);
-                //更新用户sessinkey
                 result.put("result", 1);
-                r.put("data", result);
             }catch (Exception e){
                 e.printStackTrace();
                 return R.error();
             }
-
-
         }
+        r.put("data", result);
         return r;
 
-
     }
-
 
 }

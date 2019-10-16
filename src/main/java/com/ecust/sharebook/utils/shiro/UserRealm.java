@@ -1,6 +1,5 @@
 package com.ecust.sharebook.utils.shiro;
 
-import com.ecust.sharebook.mapper.AdminMapper;
 import com.ecust.sharebook.utils.Jwt.JwtToken;
 import com.ecust.sharebook.utils.Jwt.JwtUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -9,14 +8,12 @@ import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.Resource;
 
 public class UserRealm extends AuthorizingRealm {
 
-    @Autowired
-    AdminMapper adminMapper;
+
 
     @Resource
     private JwtUtil jwtUtil;
