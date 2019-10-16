@@ -275,7 +275,7 @@ public class AppIndexController {
                 seMember.setCity(me.get("city").toString());
                 seMember.setNickName(me.get("nickName").toString());
                 seMember.setTel(null);
-                int i = tMemberService.updateByPrimaryKeySelective(seMember);
+                int i = tMemberService.save(seMember);
                 if(i==0) {
                     result.put("save_sucess", 0); //更新失败
                 }else{
