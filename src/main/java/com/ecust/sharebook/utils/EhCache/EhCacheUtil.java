@@ -37,7 +37,7 @@ public class EhCacheUtil {
         System.setProperty("net.sf.ehcache.enableShutdownHook", "true");
         if (instance == null) {
             instance = new EhCacheUtil();
-            manager = CacheManager.create(EhCacheUtil.class.getClassLoader().getResourceAsStream("config/ehcache2.xml"));
+            manager = CacheManager.create(EhCacheUtil.class.getClassLoader().getResourceAsStream("config/ehcache.xml"));
             kentrasoftCache = manager.getCache("kentrasoftCache");
         }
         return instance;
