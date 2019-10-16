@@ -62,53 +62,38 @@ public class AppIndexController {
             //查询所有书籍
             String openId = new String();
             openId=jwtUtil.getWxOpenIdByToken( params.get("access_token").toString());
-          if(openId != null){
-              Map<String, Object> param = new HashMap<>();
-              param.put("openId",openId);
-              UserInf seMember = tMemberService.selectOne(param);
-              param.clear();
-              if(seMember!=null){
-                  param.put("ownerId",seMember.getUserId());
-<<<<<<< HEAD
-                  System.out.println("ownerId="+param);
-=======
->>>>>>> 359025bd61b9752344415f5e2cd4bf166f5ca3e3
-                  List<String> isbn = tUserBookService.selectISBNbyID(param);
-                  if(isbn != null){
-                     for(String is :isbn){
-                         BookInf bk = tBookService.selectByIsbn(is);
-                         for(CatgBook cbk :catg_book_list){
-                             if(cbk.getCatgId()==0){
-                                 cbk.getCatg_book_list().add(bk);
-                                 continue;
-                             }
-                             param.clear();
-                             param.put("isbn",is);
-                             param.put("catgId",cbk.getCatgId());
-                             rBookCategory rbg = tBookCategoryService.findCatgbyIsbn(param);
-                             if(rbg !=null){
-                                 cbk.getCatg_book_list().add(bk);
-                             }
-                         }
-                     }
-                  }
-              }
+            if(openId != null){
+                Map<String, Object> param = new HashMap<>();
+                param.put("openId",openId);
+                UserInf seMember = tMemberService.selectOne(param);
+                param.clear();
+                if(seMember!=null){
+                    param.put("ownerId",seMember.getUserId());
+                    List<String> isbn = tUserBookService.selectISBNbyID(param);
+                    if(isbn != null){
+                        for(String is :isbn){
+                            BookInf bk = tBookService.selectByIsbn(is);
+                            for(CatgBook cbk :catg_book_list){
+                                if(cbk.getCatgId()==0){
+                                    cbk.getCatg_book_list().add(bk);
+                                    continue;
+                                }
+                                param.clear();
+                                param.put("isbn",is);
+                                param.put("catgId",cbk.getCatgId());
+                                rBookCategory rbg = tBookCategoryService.findCatgbyIsbn(param);
+                                if(rbg !=null){
+                                    cbk.getCatg_book_list().add(bk);
+                                }
+                            }
+                        }
+                    }
+                }
 
-          }
-<<<<<<< HEAD
-
-
-          data.setCat_list(cat_list);
-            System.out.println("data.setCat_list="+cat_list);
-          data.setCatg_book_list(catg_book_list);
-            System.out.println("catg_book_list="+catg_book_list);
+            }
+            data.setCat_list(cat_list);
+            data.setCatg_book_list(catg_book_list);
             r.put("data",data);
-            System.out.println("data="+data);
-=======
-           data.setCat_list(cat_list);
-           data.setCatg_book_list(catg_book_list);
-           r.put("data",data);
->>>>>>> 359025bd61b9752344415f5e2cd4bf166f5ca3e3
         }catch (Exception e){
             e.printStackTrace();
             return R.error();
@@ -214,7 +199,7 @@ public class AppIndexController {
     @ResponseBody
     @GetMapping("/scan/book")
     public R scanQueryBook(@RequestParam Map<String, Object> params){
-          System.out.println("/scan/book");
+        System.out.println("/scan/book");
         R r=new R();
         try {
             String isbn = new String();
