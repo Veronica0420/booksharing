@@ -1,5 +1,7 @@
 package com.ecust.sharebook.pojo;
 
+import java.util.Date;
+
 public class BookCircleInf {
     private Integer bookCircleId;
 
@@ -8,6 +10,9 @@ public class BookCircleInf {
     private Integer createrId;
 
     private String circlePicPath;
+    private Date establishTime;
+
+    private String intro;
 
     public String getCirclePicPath() {
         return circlePicPath;
@@ -15,6 +20,22 @@ public class BookCircleInf {
 
     public void setCirclePicPath(String circlePicPath) {
         this.circlePicPath = circlePicPath;
+    }
+
+    public Date getEstablishTime() {
+        return establishTime;
+    }
+
+    public void setEstablishTime(Date establishTime) {
+        this.establishTime = establishTime;
+    }
+
+    public String getIntro() {
+        return intro;
+    }
+
+    public void setIntro(String intro) {
+        this.intro = intro;
     }
 
     public Integer getBookCircleId() {

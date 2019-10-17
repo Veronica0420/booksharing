@@ -6,9 +6,12 @@
     <result column="BC_NAME" property="bcName" jdbcType="VARCHAR" />
     <result column="CREATER_ID" property="createrId" jdbcType="INTEGER" />
     <result column="CIRCLE_PIC_PATH" property="circlePicPath" jdbcType="VARCHAR"/>
+    <result column="ESTABLISH_TIME" property="establishTime" jdbcType="TIMESTAMP" />
+    <result column="INTRO" property="intro" jdbcType="VARCHAR"/>
+
   </resultMap>
   <sql id="Base_Column_List" >
-    BOOK_CIRCLE_ID, BC_NAME, CREATER_ID,CIRCLE_PIC_PATH
+    BOOK_CIRCLE_ID, BC_NAME, CREATER_ID,CIRCLE_PIC_PATH,ESTABLISH_TIME,INTRO
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
