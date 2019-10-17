@@ -20,4 +20,6 @@ public interface BookCircleInfMapper {
 
     //根据一定条件查出对应的所有图书圈列表   ——Sijar
     List<BookCircleInf> listBycreaterID(Map<String, Object> map);
+    //根据一定条件查出对应的未创建的所有图书圈列表   ——Sijar
+    List<BookCircleInf> listByNotcreaterID(Map<String, Object> map);
 }

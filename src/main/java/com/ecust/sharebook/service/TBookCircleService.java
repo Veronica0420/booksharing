@@ -8,4 +8,5 @@ import java.util.Map;
 
 public interface TBookCircleService {
     List<BookCircleInf> selectbyCreaterID(Map<String, Object> params);
+    List<BookCircleInf> selectbyNotCreaterIDMemberID(Map<String, Object> params);
 }

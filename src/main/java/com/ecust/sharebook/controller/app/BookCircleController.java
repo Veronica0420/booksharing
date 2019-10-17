@@ -38,6 +38,7 @@ public class BookCircleController {
     public R myBookCircle(@RequestParam Map<String,Object> params){
         System.out.println("bookCircle");
         List<BookCircleInf> my_book_circle_list = new ArrayList<>();
+        List<BookCircleInf> other_book_circle_list = new ArrayList<>();
         R r=new R();
         try {
             String openId = new String();
@@ -57,11 +58,15 @@ public class BookCircleController {
                     System.out.println("USER_ID="+param);
                     //查询所有我创建的图书圈
                     my_book_circle_list = tBookCircleService.selectbyCreaterID(param);
+                    //查询所有我未加入的图书圈
+                    other_book_circle_list=tBookCircleService.selectbyNotCreaterIDMemberID(param);
                     param.clear();
                 }
             }
             r.put("my_book_circle_list",my_book_circle_list);
+            r.put("other_book_circle_list",other_book_circle_list);
             System.out.println("my_book_circle_list:"+my_book_circle_list);
+            System.out.println("other_book_circle_list:"+other_book_circle_list);
         }catch (Exception e){
             e.printStackTrace();
             return R.error();

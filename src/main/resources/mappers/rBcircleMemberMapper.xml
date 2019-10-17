@@ -15,6 +15,10 @@
     from r_bcircle_member
     where BC_MEM_ID = #{bcMemId,jdbcType=INTEGER}
   </select>
+  <select id="selectByMemberId" resultType="java.lang.Integer" parameterType="java.lang.Integer" >
+    select Book_Circle_ID from r_bcircle_member
+    where MEMBER_ID = #{memberId}
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from r_bcircle_member
     where BC_MEM_ID = #{bcMemId,jdbcType=INTEGER}

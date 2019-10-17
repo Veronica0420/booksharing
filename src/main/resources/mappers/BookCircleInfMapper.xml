@@ -25,6 +25,12 @@
     from book_circle_inf
     where CREATER_ID = #{createrId}
   </select>
+  <select id="listByNotcreaterID" resultMap="BaseResultMap"  >
+    select
+    <include refid="Base_Column_List" />
+    from book_circle_inf
+    where CREATER_ID != #{createrId}
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from book_circle_inf
     where BOOK_CIRCLE_ID = #{bookCircleId,jdbcType=INTEGER}
