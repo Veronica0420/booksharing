@@ -7,6 +7,7 @@ import com.ecust.sharebook.service.TUserBookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -16,8 +17,8 @@ public class TUserBookServiceIml implements TUserBookService {
     private rUserBookMapper trUserBookMapper;
 
     @Override
-    public   List<String > selectISBNbyID(Map<String, Object> params) {
-        List<String > list = trUserBookMapper.list(params);
+    public    List<Map<String, Object>> selectByOwId(Map<String, Object> params) {
+        List<Map<String, Object>>  list = trUserBookMapper.list(params);
         if (list!=null && list.size()>0){
             return  list;
         }
@@ -37,5 +38,10 @@ public class TUserBookServiceIml implements TUserBookService {
     public int updatePrivacy(Map<String, Object> map) {
       return trUserBookMapper.updatePrivacy(map);
 
+    }
+
+    @Override
+    public int save(Map<String, Object> map) {
+        return trUserBookMapper.save(map);
     }
 }

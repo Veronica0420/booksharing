@@ -115,8 +115,8 @@
     where BOOK_ID = #{bookId,jdbcType=INTEGER}
   </update>
 
-  <select id="list" resultType="java.lang.String">
-    select `ISBN` from r_user_book
+  <select id="list" resultType="java.util.HashMap">
+    select `ISBN`,`ADD_TIME` from r_user_book
     where OWNER_ID = #{ownerId}
 </select>
 
@@ -132,4 +132,23 @@
     </set>
     where OWNER_ID = #{ownerId} and ISBN = #{isbn}
   </update>
+
+
+  <insert id="save"  useGeneratedKeys="true" keyProperty="bookId">
+		insert into r_user_book
+		(
+		`OWNER_ID`,
+		`PRIVACY`,
+		`ISBN`,
+		`ADD_TIME`
+		)
+		values
+		(
+		#{ownerId},
+		#{privacy},
+		#{isbn},
+		#{addTime}
+		)
+	</insert>
+
 </mapper>

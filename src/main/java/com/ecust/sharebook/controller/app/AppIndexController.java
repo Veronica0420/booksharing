@@ -17,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 
@@ -39,7 +40,9 @@ public class AppIndexController {
     @Autowired
     private JwtUtil jwtUtil;
 
-
+    /**
+     * shelf  加载书架
+     **/
 
     @ResponseBody
     @GetMapping("/myshelf")
@@ -64,26 +67,35 @@ public class AppIndexController {
             openId=jwtUtil.getWxOpenIdByToken( params.get("access_token").toString());
             if(openId != null){
                 Map<String, Object> param = new HashMap<>();
+                List<  Map<String, Object> > uBook = new ArrayList<>();
                 param.put("openId",openId);
                 UserInf seMember = tMemberService.selectOne(param);
                 param.clear();
                 if(seMember!=null){
                     param.put("ownerId",seMember.getUserId());
-                    List<String> isbn = tUserBookService.selectISBNbyID(param);
-                    if(isbn != null){
-                        for(String is :isbn){
-                            BookInf bk = tBookService.selectByIsbn(is);
+                    uBook = tUserBookService.selectByOwId(param);
+                    if(uBook != null){
+                        for(Map<String, Object> is :uBook){
+                            String isbn= is.get("ISBN").toString();
+                            Date addTime = (Date) is.get("ADD_TIME");
+
+                            BookInf bk = tBookService.selectByIsbn(is.get("ISBN").toString());
+                            BDself bDself = new BDself();
+                            bDself.setIsbn(bk.getIsbn());
+                            bDself.setBookName(bk.getBookName());
+                            bDself.setPicPath(bk.getPicPath());
+                            bDself.setAddTime(addTime);
                             for(CatgBook cbk :catg_book_list){
                                 if(cbk.getCatgId()==0){
-                                    cbk.getCatg_book_list().add(bk);
+                                    cbk.getCatg_book_list().add(bDself);
                                     continue;
                                 }
                                 param.clear();
-                                param.put("isbn",is);
+                                param.put("isbn",isbn);
                                 param.put("catgId",cbk.getCatgId());
                                 rBookCategory rbg = tBookCategoryService.findCatgbyIsbn(param);
                                 if(rbg !=null){
-                                    cbk.getCatg_book_list().add(bk);
+                                    cbk.getCatg_book_list().add(bDself);
                                 }
                             }
                         }
@@ -101,6 +113,9 @@ public class AppIndexController {
         return r;
     }
 
+    /**
+     * asecond/bdself 详情界面
+     **/
     @ResponseBody
     @GetMapping({"/asecond/bdself"})
     public R queryBook(@RequestParam Map<String, Object> params){
@@ -155,6 +170,10 @@ public class AppIndexController {
         return r;
     }
 
+    /**
+     * asecond/bdself  设置公开/私密
+     **/
+
     @ResponseBody
     @GetMapping({"/asecond/privacy"})
     public R setPrivacy(@RequestParam Map<String, Object> params){
@@ -162,13 +181,12 @@ public class AppIndexController {
         R r=new R();
         try {
             Map<String, Object> result = new HashMap<>();
-            result.put("save_sucess", -1);
+            result.put("save_success", -1);
             String openId = new String();
             String isbn = new String();
-            String privacy = new String();
             openId=jwtUtil.getWxOpenIdByToken( params.get("access_token").toString());
             isbn=params.get("isbn").toString();
-            privacy=params.get("privacy").toString();
+            Integer privacy =  Integer.valueOf(params.get("privacy").toString());
             System.out.println(openId+':'+isbn+":"+privacy);
             params.put("openId",openId);
 
@@ -178,9 +196,9 @@ public class AppIndexController {
                     params.put("ownerId",seMember.getUserId());
                     int i = tUserBookService.updatePrivacy(params);
                     if(i==0) {
-                        result.put("save_sucess", 0); //更新失败
+                        result.put("save_success", 0); //更新失败
                     }else{
-                        result.put("save_sucess", 1); //更新成功
+                        result.put("save_success", 1); //更新成功
                     }
                 }
 
@@ -194,7 +212,9 @@ public class AppIndexController {
         return r;
     }
 
-
+    /**
+     * scan/scResult 查询
+     **/
 
     @ResponseBody
     @GetMapping("/scan/book")
@@ -224,7 +244,70 @@ public class AppIndexController {
     }
 
 
+    /**
+     * scan/scResult 添加书籍到我的书架中
+     **/
 
+    @ResponseBody
+    @GetMapping("scan/addShelf")
+    public R addShelf(@RequestParam Map<String, Object> params){
+        System.out.println("/scan/addShelf");
+        R r=new R();
+        try {
+            Map<String, Object> result = new HashMap<>();
+            result.put("save_sucess", -1);
+            String openId = new String();
+            String isbn = new String();
+            String addTime = new String();
+
+            openId = jwtUtil.getWxOpenIdByToken( params.get("access_token").toString());
+            isbn =params.get("isbn").toString();
+            Integer privacy =  Integer.valueOf(params.get("privacy").toString());
+            addTime = params.get("addTimes").toString();
+            SimpleDateFormat format =  new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date date = format.parse(addTime);
+            params.put("addTime",date);
+            System.out.println(params);
+            params.put("openId",openId);
+            if(openId!=null&&isbn!=null&&privacy!=null&&addTime!=null){
+                UserInf seMember = tMemberService.selectOne(params);
+                if(seMember!=null){
+                    rUserBook rub = tUserBookService.SelectByIsbn(params);
+                    if(rub==null){
+                        //我的书架中无此书
+                        result.put("status", 2);
+                        params.put("ownerId",seMember.getUserId());
+                        int i = tUserBookService.save(params);
+                        if(i==0) {
+                            result.put("save_success", 0); //更新失败
+                        }else{
+                            result.put("save_success", 1); //更新成功
+                        }
+                    }
+                    else{
+                        result.put("status", 1);
+                    }
+                }else{
+                    result.put("status", 0);
+                }
+
+            }else{
+                result.put("status", -1);
+            }
+
+            r.put("data",result);
+
+        }catch (Exception e){
+            e.printStackTrace();
+            return R.error();
+        }
+        return r;
+    }
+
+
+    /**
+     * login
+     **/
     @ResponseBody
     @RequestMapping("/login")
     public R login(HttpServletRequest req) throws Exception{

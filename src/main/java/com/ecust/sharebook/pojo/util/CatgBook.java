@@ -9,10 +9,10 @@ import java.util.List;
 
 public class CatgBook {
     private Integer catgId;
-    private List<BookInf> catg_book_list;
+    private List<BDself> catg_book_list;
 
     public CatgBook(){
-        this.catg_book_list = new ArrayList<BookInf>();
+        this.catg_book_list = new ArrayList<BDself>();
     }
 
     public Integer getCatgId() {
@@ -23,10 +23,10 @@ public class CatgBook {
         this.catgId = catgId;
     }
 
-    public   List<BookInf> getCatg_book_list(){
+    public   List<BDself> getCatg_book_list(){
         return catg_book_list;
     }
-    public  void setCatg_book_list(List<BookInf> catg_book_list){
+    public  void setCatg_book_list(List<BDself> catg_book_list){
         this.catg_book_list = catg_book_list;
     }
 }

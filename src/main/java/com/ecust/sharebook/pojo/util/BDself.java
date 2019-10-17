@@ -3,6 +3,7 @@ package com.ecust.sharebook.pojo.util;
 import org.apache.catalina.LifecycleState;
 import org.springframework.context.annotation.Bean;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -23,6 +24,8 @@ public class BDself {
     private Integer privacy;
 
     private Integer borrowState;
+
+    private Date addTime;
 
 
     public String getIsbn() {
@@ -87,5 +90,13 @@ public class BDself {
 
     public void setBookName(String bookName) {
         this.bookName = bookName;
+    }
+
+    public Date getAddTime() {
+        return addTime;
+    }
+
+    public void setAddTime(Date addTime) {
+        this.addTime = addTime;
     }
 }

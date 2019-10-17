@@ -15,18 +15,30 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @MapperScan("com.ecust.sharebook.mapper")
 @EnableCaching
 @SpringBootApplication
-public class SharebookApplication {
-//extends SpringBootServletInitializer {
-
+public class SharebookApplication{
     public static void main(String[] args) {
         SpringApplication.run(SharebookApplication.class, args);
     }
 
 
-  //  @Override
-  //  protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
-  //      return builder.sources(SharebookApplication.class);
-  //  }
+}
 
+/**
+@EnableTransactionManagement
+@ServletComponentScan
+@MapperScan("com.ecust.sharebook.mapper")
+@EnableCaching
+@SpringBootApplication
+public class SharebookApplication extends SpringBootServletInitializer {
+
+    public static void main(String[] args) {
+        SpringApplication.run(SharebookApplication.class, args);
+    }
+
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
+        return builder.sources(SharebookApplication.class);
+    }
 
 }
+**/
