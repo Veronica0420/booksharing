@@ -8,7 +8,7 @@ import java.util.Map;
 public interface BookCircleInfMapper {
     int deleteByPrimaryKey(Integer bookCircleId);
 
-    int insert(BookCircleInf record);
+    int insert(Map<String,Object> map);
 
     int insertSelective(BookCircleInf record);
 

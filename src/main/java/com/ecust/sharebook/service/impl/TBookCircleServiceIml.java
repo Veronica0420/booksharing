@@ -7,10 +7,7 @@ import com.ecust.sharebook.service.TBookCircleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class TBookCircleServiceIml implements TBookCircleService {
@@ -18,6 +15,12 @@ public class TBookCircleServiceIml implements TBookCircleService {
     private BookCircleInfMapper tBookCircleInfMapper;
     @Autowired
     private rBcircleMemberMapper trBcircleMemberMapper;
+
+    @Override
+    public int insert(Map<String, Object> bcInf){
+        int result=tBookCircleInfMapper.insert(bcInf);
+        return result;
+    }
 
     @Override
     public List<BookCircleInf> selectbyCreaterID(Map<String, Object> params){

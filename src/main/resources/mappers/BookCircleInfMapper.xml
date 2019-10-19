@@ -35,12 +35,12 @@
     delete from book_circle_inf
     where BOOK_CIRCLE_ID = #{bookCircleId,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.ecust.sharebook.pojo.BookCircleInf" >
+  <insert id="insert" >
     <selectKey resultType="java.lang.Integer" keyProperty="bookCircleId" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into book_circle_inf (BC_NAME, CREATER_ID)
-    values (#{bcName,jdbcType=VARCHAR}, #{createrId,jdbcType=INTEGER})
+    insert into book_circle_inf (BC_NAME, CREATER_ID,INTRO,ESTABLISH_TIME)
+    values (#{bcName}, #{createrId},#{intro},#{establishTime})
   </insert>
   <insert id="insertSelective" parameterType="com.ecust.sharebook.pojo.BookCircleInf" >
     <selectKey resultType="java.lang.Integer" keyProperty="bookCircleId" order="AFTER" >
