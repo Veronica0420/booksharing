@@ -19,6 +19,12 @@
     from book_circle_inf
     where BOOK_CIRCLE_ID = #{bookCircleId,jdbcType=INTEGER}
   </select>
+  <select id="selectLikebcName" resultMap="BaseResultMap"  >
+    select
+    <include refid="Base_Column_List" />
+    from book_circle_inf
+    where BC_NAME LIKE CONCAT('%',#{bcName},'%')
+  </select>
   <select id="listBycreaterID" resultMap="BaseResultMap"  >
     select
     <include refid="Base_Column_List" />

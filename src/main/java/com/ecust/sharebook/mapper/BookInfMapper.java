@@ -2,6 +2,8 @@ package com.ecust.sharebook.mapper;
 
 import com.ecust.sharebook.pojo.BookInf;
 
+import java.util.Map;
+
 public interface BookInfMapper {
     int deleteByPrimaryKey(String isbn);
 

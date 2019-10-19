@@ -18,6 +18,9 @@ public interface BookCircleInfMapper {
 
     int updateByPrimaryKey(BookCircleInf record);
 
+    //根据图书圈名查找相似结果  ——Sijar
+    List<BookCircleInf> selectLikebcName(Map<String ,Object> map);
+
     //根据一定条件查出对应的所有图书圈列表   ——Sijar
     List<BookCircleInf> listBycreaterID(Map<String, Object> map);
     //根据一定条件查出对应的未创建的所有图书圈列表   ——Sijar

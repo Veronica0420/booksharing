@@ -23,6 +23,16 @@ public class TBookCircleServiceIml implements TBookCircleService {
     }
 
     @Override
+    public List<BookCircleInf> selectLikBCName(Map<String, Object> param){
+        List<BookCircleInf> list=tBookCircleInfMapper.selectLikebcName(param);
+        if(list!=null&&list.size()>0){
+            return list;
+        }
+         return null;
+
+    }
+
+    @Override
     public List<BookCircleInf> selectbyCreaterID(Map<String, Object> params){
         List<BookCircleInf > list = tBookCircleInfMapper.listBycreaterID(params);
         if (list!=null && list.size()>0){

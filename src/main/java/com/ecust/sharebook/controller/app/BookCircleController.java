@@ -106,7 +106,32 @@ public class BookCircleController {
                 }
             }
 
+            System.out.println("<-----newBookCircle end---->");
 
+        }catch (Exception e){
+            e.printStackTrace();
+            return R.error();
+        }
+        return r;
+    }
+
+
+    @ResponseBody
+    @GetMapping("/searchBookCircle")
+    public R searchBookCircle(@RequestParam Map<String,Object> params){
+        System.out.println("<--searchBookCircle  start----->");
+        System.out.println("params:"+params);
+        String bcName=new String();
+        List<BookCircleInf> searchBCInf=new ArrayList<>();
+        R r=new R();
+        try {
+            bcName=params.get("bcName").toString();
+            Map<String, Object> param = new HashMap<>();
+            param.put("bcName",bcName);
+            searchBCInf=tBookCircleService.selectLikBCName(param);
+            param.clear();
+            r.put("searchBCInf",searchBCInf);
+            System.out.println("<--searchBookCircle  end----->");
         }catch (Exception e){
             e.printStackTrace();
             return R.error();
