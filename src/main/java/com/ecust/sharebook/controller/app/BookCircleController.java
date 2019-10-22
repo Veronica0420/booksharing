@@ -54,6 +54,7 @@ public class BookCircleController {
                 param.clear();
                 if (seMember != null) {
                     param.put("createrId", seMember.getUserId());
+                    param.put("memberId",seMember.getUserId());
                     System.out.println("----------USER_ID="+param);
                     //查询所有我创建的图书圈
                     my_book_circle_list = tBookCircleService.selectbyCreaterID(param);

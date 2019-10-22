@@ -35,6 +35,12 @@ public class TBookCircleServiceIml implements TBookCircleService {
     @Override
     public List<BookCircleInf> selectbyCreaterID(Map<String, Object> params){
         List<BookCircleInf > list = tBookCircleInfMapper.listBycreaterID(params);
+        List<Integer> list_id = trBcircleMemberMapper.selectByMemberId(params);
+        for(int i=0 ;i<list_id.size();i++){
+            System.out.println("map.put  list_id"+i+"="+list_id.get(i));
+            BookCircleInf tmp=tBookCircleInfMapper.selectByPrimaryKey(list_id.get(i));
+            list.add(tmp);
+        }
         if (list!=null && list.size()>0){
             return  list;
         }
