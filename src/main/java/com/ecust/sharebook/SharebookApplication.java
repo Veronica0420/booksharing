@@ -9,7 +9,7 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-
+/**
 @EnableTransactionManagement
 @ServletComponentScan
 @MapperScan("com.ecust.sharebook.mapper")
@@ -22,8 +22,8 @@ public class SharebookApplication{
 
 
 }
+ **/
 
-/**
 @EnableTransactionManagement
 @ServletComponentScan
 @MapperScan("com.ecust.sharebook.mapper")
@@ -41,4 +41,3 @@ public class SharebookApplication extends SpringBootServletInitializer {
     }
 
 }
-**/

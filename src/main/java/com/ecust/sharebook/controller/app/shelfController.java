@@ -81,12 +81,11 @@ public class shelfController {
                         cb.setCatgId(ci.getCatgId());
                         catg_book_list.add(cb);
                     }
-
+                    data.setCat_list(cat_list);
                     //查询分类下的所有书籍
                     try{
                         //查询借阅的书籍和拥有的书籍
                         List<myShelf> myshelfs =  tUserBookService.findShelf(param);
-
                         for(myShelf myShelfTemp : myshelfs){
                             myShelfTemp.sortTime(seMember.getUserId());
                             BookInf bookInfTemp = tBookService.selectByIsbn(myShelfTemp.getIsbn());
@@ -111,14 +110,14 @@ public class shelfController {
 
                             }
                         }
-                        data.setCat_list(cat_list);
+
                         data.setCatg_book_list(catg_book_list);
-                        r.put("data",data);
+
                         result.put("isSuccess",2);
                     }catch (Exception e){
                         result.put("isSuccess",3);
                     }
-
+                    r.put("data",data);
 
                 }else
                     result.put("isSuccess",1);
