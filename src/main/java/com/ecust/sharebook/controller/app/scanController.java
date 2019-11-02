@@ -89,17 +89,22 @@ public class scanController {
             addTime = params.get("addTimes").toString();
             SimpleDateFormat format =  new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Date date = format.parse(addTime);
+           // params.put("isbn",isbn);
+           // params.put("privacy",privacy);
             params.put("addTime",date);
+
+
             System.out.println(params);
-            params.put("openId",openId);
+            System.out.println(params);
             if(openId!=null&&isbn!=null&&privacy!=null&&addTime!=null){
+                params.put("openId",openId);
                 UserInf seMember = tMemberService.selectOne(params);
                 if(seMember!=null){
+                    params.put("ownerId",seMember.getUserId());
                     rUserBook rub = tUserBookService.SelectByIsbn(params);
                     if(rub==null){
                         //我的书架中无此书
                         result.put("status", 2);
-                        params.put("ownerId",seMember.getUserId());
                         int i = tUserBookService.save(params);
                         if(i==0) {
                             result.put("save_success", 0); //更新失败

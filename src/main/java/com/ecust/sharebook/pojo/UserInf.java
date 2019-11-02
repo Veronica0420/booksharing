@@ -21,6 +21,8 @@ public class UserInf {
 
     private String tel;
 
+    private String avatarUrl;
+
 
    //自动生成
     public Integer getUserId() {
@@ -103,4 +105,12 @@ public class UserInf {
         this.tel = tel == null ? null : tel.trim();
     }
 
+
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
+    }
 }

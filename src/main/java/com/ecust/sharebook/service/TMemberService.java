@@ -20,7 +20,12 @@ public interface TMemberService {
 
 	int updateByPrimaryKeySelective(UserInf record);
 
+	UserInf selectByPrimaryKey(Integer userId);
+
 	int updateSkeyByOpid(Map<String, Object> map);
+
+
+	List<UserInf> list(Map<String, Object> map);
 
 
 }

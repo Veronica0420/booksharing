@@ -1,7 +1,6 @@
-package com.ecust.sharebook.pojo.util;
+package com.ecust.sharebook.pojo.util.shelf;
 
 import com.ecust.sharebook.pojo.CategoryInf;
-import com.ecust.sharebook.pojo.util.CatgBook;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +8,8 @@ import java.util.List;
 public class IndexData {
     private List<CategoryInf> cat_list ;
     private List<CatgBook> catg_book_list;
+
+    private   List<myShelf> borrow;
 
 public IndexData(){
     cat_list = new ArrayList<CategoryInf>();
@@ -29,5 +30,13 @@ public IndexData(){
 
     public void setCatg_book_list(List<CatgBook> catg_book_list) {
         this.catg_book_list = catg_book_list;
+    }
+
+    public List<myShelf> getBorrow() {
+        return borrow;
+    }
+
+    public void setBorrow(List<myShelf> borrow) {
+        this.borrow = borrow;
     }
 }

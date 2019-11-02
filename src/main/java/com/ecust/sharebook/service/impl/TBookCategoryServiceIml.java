@@ -27,12 +27,12 @@ public class TBookCategoryServiceIml implements TBookCategoryService {
         return  null;
     }
 
-    @Override
-    public List<rBookCategory> findbyIsbn(Map<String, Object> map) {
-        List<rBookCategory> list =tBookCategoryMapper.findbyIsbn(map);
 
-        if (list!=null && list.size()>0){
-            System.out.println(list.get(0));
+
+    @Override
+    public List<rBookCategory> list(Map<String, Object> map) {
+        List<rBookCategory> list = tBookCategoryMapper.list(map);
+        if(list!=null && list.size()!=0){
             return  list;
         }
         return  null;

@@ -12,10 +12,11 @@
     <result column="PROVINCE" property="province" jdbcType="VARCHAR" />
     <result column="COUNTRY" property="country" jdbcType="VARCHAR" />
     <result column="TEL" property="tel" jdbcType="VARCHAR" />
+    <result column="AVATARUrl" property="avatarUrl" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     USER_ID, OPEN_ID, SESSION_KEY, UNION_ID, NICK_NAME, GENDER, CITY, PROVINCE, COUNTRY, 
-    TEL
+    TEL,AVATARUrl
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -33,11 +34,12 @@
     </selectKey>
     insert into user_inf (OPEN_ID, SESSION_KEY, UNION_ID, 
       NICK_NAME, GENDER, CITY, 
-      PROVINCE, COUNTRY, TEL
+      PROVINCE, COUNTRY, TEL,AVATARUrl
       )
     values (#{openId,jdbcType=VARCHAR}, #{sessionKey,jdbcType=VARCHAR}, #{unionId,jdbcType=VARCHAR}, 
       #{nickName,jdbcType=VARCHAR}, #{gender,jdbcType=BIT}, #{city,jdbcType=VARCHAR}, 
-      #{province,jdbcType=VARCHAR}, #{country,jdbcType=VARCHAR}, #{tel,jdbcType=VARCHAR}
+      #{province,jdbcType=VARCHAR}, #{country,jdbcType=VARCHAR}, #{tel,jdbcType=VARCHAR},
+      #{avatarUrl,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.ecust.sharebook.pojo.UserInf" >
@@ -73,6 +75,9 @@
       <if test="tel != null" >
         TEL,
       </if>
+      <if test="avatarUrl != null">
+        AVATARUrl,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="openId != null" >
@@ -101,6 +106,9 @@
       </if>
       <if test="tel != null" >
         #{tel,jdbcType=VARCHAR},
+      </if>
+      <if test="avatarUrl != null">
+        #{avatarUrl,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -134,6 +142,9 @@
       <if test="tel != null" >
         TEL = #{tel,jdbcType=VARCHAR},
       </if>
+      <if test="avatarUrl != null">
+        AVATARUrl = #{avatarUrl,jdbcType=VARCHAR},
+      </if>
     </set>
     where USER_ID = #{userId,jdbcType=INTEGER}
   </update>
@@ -147,18 +158,19 @@
       CITY = #{city,jdbcType=VARCHAR},
       PROVINCE = #{province,jdbcType=VARCHAR},
       COUNTRY = #{country,jdbcType=VARCHAR},
-      TEL = #{tel,jdbcType=VARCHAR}
+      TEL = #{tel,jdbcType=VARCHAR},
+      AVATARUrl = #{avatarUrl,jdbcType=VARCHAR}
     where USER_ID = #{userId,jdbcType=INTEGER}
   </update>
 
   <select id="selectUserByOepnid" resultType="com.ecust.sharebook.pojo.UserInf">
-    select `USER_ID`,`OPEN_ID`,`SESSION_KEY`,`UNION_ID`,`NICK_NAME`,`GENDER`,`CITY`,`PROVINCE`,`COUNTRY`,`TEL` from user_inf
+    select `USER_ID`,`OPEN_ID`,`SESSION_KEY`,`UNION_ID`,`NICK_NAME`,`GENDER`,`CITY`,`PROVINCE`,`COUNTRY`,`TEL`,`AVATARUrl` from user_inf
     where OPEN_ID= #{openId}
 
   </select>
 
   <select id="get" resultType="com.ecust.sharebook.pojo.UserInf">
-		select `USER_ID`,`OPEN_ID`,`SESSION_KEY`,`UNION_ID`,`NICK_NAME`,`GENDER`,`CITY`,`PROVINCE`,`COUNTRY`,`TEL` from user_inf
+		select `USER_ID`,`OPEN_ID`,`SESSION_KEY`,`UNION_ID`,`NICK_NAME`,`GENDER`,`CITY`,`PROVINCE`,`COUNTRY`,`TEL` ,`AVATARUrl` from user_inf
 		where USER_ID = #{userId}
 	</select>
 
@@ -173,7 +185,8 @@
 		`CITY`,
 		`PROVINCE`,
 		`COUNTRY`,
-		`TEL`
+		`TEL`,
+		`AVATARUrl`
 		)
 		values
 		(
@@ -185,7 +198,8 @@
 		#{city},
 		#{province},
 		#{country},
-		#{tel}
+		#{tel},
+		#{avatarUrl}
 		)
 	</insert>
 
@@ -197,5 +211,38 @@
     </set>
     where OPEN_ID = #{openId}
   </update>
+
+
+
+  <select id="list" resultType="com.ecust.sharebook.pojo.UserInf">
+    select   `USER_ID`, `OPEN_ID`, `SESSION_KEY`,`UNION_ID`, `NICK_NAME`, `GENDER`, `CITY`, `PROVINCE`, `COUNTRY`,
+    `TEL`,`AVATARUrl`
+    from user_inf
+    <where>
+      <if test="userId != null and userId != ''"> and USER_ID = #{userId} </if>
+      <if test="openId != null and openId != ''"> and OPEN_ID = #{openId} </if>
+      <if test="sessionKey != null and sessionKey != ''"> and SESSION_KEY = #{sessionKey} </if>
+      <if test="unionId != null and unionId != ''"> and UNION_ID = #{unionId} </if>
+      <if test="nickName != null and nickName != ''"> and NICK_NAME = #{nickName} </if>
+      <if test="gender != null and gender != ''"> and GENDER = #{gender} </if>
+      <if test="city != null and city != ''"> and CITY = #{city} </if>
+      <if test="country != null and country != ''"> and COUNTRY = #{country} </if>
+      <if test="tel != null and tel != ''"> and TEL = #{tel} </if>
+      <if test="avatarUrl != null and avatarUrl != ''"> and AVATARUrl = #{avatarUrl} </if>
+    </where>
+    <choose>
+      <when test="sort != null and sort.trim() != ''">
+        order by ${sort} ${order}
+      </when>
+      <otherwise>
+        order by USER_ID desc
+      </otherwise>
+    </choose>
+    <if test="offset != null and limit != null">
+      limit #{offset}, #{limit}
+    </if>
+  </select>
+
+
 
 </mapper>

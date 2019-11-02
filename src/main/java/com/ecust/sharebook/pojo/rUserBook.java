@@ -1,6 +1,7 @@
 package com.ecust.sharebook.pojo;
 
 import java.util.Date;
+import java.util.List;
 
 public class rUserBook {
     private Integer bookId;
@@ -16,6 +17,7 @@ public class rUserBook {
     private Date addTime;
 
     private Boolean deleteBook;
+
 
     public Integer getBookId() {
         return bookId;
@@ -72,4 +74,5 @@ public class rUserBook {
     public void setDeleteBook(Boolean deleteBook) {
         this.deleteBook = deleteBook;
     }
+
 }

@@ -27,4 +27,6 @@ public interface UserInfMapper {
     int save(UserInf tMember);
 
     int updateSkeyByOpid(Map<String, Object> map);
+
+    List<UserInf> list(Map<String, Object> map);
 }

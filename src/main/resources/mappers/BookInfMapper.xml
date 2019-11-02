@@ -13,6 +13,26 @@
     <result column="BRIEF_INTRO" property="briefIntro" jdbcType="VARCHAR" />
     <result column="CONTENTS" property="contents" jdbcType="VARCHAR" />
   </resultMap>
+
+  <resultMap id="catgResultMap" type="com.ecust.sharebook.pojo.BookInf" >
+    <id column="BISBN" property="isbn" jdbcType="CHAR" />
+    <result column="BOOK_NAME" property="bookName" jdbcType="VARCHAR" />
+    <result column="AUTHOR" property="author" jdbcType="VARCHAR" />
+    <result column="TRANSLATOR" property="translator" jdbcType="VARCHAR" />
+    <result column="PUBLISHER" property="publisher" jdbcType="VARCHAR" />
+    <result column="PUB_TIME" property="pubTime" jdbcType="VARCHAR" />
+    <result column="PRICE" property="price" jdbcType="VARCHAR" />
+    <result column="PIC_PATH" property="picPath" jdbcType="VARCHAR" />
+    <result column="BRIEF_INTRO" property="briefIntro" jdbcType="VARCHAR" />
+    <result column="CONTENTS" property="contents" jdbcType="VARCHAR" />
+    <collection property="categoryInfList"  javaType="ArrayList" ofType="com.ecust.sharebook.pojo.CategoryInf">
+      <id column="CATG_ID" property="catgId" jdbcType="INTEGER" />
+      <result column="CATG_NAME" property="catgName" jdbcType="VARCHAR" />
+    </collection>
+  </resultMap>
+
+
+
   <sql id="Base_Column_List" >
     ISBN, BOOK_NAME, AUTHOR, TRANSLATOR, PUBLISHER, PUB_TIME, PRICE, PIC_PATH, BRIEF_INTRO, 
     CONTENTS
@@ -150,4 +170,46 @@
       CONTENTS = #{contents,jdbcType=VARCHAR}
     where ISBN = #{isbn,jdbcType=CHAR}
   </update>
+
+
+  <select id="list" resultType="com.ecust.sharebook.pojo.BookInf">
+    select   `ISBN`, `BOOK_NAME`, `AUTHOR`, `TRANSLATOR`, `PUBLISHER`, `PUB_TIME`, `PRICE`, `PIC_PATH`, `BRIEF_INTRO`,
+    `CONTENTS`
+    from book_inf
+    <where>
+      <if test="isbn != null and isbn != ''"> and ISBN = #{isbn} </if>
+      <if test="bookName != null and bookName != ''"> and BOOK_NAME = #{bookName} </if>
+      <if test="author != null and author != ''"> and AUTHOR = #{author} </if>
+      <if test="translator != null and translator != ''"> and TRANSLATOR = #{translator} </if>
+      <if test="publisher != null and publisher != ''"> and PUBLISHER = #{publisher} </if>
+      <if test="pubTime != null and pubTime != ''"> and PUB_TIME = #{pubTime} </if>
+      <if test="price != null and price != ''"> and PRICE = #{price} </if>
+    </where>
+    <choose>
+      <when test="sort != null and sort.trim() != ''">
+        order by ${sort} ${order}
+      </when>
+      <otherwise>
+        order by ISBN desc
+      </otherwise>
+    </choose>
+    <if test="offset != null and limit != null">
+      limit #{offset}, #{limit}
+    </if>
+  </select>
+
+
+  <select id="findbyIsbn" resultMap="catgResultMap">
+  SELECT
+  book_inf.ISBN AS BISBN, BOOK_NAME, AUTHOR, TRANSLATOR, PUBLISHER, PUB_TIME, PRICE, PIC_PATH, BRIEF_INTRO,CONTENTS,
+  CATG_NAME,CATG_ID
+  FROM book_inf LEFT JOIN  r_book_category
+  ON book_inf.ISBN =  r_book_category.ISBN
+  LEFT JOIN category_inf
+  ON CATG_ID = MCATG_ID
+  WHERE book_inf.ISBN =#{isbn}
+</select>
+
+
+
 </mapper>

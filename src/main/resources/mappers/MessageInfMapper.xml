@@ -9,9 +9,12 @@
     <result column="DATE_TIME" property="dateTime" jdbcType="TIMESTAMP" />
     <result column="REASON" property="reason" jdbcType="VARCHAR" />
     <result column="BORROW_RES" property="borrowRes" jdbcType="BIT" />
+    <result column="M_TYPE" property="mType" jdbcType="INTEGER" />
+    <result column="M_BORROW_ID" property="mBorrowId" jdbcType="INTEGER" />
+
   </resultMap>
   <sql id="Base_Column_List" >
-    MESSAGE_ID, SENDER_ID, RECEIVER_ID, CONTENT, DATE_TIME, REASON, BORROW_RES
+    MESSAGE_ID, SENDER_ID, RECEIVER_ID, CONTENT, DATE_TIME, REASON, BORROW_RES,M_TYPE,M_BORROW_ID
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -28,10 +31,11 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into message_inf (SENDER_ID, RECEIVER_ID, CONTENT, 
-      DATE_TIME, REASON, BORROW_RES
+      DATE_TIME, REASON, BORROW_RES,M_TYPE,M_BORROW_ID
       )
     values (#{senderId,jdbcType=INTEGER}, #{receiverId,jdbcType=INTEGER}, #{content,jdbcType=VARCHAR}, 
-      #{dateTime,jdbcType=TIMESTAMP}, #{reason,jdbcType=VARCHAR}, #{borrowRes,jdbcType=BIT}
+      #{dateTime,jdbcType=TIMESTAMP}, #{reason,jdbcType=VARCHAR}, #{borrowRes,jdbcType=BIT}, #{mType,jdbcType=INTEGER},
+     #{mBorrowId,jdbcType=INTEGER}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.ecust.sharebook.pojo.MessageInf" >
@@ -58,6 +62,13 @@
       <if test="borrowRes != null" >
         BORROW_RES,
       </if>
+      <if test="mType != null" >
+        M_TYPE,
+      </if>
+
+      <if test="mBorrowId != null" >
+        M_BORROW_ID,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="senderId != null" >
@@ -77,6 +88,13 @@
       </if>
       <if test="borrowRes != null" >
         #{borrowRes,jdbcType=BIT},
+      </if>
+      <if test="mType != null" >
+         #{mType,jdbcType=INTEGER},
+      </if>
+
+      <if test="mBorrowId != null" >
+        #{mBorrowId,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -101,6 +119,13 @@
       <if test="borrowRes != null" >
         BORROW_RES = #{borrowRes,jdbcType=BIT},
       </if>
+      <if test="mType != null" >
+        M_TYPE = #{mType,jdbcType=INTEGER},
+      </if>
+
+      <if test="mBorrowId != null" >
+        M_BORROW_ID = #{mBorrowId,jdbcType=INTEGER},
+      </if>
     </set>
     where MESSAGE_ID = #{messageId,jdbcType=INTEGER}
   </update>
@@ -111,7 +136,41 @@
       CONTENT = #{content,jdbcType=VARCHAR},
       DATE_TIME = #{dateTime,jdbcType=TIMESTAMP},
       REASON = #{reason,jdbcType=VARCHAR},
-      BORROW_RES = #{borrowRes,jdbcType=BIT}
+      BORROW_RES = #{borrowRes,jdbcType=BIT},
+      M_TYPE = #{mType,jdbcType=INTEGER},
+       M_BORROW_ID = #{mBorrowId,jdbcType=INTEGER}
     where MESSAGE_ID = #{messageId,jdbcType=INTEGER}
   </update>
+
+
+
+
+  <select id="list" resultType="com.ecust.sharebook.pojo.MessageInf">
+    select   MESSAGE_ID, SENDER_ID, RECEIVER_ID, CONTENT, DATE_TIME, REASON, BORROW_RES,M_TYPE,M_BORROW_ID
+
+    from message_inf
+    <where>
+      <if test="userId != null and userId != ''"> and MESSAGE_ID = #{userId} </if>
+      <if test="senderId != null and senderId != ''"> and SENDER_ID = #{senderId} </if>
+      <if test="receiverId != null and receiverId != ''"> and RECEIVER_ID = #{receiverId} </if>
+      <if test="content != null and content != ''"> and CONTENT = #{content} </if>
+      <if test="dateTime != null and dateTime != ''"> and DATE_TIME = #{dateTime} </if>
+      <if test="reason != null and reason != ''"> and REASON = #{reason} </if>
+      <if test="borrowRes != null and borrowRes != ''"> and BORROW_RES = #{borrowRes} </if>
+      <if test="mType != null and mType != ''"> and M_TYPE = #{mType} </if>
+      <if test="mBorrowId != null and mBorrowId != ''"> and M_BORROW_ID = #{mBorrowId} </if>
+    </where>
+    <choose>
+      <when test="sort != null and sort.trim() != ''">
+        order by ${sort} ${order}
+      </when>
+      <otherwise>
+        order by MESSAGE_ID desc
+      </otherwise>
+    </choose>
+    <if test="offset != null and limit != null">
+      limit #{offset}, #{limit}
+    </if>
+  </select>
+
 </mapper>

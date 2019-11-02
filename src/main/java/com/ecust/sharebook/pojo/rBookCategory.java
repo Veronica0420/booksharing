@@ -7,6 +7,8 @@ public class rBookCategory {
 
     private Integer catgId;
 
+
+
     public Integer getbCatgId() {
         return bCatgId;
     }
@@ -30,4 +32,5 @@ public class rBookCategory {
     public void setCatgId(Integer catgId) {
         this.catgId = catgId;
     }
+
 }

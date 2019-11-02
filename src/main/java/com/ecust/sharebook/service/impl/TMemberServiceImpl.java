@@ -47,8 +47,22 @@ public class TMemberServiceImpl implements TMemberService {
 	}
 
 	@Override
+	public UserInf selectByPrimaryKey(Integer userId) {
+		return userInfMapper.selectByPrimaryKey( userId);
+	}
+
+	@Override
 	public int updateSkeyByOpid(Map<String, Object> map) {
 		return userInfMapper.updateSkeyByOpid(map);
+	}
+
+	@Override
+	public List<UserInf> list(Map<String, Object> map) {
+		List<UserInf> list = userInfMapper.list(map);
+		if(list!=null && list.size()!=0){
+			return  list;
+		}
+		return  null;
 	}
 
 

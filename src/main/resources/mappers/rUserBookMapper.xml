@@ -10,6 +10,30 @@
     <result column="ADD_TIME" property="addTime" jdbcType="TIMESTAMP" />
     <result column="DELETE_BOOK" property="deleteBook" jdbcType="BIT" />
   </resultMap>
+
+
+  <resultMap type="com.ecust.sharebook.pojo.util.shelf.myShelf" id="myShelfResultMap">
+    <id column="ISBN" property="isbn"/>
+    <collection property="myShelfLists" ofType="com.ecust.sharebook.pojo.util.shelf.myShelfList">
+      <id column="BOOK_ID" property="bookId"/>
+      <result column="ADD_TIME" property="addTime"/>
+      <result column="OWNER_ID" property="ownerId"/>
+      <result column="BORROW_TIME" property="borrowTime"/>
+      <result column="BORROW_ID" property="borrowId"/>
+      <result column="USER_ID" property="userId"/>
+    </collection>
+  </resultMap>
+
+
+  <resultMap type="com.ecust.sharebook.pojo.util.shelf.myShelf" id="otherShelfResultMap">
+    <id column="ISBN" property="isbn"/>
+    <collection property="myShelfLists" ofType="com.ecust.sharebook.pojo.util.shelf.myShelfList">
+      <id column="BOOK_ID" property="bookId"/>
+      <result column="ADD_TIME" property="addTime"/>
+
+    </collection>
+  </resultMap>
+
   <sql id="Base_Column_List" >
     BOOK_ID, ISBN, OWNER_ID, PRIVACY, BORROW_STATE, ADD_TIME, DELETE_BOOK
   </sql>
@@ -115,23 +139,18 @@
     where BOOK_ID = #{bookId,jdbcType=INTEGER}
   </update>
 
-  <select id="list" resultType="java.util.HashMap">
+  <select id="list1" resultType="java.util.HashMap">
     select `ISBN`,`ADD_TIME` from r_user_book
     where OWNER_ID = #{ownerId}
 </select>
 
   <select id="SelectByIsbn" resultType="com.ecust.sharebook.pojo.rUserBook">
     select * from r_user_book
-    where ISBN = #{isbn}
+    <where>
+      <if test="ownerId != null and ownerId != ''"> and OWNER_ID = #{ownerId} </if>
+      <if test="isbn != null and isbn != ''"> and ISBN = #{isbn} </if>
+    </where>
 </select>
-
-  <update id="updatePrivacy" >
-    update r_user_book
-    <set>
-      <if test="privacy != null">`PRIVACY`= #{privacy}, </if>
-    </set>
-    where OWNER_ID = #{ownerId} and ISBN = #{isbn}
-  </update>
 
 
   <insert id="save"  useGeneratedKeys="true" keyProperty="bookId">
@@ -150,5 +169,117 @@
 		#{addTime}
 		)
 	</insert>
+
+
+
+  <select id="findShelf" resultMap="myShelfResultMap">
+  SELECT
+    r_user_book.ISBN,
+    r_user_book.OWNER_ID,
+    r_user_book.BOOK_ID,
+    r_user_book.ADD_TIME,
+    r_book_user_borrow.BORROW_TIME,
+    r_book_user_borrow.USER_ID,
+    r_book_user_borrow.BORROW_ID
+    FROM  r_user_book LEFT JOIN   r_book_user_borrow
+    ON r_book_user_borrow.BOOK_ID = r_user_book.BOOK_ID
+    WHERE r_book_user_borrow.USER_ID = #{userId}
+    AND r_book_user_borrow.USR_BORROW_STATE IN (1,2,3,4,5)
+    OR r_user_book.OWNER_ID = #{userId}
+  </select>
+
+
+
+  <select id="findOtherShelf" resultMap="otherShelfResultMap">
+  SELECT
+    ISBN,
+    BOOK_ID,
+    ADD_TIME
+    FROM  r_user_book
+    WHERE OWNER_ID = #{ownerId}
+    AND PRIVACY = 0
+  </select>
+
+
+
+  <select id="findOtherShelfCateLog" resultMap="otherShelfResultMap">
+    SELECT
+    ISBN,
+    BOOK_ID,
+    ADD_TIME
+    FROM  r_user_book
+    WHERE OWNER_ID = #{ownerId}
+    AND PRIVACY = 0
+    AND  r_user_book.ISBN = #{isbn}
+  </select>
+
+
+
+  <select id="findShelfCateLog" resultMap="myShelfResultMap">
+  SELECT
+    r_user_book.ISBN,
+    r_user_book.OWNER_ID,
+    r_user_book.BOOK_ID,
+    r_user_book.ADD_TIME,
+    r_book_user_borrow.BORROW_TIME,
+    r_book_user_borrow.USER_ID,
+    r_book_user_borrow.BORROW_ID
+    FROM  r_user_book LEFT JOIN   r_book_user_borrow
+    ON r_book_user_borrow.BOOK_ID = r_user_book.BOOK_ID
+    WHERE (r_book_user_borrow.USER_ID =#{userId}
+    AND r_book_user_borrow.USR_BORROW_STATE IN (1,2,3,4,5)
+    OR r_user_book.OWNER_ID = #{userId})
+    AND  r_user_book.ISBN = #{isbn}
+  </select>
+
+
+
+  <select id="list" resultType="com.ecust.sharebook.pojo.rUserBook">
+    select BOOK_ID, ISBN, OWNER_ID, PRIVACY, BORROW_STATE, ADD_TIME, DELETE_BOOK
+    from r_user_book
+    <where>
+      <if test="bookId != null and bookId != ''"> and BOOK_ID = #{bookId} </if>
+      <if test="isbn != null and isbn != ''"> and ISBN = #{isbn} </if>
+      <if test="ownerId != null and ownerId != ''"> and OWNER_ID = #{ownerId} </if>
+      <if test="privacy != null and privacy != ''"> and PRIVACY = #{privacy} </if>
+      <if test="borrowState != null and borrowState != ''"> and BORROW_STATE = #{borrowState} </if>
+      <if test="addTime != null and addTime != ''"> and ADD_TIME = #{addTime} </if>
+      <if test="deleteBook != null and deleteBook != ''"> and DELETE_BOOK = #{deleteBook} </if>
+    </where>
+    <choose>
+      <when test="sort != null and sort.trim() != ''">
+        order by ${sort} ${order}
+      </when>
+      <otherwise>
+        order by BOOK_ID desc
+      </otherwise>
+    </choose>
+    <if test="offset != null and limit != null">
+      limit #{offset}, #{limit}
+    </if>
+  </select>
+
+
+
+  <select id="listByState" resultType="java.lang.Integer">
+    SELECT
+    BORROW_ID
+    FROM r_user_book,r_book_user_borrow
+    <where>
+      r_user_book.BOOK_ID = r_book_user_borrow.BOOK_ID
+      <if test="bookId != null and bookId != ''"> and r_user_book.BOOK_ID = #{bookId} </if>
+      <if test="usrBorrowState != null and usrBorrowState != ''"> and USR_BORROW_STATE IN (1,2,3)</if>
+      <if test="ownerId != null and ownerId != ''"> and OWNER_ID = #{ownerId} </if>
+    </where>
+
+    <if test="offset != null and limit != null">
+      limit #{offset}, #{limit}
+    </if>
+  </select>
+
+
+
+
+
 
 </mapper>

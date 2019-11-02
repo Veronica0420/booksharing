@@ -7,5 +7,7 @@ import java.util.Map;
 
 public interface TBookCategoryService {
     rBookCategory findCatgbyIsbn(Map<String, Object> map);
-    List<rBookCategory> findbyIsbn(Map<String, Object> map);
+
+
+    List<rBookCategory> list(Map<String, Object> map);
 }

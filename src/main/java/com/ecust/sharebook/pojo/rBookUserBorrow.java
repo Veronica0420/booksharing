@@ -9,11 +9,13 @@ public class rBookUserBorrow {
 
     private Integer userId;
 
-    private Boolean usrBorrowState;
+    private Integer usrBorrowState;
 
     private Date borrowDateTime;
 
     private Date returnDateTime;
+
+    private Date borrowTime;
 
     public Integer getBorrowId() {
         return borrowId;
@@ -39,11 +41,11 @@ public class rBookUserBorrow {
         this.userId = userId;
     }
 
-    public Boolean getUsrBorrowState() {
+    public Integer getUsrBorrowState() {
         return usrBorrowState;
     }
 
-    public void setUsrBorrowState(Boolean usrBorrowState) {
+    public void setUsrBorrowState(Integer usrBorrowState) {
         this.usrBorrowState = usrBorrowState;
     }
 
@@ -61,5 +63,14 @@ public class rBookUserBorrow {
 
     public void setReturnDateTime(Date returnDateTime) {
         this.returnDateTime = returnDateTime;
+    }
+
+    public Date getBorrowTime() {
+        return borrowTime;
+    }
+
+
+    public void setBorrowTime(Date borrowTime) {
+        this.borrowTime = borrowTime;
     }
 }

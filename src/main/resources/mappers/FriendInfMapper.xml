@@ -7,6 +7,17 @@
     <result column="FID" property="fid" jdbcType="INTEGER" />
     <result column="ALIAS" property="alias" jdbcType="VARCHAR" />
   </resultMap>
+
+  <resultMap type="com.ecust.sharebook.pojo.util.friend.friendList" id="listResultMap">
+
+    <id column="FID" property="fid"/>
+    <result column="ALIAS" property="alias"/>
+    <result column="NICK_NAME" property="nickName"/>
+    <result column="AVATARUrl" property="avatarUrl"/>
+
+
+  </resultMap>
+
   <sql id="Base_Column_List" >
     FDRIEND_ID, UID, FID, ALIAS
   </sql>
@@ -79,4 +90,15 @@
       ALIAS = #{alias,jdbcType=VARCHAR}
     where FDRIEND_ID = #{fdriendId,jdbcType=INTEGER}
   </update>
+
+
+  <select id="getList" resultMap="listResultMap">
+    SELECT
+	  FID,ALIAS,NICK_NAME,AVATARUrl
+    FROM  friend_inf , user_inf
+    WHERE friend_inf.FID = user_inf.USER_ID
+    AND  friend_inf.UID = #{userId}
+
+	</select>
+
 </mapper>

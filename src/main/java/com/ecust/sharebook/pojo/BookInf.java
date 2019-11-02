@@ -1,5 +1,7 @@
 package com.ecust.sharebook.pojo;
 
+import java.util.List;
+
 public class BookInf {
     private String isbn;
 
@@ -20,6 +22,8 @@ public class BookInf {
     private String briefIntro;
 
     private String contents;
+
+    private List<CategoryInf> categoryInfList;
 
     public String getIsbn() {
         return isbn;
@@ -99,5 +103,13 @@ public class BookInf {
 
     public void setContents(String contents) {
         this.contents = contents == null ? null : contents.trim();
+    }
+
+    public List<CategoryInf> getCategoryInfList() {
+        return categoryInfList;
+    }
+
+    public void setCategoryInfList(List<CategoryInf> categoryInfList) {
+        this.categoryInfList = categoryInfList;
     }
 }

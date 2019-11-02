@@ -4,10 +4,13 @@
   <resultMap id="BaseResultMap" type="com.ecust.sharebook.pojo.rBookCategory" >
     <id column="B_CATG_ID" property="bCatgId" jdbcType="INTEGER" />
     <result column="ISBN" property="isbn" jdbcType="CHAR" />
-    <result column="CATG_ID" property="catgId" jdbcType="INTEGER" />
+    <result column="MCATG_ID" property="catgId" jdbcType="INTEGER" />
   </resultMap>
+
+
+
   <sql id="Base_Column_List" >
-    B_CATG_ID, ISBN, CATG_ID
+    B_CATG_ID, ISBN, MCATG_ID
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -23,7 +26,7 @@
     <selectKey resultType="java.lang.Integer" keyProperty="bCatgId" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into r_book_category (ISBN, CATG_ID)
+    insert into r_book_category (ISBN, MCATG_ID)
     values (#{isbn,jdbcType=CHAR}, #{catgId,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.ecust.sharebook.pojo.rBookCategory" >
@@ -36,7 +39,7 @@
         ISBN,
       </if>
       <if test="catgId != null" >
-        CATG_ID,
+        MCATG_ID,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -55,7 +58,7 @@
         ISBN = #{isbn,jdbcType=CHAR},
       </if>
       <if test="catgId != null" >
-        CATG_ID = #{catgId,jdbcType=INTEGER},
+        MCATG_ID = #{catgId,jdbcType=INTEGER},
       </if>
     </set>
     where B_CATG_ID = #{bCatgId,jdbcType=INTEGER}
@@ -63,19 +66,39 @@
   <update id="updateByPrimaryKey" parameterType="com.ecust.sharebook.pojo.rBookCategory" >
     update r_book_category
     set ISBN = #{isbn,jdbcType=CHAR},
-      CATG_ID = #{catgId,jdbcType=INTEGER}
+      MCATG_ID = #{catgId,jdbcType=INTEGER}
     where B_CATG_ID = #{bCatgId,jdbcType=INTEGER}
   </update>
 
   <select id="findCatgbyIsbn" resultType="com.ecust.sharebook.pojo.rBookCategory">
-    select `CATG_ID` from r_book_category
-    where ISBN = #{isbn} and CATG_ID = #{catgId}
+    select * from r_book_category
+    where ISBN = #{isbn} and MCATG_ID = #{catgId}
 
 </select>
 
-  <select id="findbyIsbn" resultType="com.ecust.sharebook.pojo.rBookCategory">
-    select `B_CATG_ID`, `ISBN`,`CATG_ID` from r_book_category
-    where ISBN = #{isbn}
 
-</select>
+
+  <select id="list" resultType="com.ecust.sharebook.pojo.rBookCategory">
+    select `B_CATG_ID`, `ISBN`, `MCATG_ID`
+    from r_book_category
+    <where>
+      <if test="bCatgId != null and bCatgId != ''"> and B_CATG_ID = #{bCatgId} </if>
+      <if test="isbn != null and isbn != ''"> and ISBN = #{isbn} </if>
+      <if test="catgId != null and catgId != ''"> and MCATG_ID = #{catgId} </if>
+    </where>
+    <choose>
+      <when test="sort != null and sort.trim() != ''">
+        order by ${sort} ${order}
+      </when>
+      <otherwise>
+        order by B_CATG_ID desc
+      </otherwise>
+    </choose>
+    <if test="offset != null and limit != null">
+      limit #{offset}, #{limit}
+    </if>
+  </select>
+
+
+
 </mapper>

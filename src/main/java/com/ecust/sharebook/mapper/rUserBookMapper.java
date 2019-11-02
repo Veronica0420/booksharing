@@ -1,13 +1,14 @@
 package com.ecust.sharebook.mapper;
 
-import com.ecust.sharebook.pojo.rUserBook;
-import org.apache.catalina.User;
 
-import java.util.Date;
+import com.ecust.sharebook.pojo.rUserBook;
+import com.ecust.sharebook.pojo.util.shelf.myShelf;
+
 import java.util.List;
 import java.util.Map;
 
 public interface rUserBookMapper {
+
     int deleteByPrimaryKey(Integer bookId);
 
     int insert(rUserBook record);
@@ -20,13 +21,45 @@ public interface rUserBookMapper {
 
     int updateByPrimaryKey(rUserBook record);
 
+
+
     //自定义
-    List<Map<String, Object>> list(Map<String, Object> map);
+    List<Map<String, Object>> list1(Map<String, Object> map);
 
 
     List<rUserBook>SelectByIsbn(Map<String, Object> map);
 
-    int updatePrivacy(Map<String, Object> map);
 
     int save(Map<String, Object> map);
+
+    /**
+     * shelf 加载
+     * **/
+    List<myShelf> findShelf(Map<String, Object> map);
+
+    /**
+     * othershelf 加载
+     * **/
+    List<myShelf> findOtherShelf(Map<String, Object> map);
+
+
+    /**
+     * shelf-list 加载
+     * **/
+    List<myShelf>  findShelfCateLog(Map<String, Object> map);
+
+    /**
+     * othershelf-list 加载
+     * **/
+    List<myShelf>  findOtherShelfCateLog(Map<String, Object> map);
+
+
+
+    List<rUserBook> list(Map<String, Object> map);
+
+
+    List<Integer> listByState(Map<String, Object> map);
+
+
+
 }

@@ -17,6 +17,10 @@ public class MessageInf {
 
     private Boolean borrowRes;
 
+    private Integer mType;
+
+    private Integer mBorrowId;
+
     public Integer getMessageId() {
         return messageId;
     }
@@ -71,5 +75,22 @@ public class MessageInf {
 
     public void setBorrowRes(Boolean borrowRes) {
         this.borrowRes = borrowRes;
+    }
+
+    public Integer getmType() {
+        return mType;
+    }
+
+    public void setmType(Integer mType) {
+        this.mType = mType;
+    }
+
+
+    public Integer getmBorrowId() {
+        return mBorrowId;
+    }
+
+    public void setmBorrowId(Integer mBorrowId) {
+        this.mBorrowId = mBorrowId;
     }
 }

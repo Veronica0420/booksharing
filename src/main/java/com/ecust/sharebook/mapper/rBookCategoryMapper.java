@@ -21,5 +21,8 @@ public interface rBookCategoryMapper {
     //自定义
     List<rBookCategory>  findCatgbyIsbn(Map<String, Object> map);
 
-    List<rBookCategory>findbyIsbn(Map<String, Object> map);
+
+    List<rBookCategory> list(Map<String, Object> map);
+
+
 }
