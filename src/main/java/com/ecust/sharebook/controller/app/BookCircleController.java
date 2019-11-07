@@ -118,18 +118,45 @@ public class BookCircleController {
 
 
     @ResponseBody
-    @GetMapping("/searchBookCircle")
-    public R searchBookCircle(@RequestParam Map<String,Object> params){
-        System.out.println("<--searchBookCircle  start----->");
+    @GetMapping("/searchBookCircleBName")
+    public R searchBookCircleBName(@RequestParam Map<String,Object> params){
+        System.out.println("<--searchBookCircle BName  start----->");
+        System.out.println("params:"+params);
+        String bName=new String();
+        List<BookCircleInf> searchBCInf=new ArrayList<>();
+        R r=new R();
+        try {
+            bName=params.get("bName").toString();
+            System.out.println("bcName========="+bName);
+            Map<String, Object> param = new HashMap<>();
+            param.put("bName",bName);
+            searchBCInf=tBookCircleService.seletbybName_bc(param);
+            param.clear();
+            r.put("searchBCInf",searchBCInf);
+            System.out.println("<--searchBookCircle  end----->");
+        }catch (Exception e){
+            e.printStackTrace();
+            return R.error();
+        }
+        return r;
+    }
+
+
+    @ResponseBody
+    @GetMapping("/searchBookCircleBCName")
+    public R searchBookCircleBCName(@RequestParam Map<String,Object> params){
+        System.out.println("<--searchBookCircle BCName start----->");
         System.out.println("params:"+params);
         String bcName=new String();
         List<BookCircleInf> searchBCInf=new ArrayList<>();
         R r=new R();
         try {
             bcName=params.get("bcName").toString();
+            System.out.println("bcName========="+bcName);
             Map<String, Object> param = new HashMap<>();
             param.put("bcName",bcName);
             searchBCInf=tBookCircleService.selectLikBCName(param);
+
             param.clear();
             r.put("searchBCInf",searchBCInf);
             System.out.println("<--searchBookCircle  end----->");

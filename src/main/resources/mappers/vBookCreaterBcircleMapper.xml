@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ecust.sharebook.mapper.vBookCreaterBcircleMapper" >
+    <resultMap id="BaseResultMap" type="com.ecust.sharebook.pojo.vBookCreaterBcircle" >
+        <id column="BOOK_ID" property="bookId" jdbcType="INTEGER" />
+        <id column="BOOK_CIRCLE_ID" property="bookCircleId" jdbcType="INTEGER" />
+        <result column="ISBN" property="isbn" jdbcType="CHAR" />
+        <result column="BOOK_NAME" property="bookName" jdbcType="VARCHAR"/>
+        <result column="OWNER_ID" property="ownerId" jdbcType="INTEGER" />
+        <collection property="list" javaType="ArrayList" column="{bookId = BOOK_ID,bookCircleId=BOOK_CIRCLE_ID}" select="getSubBaseResult"/>
+    </resultMap>
+    <sql id="Base_Column_List" >
+    BOOK_ID, BOOK_CIRCLE_ID,ISBN,BOOK_NAME, OWNER_ID
+  </sql>
+    <select id="getBaseResultKey"  resultMap="BaseResultMap">
+        SELECT BOOK_ID,BOOK_CIRCLE_ID FROM v_book_creater_bcircle
+ </select>
+
+    <select id="selectByPrimaryKey"  resultMap="BaseResultMap">
+        SELECT  <include refid="Base_Column_List" />
+        FROM v_book_creater_bcircle
+        WHERE BOOK_ID= #{bookId} AND BOOK_CIRCLE_ID = #{bookCircleId}
+  </select>
+
+    <select id="selectByBookName"  resultType="java.lang.Integer">
+        SELECT  BOOK_CIRCLE_ID
+        FROM v_book_creater_bcircle
+        WHERE BOOK_NAME LIKE CONCAT('%',#{bName},'%')
+    </select>
+
+    <delete id="deleteByPrimaryKey" >
+    delete from v_book_creater_bcircle
+    where BOOK_ID= #{bookId} AND BOOK_CIRCLE_ID = #{bookCircleId}
+  </delete>
+
+</mapper>
