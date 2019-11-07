@@ -1,6 +1,7 @@
 package com.ecust.sharebook.controller.app;
 
 import com.alibaba.fastjson.parser.SymbolTable;
+import com.ecust.sharebook.mapper.BookCircleInfMapper;
 import com.ecust.sharebook.pojo.*;
 import com.ecust.sharebook.service.TBookCircleService;
 import com.ecust.sharebook.service.TMemberService;
@@ -160,6 +161,59 @@ public class BookCircleController {
             param.clear();
             r.put("searchBCInf",searchBCInf);
             System.out.println("<--searchBookCircle  end----->");
+        }catch (Exception e){
+            e.printStackTrace();
+            return R.error();
+        }
+        return r;
+    }
+
+
+
+    @ResponseBody
+    @GetMapping("/bsecond/cMember")
+    public R cMember(@RequestParam Map<String,Object> params){
+        System.out.println("<--cMember start----->");
+        System.out.println("params:"+params);
+        String circleId=new String();
+        BookCircleInf bookCircleInf=new BookCircleInf();
+        R r=new R();
+        try {
+            circleId=params.get("circleId").toString();
+            System.out.println("circleId========="+circleId);
+            bookCircleInf= tBookCircleService.selectByPrimaryKey(Integer.parseInt(circleId));
+            r.put("bookCircleInf",bookCircleInf);
+            r.put("bcName",bookCircleInf.getBcName());
+            r.put("createTime",bookCircleInf.getEstablishTime());
+            r.put("intro",bookCircleInf.getIntro());
+            r.put("picPath",bookCircleInf.getCirclePicPath());
+            System.out.println("<--cMember end----->");
+        }catch (Exception e){
+            e.printStackTrace();
+            return R.error();
+        }
+        return r;
+    }
+
+
+    @ResponseBody
+    @GetMapping("/bsecond/otherCircle")
+    public R otherCircle(@RequestParam Map<String,Object> params){
+        System.out.println("<--otherCircle start----->");
+        System.out.println("params:"+params);
+        String bcName=new String();
+        List<BookCircleInf> searchBCInf=new ArrayList<>();
+        R r=new R();
+        try {
+            bcName=params.get("bcName").toString();
+            System.out.println("bcName========="+bcName);
+            Map<String, Object> param = new HashMap<>();
+            param.put("bcName",bcName);
+            searchBCInf=tBookCircleService.selectLikBCName(param);
+
+            param.clear();
+            r.put("searchBCInf",searchBCInf);
+            System.out.println("<--otherCircle end----->");
         }catch (Exception e){
             e.printStackTrace();
             return R.error();

@@ -31,6 +31,12 @@ public class TBookCircleServiceIml implements TBookCircleService {
     }
 
     @Override
+    public BookCircleInf selectByPrimaryKey(Integer circleId){
+        BookCircleInf result=tBookCircleInfMapper.selectByPrimaryKey(circleId);
+        return result;
+    }
+
+    @Override
     public List<BookCircleInf> selectLikBCName(Map<String, Object> param) {
         List<BookCircleInf> list = tBookCircleInfMapper.selectLikebcName(param);
         if (list != null && list.size() > 0) {
