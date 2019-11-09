@@ -3,6 +3,7 @@ package com.ecust.sharebook.controller.app;
 import com.alibaba.fastjson.parser.SymbolTable;
 import com.ecust.sharebook.mapper.BookCircleInfMapper;
 import com.ecust.sharebook.pojo.*;
+import com.ecust.sharebook.service.TBcircleMemberService;
 import com.ecust.sharebook.service.TBookCircleService;
 import com.ecust.sharebook.service.TMemberService;
 import com.ecust.sharebook.utils.Jwt.JwtUtil;
@@ -32,6 +33,8 @@ public class BookCircleController {
     private TBookCircleService tBookCircleService;
     @Autowired
     private JwtUtil jwtUtil;
+    @Autowired
+    private TBcircleMemberService tBcircleMemberService;
 
     @ResponseBody
     @GetMapping("/bookCircle")
@@ -139,6 +142,7 @@ public class BookCircleController {
             e.printStackTrace();
             return R.error();
         }
+
         return r;
     }
 
@@ -192,6 +196,33 @@ public class BookCircleController {
             e.printStackTrace();
             return R.error();
         }
+
+
+        Map<String, Object> result = new HashMap<>();
+        Map<String, Object> param = new HashMap<>();
+        Integer bookCircleId = Integer.valueOf(circleId);
+        param.put("bookCircleId", bookCircleId);
+        List<rBcircleMember> mlist = new ArrayList<>();
+
+        try {
+            mlist = tBcircleMemberService.list(param);
+            for (rBcircleMember rBcircleMemberTemp : mlist) {
+                UserInf userInf = new UserInf();
+                param.clear();
+                param.put("userId",rBcircleMemberTemp.getMemberId());
+                userInf = tMemberService.listPublic(param).get(0);
+                rBcircleMemberTemp.setUserInf(userInf);
+
+            }
+
+            r.put("data", mlist);
+            result.put("is_exist", 1);
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.put("is_exist", 0);
+        }
+
+        r.put("status", result);
         return r;
     }
 

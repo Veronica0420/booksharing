@@ -109,5 +109,41 @@ public class TBookCircleServiceIml implements TBookCircleService {
         return null;
     }
 
+    /**
+     * 根据图书圈名得到圈内成员所有公开书籍列表
+     */
+    @Override
+    public List<vBookMemberBcircle> selectbyBCId(Map<String, Object> params){
+        System.out.println("params:"+params);
+        List<vBookMemberBcircle> list1=new ArrayList<>();
+        List<vBookCreaterBcircle> list2=new ArrayList<>();
+        list1=tvBookMemberBcircleMapper.selectByBCId(params);
+        list2=tvBookCreaterBcircleMapper.selectByBCId(params);
+        System.out.println("params:"+list1.size());
+        System.out.println("params:"+list2.size());
+        //把vBookCreaterBcircle转为vBookMemberBcircle
+        List<vBookMemberBcircle> listTmp=new ArrayList<>();
+        for(int i=0;i<list2.size();i++){
+            vBookMemberBcircle tmp=new vBookMemberBcircle();
+            tmp.setBookCircleId(list2.get(i).getBookCircleId());
+            tmp.setBookId(list2.get(i).getBookId());
+            tmp.setBookName(list2.get(i).getBookName());
+            tmp.setIsbn(list2.get(i).getIsbn());
+            tmp.setOwnerId(list2.get(i).getOwnerId());
+            tmp.setPrivacy(list2.get(i).getPrivacy());
+            listTmp.add(tmp);
+        }
+
+        list1.addAll(listTmp);
+
+        for(int i=0;i<list1.size();i++){
+            System.out.println("list"+i+"="+list1.get(i).getBookName());
+        }
+        if(list1!=null&& list1.size()>0)
+            return list1;
+        else
+            return null;
+    }
+
 
 }

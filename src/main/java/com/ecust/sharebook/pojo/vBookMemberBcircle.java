@@ -2,10 +2,11 @@ package com.ecust.sharebook.pojo;
 
 public class vBookMemberBcircle {
     private  Integer bookId;
-    private  Integer isbn;
-    private  String booName;
+    private  String isbn;
+    private  String bookName;
     private  Integer ownerId;
     private  Integer bookCircleId;
+    private  Integer privacy;
 
     public Integer getBookId() {
         return bookId;
@@ -15,20 +16,20 @@ public class vBookMemberBcircle {
         this.bookId = bookId;
     }
 
-    public Integer getIsbn() {
+    public String getIsbn() {
         return isbn;
     }
 
-    public void setIsbn(Integer isbn) {
+    public void setIsbn(String isbn) {
         this.isbn = isbn;
     }
 
-    public String getBooName() {
-        return booName;
+    public String getBookName() {
+        return bookName;
     }
 
-    public void setBooName(String booName) {
-        this.booName = booName;
+    public void setBookName(String bookName) {
+        this.bookName = bookName;
     }
 
     public Integer getOwnerId() {
@@ -45,5 +46,12 @@ public class vBookMemberBcircle {
 
     public void setBookCircleId(Integer bookCircleId) {
         this.bookCircleId = bookCircleId;
+    }
+    public Integer getPrivacy() {
+        return privacy;
+    }
+
+    public void setPrivacy(Integer privacy) {
+        this.privacy = privacy;
     }
 }

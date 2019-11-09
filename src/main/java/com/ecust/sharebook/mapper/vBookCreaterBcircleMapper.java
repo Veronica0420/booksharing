@@ -13,6 +13,8 @@ public interface vBookCreaterBcircleMapper {
 
     vBookCreaterBcircle selectByPrimaryKey(Map<String, Object> map);
 
-    //根据书名查找有此书的图书圈  ——Sijar
+    //根据书名查找有此书（属性公开）的图书圈  ——Sijar
     List<Integer> selectByBookName(Map<String, Object> map);
+    //根据图书圈名查找书圈创建者的所有公开书籍 ——Sijar
+    List<vBookCreaterBcircle> selectByBCId(Map<String, Object> map);
 }
