@@ -101,4 +101,30 @@
       BOOK_CIRCLE_ID = #{bookCircleId,jdbcType=INTEGER}
     where POST_ID = #{postId,jdbcType=INTEGER}
   </update>
+
+
+
+
+  <select id="list" resultType="com.ecust.sharebook.pojo.PostInf">
+    SELECT
+    POST_ID, PUBLISHER_ID, PUB_TIME, TITLE, CONTENT, BOOK_CIRCLE_ID
+    from post_inf
+    <where>
+      <if test="postId != null and postId != ''"> and POST_ID = #{postId} </if>
+      <if test="publisherId != null and publisherId != ''"> and PUBLISHER_ID = #{publisherId} </if>
+      <if test="bookCircleId != null and bookCircleId != ''"> and BOOK_CIRCLE_ID = #{bookCircleId} </if>
+    </where>
+    <choose>
+      <when test="sort != null and sort.trim() != ''">
+        order by ${sort} ${order}
+      </when>
+      <otherwise>
+        order by POST_ID desc
+      </otherwise>
+    </choose>
+    <if test="offset != null and limit != null">
+      limit #{offset}, #{limit}
+    </if>
+  </select>
+
 </mapper>

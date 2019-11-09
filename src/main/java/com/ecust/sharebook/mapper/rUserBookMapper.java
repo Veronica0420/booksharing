@@ -1,6 +1,7 @@
 package com.ecust.sharebook.mapper;
 
 
+import com.ecust.sharebook.pojo.MessageInf;
 import com.ecust.sharebook.pojo.rUserBook;
 import com.ecust.sharebook.pojo.util.shelf.myShelf;
 
@@ -58,7 +59,15 @@ public interface rUserBookMapper {
     List<rUserBook> list(Map<String, Object> map);
 
 
-    List<Integer> listByState(Map<String, Object> map);
+    /**
+     * 查询申请
+     * **/
+    List<MessageInf> listByState1(Map<String, Object> map);
+
+    /**
+     * 查询归还
+     * **/
+    List<MessageInf> listByState2(Map<String, Object> map);
 
 
 

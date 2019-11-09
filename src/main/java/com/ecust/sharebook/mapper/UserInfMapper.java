@@ -29,4 +29,7 @@ public interface UserInfMapper {
     int updateSkeyByOpid(Map<String, Object> map);
 
     List<UserInf> list(Map<String, Object> map);
+
+    List<UserInf> listPublic(Map<String, Object> map);
+
 }

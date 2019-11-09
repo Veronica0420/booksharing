@@ -2,7 +2,7 @@ package com.ecust.sharebook.pojo;
 
 import java.util.Date;
 
-public class CommenInf {
+public class CommentInf {
     private Integer commentId;
 
     private Integer postId;
@@ -12,6 +12,8 @@ public class CommenInf {
     private String content;
 
     private Date comtTime;
+
+    private  UserInf userInf;
 
     public Integer getCommentId() {
         return commentId;
@@ -51,5 +53,13 @@ public class CommenInf {
 
     public void setComtTime(Date comtTime) {
         this.comtTime = comtTime;
+    }
+
+    public UserInf getUserInf() {
+        return userInf;
+    }
+
+    public void setUserInf(UserInf userInf) {
+        this.userInf = userInf;
     }
 }

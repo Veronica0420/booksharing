@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.ecust.sharebook.mapper.CommenInfMapper" >
-  <resultMap id="BaseResultMap" type="com.ecust.sharebook.pojo.CommenInf" >
+<mapper namespace="com.ecust.sharebook.mapper.CommentInfMapper" >
+  <resultMap id="BaseResultMap" type="com.ecust.sharebook.pojo.CommentInf" >
     <id column="COMMENT_ID" property="commentId" jdbcType="INTEGER" />
     <result column="POST_ID" property="postId" jdbcType="INTEGER" />
     <result column="USER_ID" property="userId" jdbcType="INTEGER" />
@@ -21,7 +21,7 @@
     delete from comment_inf
     where COMMENT_ID = #{commentId,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.ecust.sharebook.pojo.CommenInf" >
+  <insert id="insert" parameterType="com.ecust.sharebook.pojo.CommentInf" >
     <selectKey resultType="java.lang.Integer" keyProperty="commentId" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -30,7 +30,7 @@
     values (#{postId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{content,jdbcType=VARCHAR}, 
       #{comtTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.ecust.sharebook.pojo.CommenInf" >
+  <insert id="insertSelective" parameterType="com.ecust.sharebook.pojo.CommentInf" >
     <selectKey resultType="java.lang.Integer" keyProperty="commentId" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -64,7 +64,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.ecust.sharebook.pojo.CommenInf" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.ecust.sharebook.pojo.CommentInf" >
     update comment_inf
     <set >
       <if test="postId != null" >
@@ -82,7 +82,7 @@
     </set>
     where COMMENT_ID = #{commentId,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.ecust.sharebook.pojo.CommenInf" >
+  <update id="updateByPrimaryKey" parameterType="com.ecust.sharebook.pojo.CommentInf" >
     update comment_inf
     set POST_ID = #{postId,jdbcType=INTEGER},
       USER_ID = #{userId,jdbcType=INTEGER},
@@ -90,4 +90,27 @@
       COMT_TIME = #{comtTime,jdbcType=TIMESTAMP}
     where COMMENT_ID = #{commentId,jdbcType=INTEGER}
   </update>
+
+
+  <select id="list" resultType="com.ecust.sharebook.pojo.CommentInf">
+    SELECT
+    COMMENT_ID, POST_ID, USER_ID, CONTENT, COMT_TIME
+    from comment_inf
+    <where>
+      <if test="commentId != null and commentId != ''"> and COMMENT_ID = #{commentId} </if>
+      <if test="postId != null and postId != ''"> and POST_ID = #{postId} </if>
+      <if test="userId != null and userId != ''"> and USER_ID = #{userId} </if>
+    </where>
+    <choose>
+      <when test="sort != null and sort.trim() != ''">
+        order by ${sort} ${order}
+      </when>
+      <otherwise>
+        order by COMMENT_ID desc
+      </otherwise>
+    </choose>
+    <if test="offset != null and limit != null">
+      limit #{offset}, #{limit}
+    </if>
+  </select>
 </mapper>

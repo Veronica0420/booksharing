@@ -1,6 +1,7 @@
 package com.ecust.sharebook.service.impl;
 
 import com.ecust.sharebook.mapper.rUserBookMapper;
+import com.ecust.sharebook.pojo.MessageInf;
 import com.ecust.sharebook.pojo.rUserBook;
 import com.ecust.sharebook.pojo.util.shelf.myShelf;
 import com.ecust.sharebook.service.TUserBookService;
@@ -116,11 +117,23 @@ public class TUserBookServiceIml implements TUserBookService {
     }
 
     @Override
-    public List<Integer> listByState(Map<String, Object> map) {
-        List<Integer> list = trUserBookMapper.listByState(map);
+    public List<MessageInf> listByState1(Map<String, Object> map) {
+        List<MessageInf> list = trUserBookMapper.listByState1(map);
+        if(list!=null &&list.size()!=0){
+            return list;
+        }
+        return  null;
+
+    }
+
+    @Override
+    public List<MessageInf> listByState2(Map<String, Object> map) {
+        List<MessageInf> list = trUserBookMapper.listByState2(map);
         if(list!=null &&list.size()!=0){
             return list;
         }
         return  null;
     }
+
+
 }

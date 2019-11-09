@@ -13,29 +13,14 @@ public class messageBookId {
 
     private String avatarUrl;
 
-    private List<MessageInf> messageInfs; // 可选
 
 
-    private String bookName;
+    private MessageInf messageInfs;
 
 
-    private String picPath;
 
 
-    private   MessageInf  currentMessageInf;
 
-
-    public messageBookId(Integer userId, String nickName, String avatarUrl, MessageInf  currentMessageInf){
-        this.setAvatarUrl(avatarUrl);
-        this.setCurrentMessageInf(currentMessageInf);
-        this.setNickName(nickName);
-        this.setUserId(userId);
-
-    }
-
-    public messageBookId(){
-
-    }
 
     public Integer getUserId() {
         return userId;
@@ -61,19 +46,24 @@ public class messageBookId {
         this.avatarUrl = avatarUrl;
     }
 
-    public List<MessageInf> getMessageInfs() {
+
+    public  void setOther(Integer userId,String nickName,String avatarUrl, MessageInf messageInfs){
+        this.setUserId(userId);
+        this.setNickName(nickName);
+        this.setAvatarUrl(avatarUrl);
+        this.setMessageInfs(messageInfs);
+
+    }
+
+
+
+    public MessageInf getMessageInfs() {
         return messageInfs;
     }
 
-    public void setMessageInfs(List<MessageInf> messageInfs) {
+    public void setMessageInfs(MessageInf messageInfs) {
         this.messageInfs = messageInfs;
     }
 
-    public MessageInf getCurrentMessageInf() {
-        return currentMessageInf;
-    }
 
-    public void setCurrentMessageInf(MessageInf currentMessageInf) {
-        this.currentMessageInf = currentMessageInf;
-    }
 }

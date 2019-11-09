@@ -51,7 +51,7 @@ public class friendController {
             param.put("openId",openId);
             UserInf userInf=tMemberService.list(param).get(0);
             param.put("userId",userInf.getUserId());
-            System.out.println(param);
+
 
                List<friendList> friendLists = tFriendService.getList(param);
 

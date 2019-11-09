@@ -15,6 +15,8 @@ public class PostInf {
 
     private Integer bookCircleId;
 
+    private  UserInf userInf;
+
     public Integer getPostId() {
         return postId;
     }
@@ -61,5 +63,13 @@ public class PostInf {
 
     public void setBookCircleId(Integer bookCircleId) {
         this.bookCircleId = bookCircleId;
+    }
+
+    public UserInf getUserInf() {
+        return userInf;
+    }
+
+    public void setUserInf(UserInf userInf) {
+        this.userInf = userInf;
     }
 }
