@@ -53,13 +53,13 @@ public class BookCircleController {
                 UserInf seMember = tMemberService.selectOne(param);
                 param.clear();
                 if (seMember != null) {
-                    param.put("createrId", seMember.getUserId());
+                    param.put("createrId",seMember.getUserId());
                     param.put("memberId",seMember.getUserId());
                     System.out.println("----------USER_ID="+param);
                     //查询所有我加入的图书圈
                     my_book_circle_list = tBookCircleService.selectfromMemberID(param);
                     //查询所有我未加入的图书圈
-                    other_book_circle_list=tBookCircleService.selectbyNotCreaterIDMemberID(param);
+                    other_book_circle_list=tBookCircleService.selectbyNotMember(param);
                     param.clear();
                 }
             }
@@ -97,13 +97,21 @@ public class BookCircleController {
                 UserInf seMember = tMemberService.selectOne(param);
                 param.clear();
                 if (seMember != null) {
-                    param.put("createrId", seMember.getUserId());
-                    param.put("bcName",bcName);
-                    param.put("intro",intro);
-                    param.put("establishTime",dateFormat.format(establishTime));
-                    System.out.println("param::::::"+param);
-                    r.put("result",tBookCircleService.insert(param));
-                    param.clear();
+                    BookCircleInf bookCircleInf=new BookCircleInf();
+                    bookCircleInf.setCreaterId(seMember.getUserId());
+                    bookCircleInf.setBcName(bcName);
+                    bookCircleInf.setIntro(intro);
+                    bookCircleInf.setEstablishTime(establishTime);
+
+                    int insertid=tBookCircleService.insert(bookCircleInf);
+                    r.put("result",insertid);
+                    System.out.println("bookCircleInf.getBookCircleId()="+bookCircleInf.getBookCircleId());
+                    Map<String, Object> param2 = new HashMap<>();
+                    param2.put("bookCircleId",bookCircleInf.getBookCircleId());
+                    param2.put("memberId",seMember.getUserId());
+                    param2.put("ifCreater",1);
+                    r.put("resultMember",tBcircleMemberService.insertmap(param2));
+                    param2.clear();
                 }
             }
 

@@ -18,6 +18,7 @@ public interface TBcircleMemberService {
     List<rBcircleMember> list(Map<String, Object> map);
 
     int insert(rBcircleMember record);
+    int insertmap(Map<String, Object> map);
 
     int insertSelective(rBcircleMember record);
 

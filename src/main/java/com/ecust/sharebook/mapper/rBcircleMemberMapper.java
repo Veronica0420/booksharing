@@ -13,6 +13,8 @@ public interface rBcircleMemberMapper {
 
     int insert(rBcircleMember record);
 
+    int insertmap(Map<String, Object> map);
+
     int insertSelective(rBcircleMember record);
 
     rBcircleMember selectByPrimaryKey(Integer bcMemId);

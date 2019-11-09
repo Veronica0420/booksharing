@@ -2,6 +2,7 @@ package com.ecust.sharebook.service.impl;
 
 
 import com.ecust.sharebook.mapper.UserInfMapper;
+import com.ecust.sharebook.mapper.rBcircleMemberMapper;
 import com.ecust.sharebook.pojo.UserInf;
 import com.ecust.sharebook.service.TMemberService;
 import org.apache.catalina.User;
@@ -17,7 +18,6 @@ import java.util.Map;
 public class TMemberServiceImpl implements TMemberService {
 	@Autowired
 	private UserInfMapper userInfMapper;
-
 	@Override
 	public UserInf get(int id){
 		return userInfMapper.get(id);

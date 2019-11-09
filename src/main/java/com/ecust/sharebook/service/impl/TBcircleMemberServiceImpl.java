@@ -46,6 +46,11 @@ public class TBcircleMemberServiceImpl  implements TBcircleMemberService {
     }
 
     @Override
+    public int insertmap(Map<String, Object> map) {
+        return tBcircleMemberMapper.insertmap(map);
+    }
+
+    @Override
     public int insertSelective(rBcircleMember record) {
         return tBcircleMemberMapper.insertSelective(record);
     }
