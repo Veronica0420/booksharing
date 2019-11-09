@@ -1,7 +1,5 @@
 package com.ecust.sharebook.controller.app;
 
-import com.alibaba.fastjson.parser.SymbolTable;
-import com.ecust.sharebook.mapper.BookCircleInfMapper;
 import com.ecust.sharebook.pojo.*;
 import com.ecust.sharebook.service.TBcircleMemberService;
 import com.ecust.sharebook.service.TBookCircleService;
@@ -15,8 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -60,8 +56,8 @@ public class BookCircleController {
                     param.put("createrId", seMember.getUserId());
                     param.put("memberId",seMember.getUserId());
                     System.out.println("----------USER_ID="+param);
-                    //查询所有我创建的图书圈
-                    my_book_circle_list = tBookCircleService.selectbyCreaterID(param);
+                    //查询所有我加入的图书圈
+                    my_book_circle_list = tBookCircleService.selectfromMemberID(param);
                     //查询所有我未加入的图书圈
                     other_book_circle_list=tBookCircleService.selectbyNotCreaterIDMemberID(param);
                     param.clear();
