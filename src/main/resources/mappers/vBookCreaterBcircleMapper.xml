@@ -4,13 +4,13 @@
     <resultMap id="BaseResultMap" type="com.ecust.sharebook.pojo.vBookCreaterBcircle" >
         <id column="BOOK_ID" property="bookId" jdbcType="INTEGER" />
         <id column="BOOK_CIRCLE_ID" property="bookCircleId" jdbcType="INTEGER" />
+        <result column="PRIVACY" property="privacy" jdbcType="INTEGER" />
         <result column="ISBN" property="isbn" jdbcType="CHAR" />
         <result column="BOOK_NAME" property="bookName" jdbcType="VARCHAR"/>
         <result column="OWNER_ID" property="ownerId" jdbcType="INTEGER" />
-        <collection property="list" javaType="ArrayList" column="{bookId = BOOK_ID,bookCircleId=BOOK_CIRCLE_ID}" select="getSubBaseResult"/>
     </resultMap>
     <sql id="Base_Column_List" >
-    BOOK_ID, BOOK_CIRCLE_ID,ISBN,BOOK_NAME, OWNER_ID
+    BOOK_ID, BOOK_CIRCLE_ID,ISBN,BOOK_NAME, OWNER_ID,PRIVACY
   </sql>
     <select id="getBaseResultKey"  resultMap="BaseResultMap">
         SELECT BOOK_ID,BOOK_CIRCLE_ID FROM v_book_creater_bcircle
@@ -25,7 +25,13 @@
     <select id="selectByBookName"  resultType="java.lang.Integer">
         SELECT  BOOK_CIRCLE_ID
         FROM v_book_creater_bcircle
-        WHERE BOOK_NAME LIKE CONCAT('%',#{bName},'%')
+        WHERE BOOK_NAME LIKE CONCAT('%',#{bName},'%') AND PRIVACY=0
+    </select>
+
+    <select id="selectByBCId"  resultMap="BaseResultMap">
+        SELECT  *
+        FROM v_book_creater_bcircle
+        WHERE BOOK_CIRCLE_ID =#{bookCircleId} AND PRIVACY=0
     </select>
 
     <delete id="deleteByPrimaryKey" >
