@@ -153,6 +153,7 @@ public class BookCircleController {
 
     @ResponseBody
     @GetMapping("/searchBookCircleBCName")
+
     public R searchBookCircleBCName(@RequestParam Map<String,Object> params){
         System.out.println("<--searchBookCircle BCName start----->");
         System.out.println("params:"+params);
