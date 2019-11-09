@@ -8,7 +8,7 @@
     <result column="CONTENT" property="content" jdbcType="VARCHAR" />
     <result column="DATE_TIME" property="dateTime" jdbcType="TIMESTAMP" />
     <result column="REASON" property="reason" jdbcType="VARCHAR" />
-    <result column="BORROW_RES" property="borrowRes" jdbcType="BIT" />
+    <result column="BORROW_RES" property="borrowRes" jdbcType="INTEGER" />
     <result column="M_TYPE" property="mType" jdbcType="INTEGER" />
     <result column="M_BORROW_ID" property="mBorrowId" jdbcType="INTEGER" />
 
@@ -17,7 +17,7 @@
     MESSAGE_ID, SENDER_ID, RECEIVER_ID, CONTENT, DATE_TIME, REASON, BORROW_RES,M_TYPE,M_BORROW_ID
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
+    select
     <include refid="Base_Column_List" />
     from message_inf
     where MESSAGE_ID = #{messageId,jdbcType=INTEGER}
@@ -30,11 +30,11 @@
     <selectKey resultType="java.lang.Integer" keyProperty="messageId" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into message_inf (SENDER_ID, RECEIVER_ID, CONTENT, 
+    insert into message_inf (SENDER_ID, RECEIVER_ID, CONTENT,
       DATE_TIME, REASON, BORROW_RES,M_TYPE,M_BORROW_ID
       )
-    values (#{senderId,jdbcType=INTEGER}, #{receiverId,jdbcType=INTEGER}, #{content,jdbcType=VARCHAR}, 
-      #{dateTime,jdbcType=TIMESTAMP}, #{reason,jdbcType=VARCHAR}, #{borrowRes,jdbcType=BIT}, #{mType,jdbcType=INTEGER},
+    values (#{senderId,jdbcType=INTEGER}, #{receiverId,jdbcType=INTEGER}, #{content,jdbcType=VARCHAR},
+      #{dateTime,jdbcType=TIMESTAMP}, #{reason,jdbcType=VARCHAR}, #{borrowRes,jdbcType=INTEGER}, #{mType,jdbcType=INTEGER},
      #{mBorrowId,jdbcType=INTEGER}
       )
   </insert>
@@ -87,7 +87,7 @@
         #{reason,jdbcType=VARCHAR},
       </if>
       <if test="borrowRes != null" >
-        #{borrowRes,jdbcType=BIT},
+        #{borrowRes,jdbcType=INTEGER},
       </if>
       <if test="mType != null" >
          #{mType,jdbcType=INTEGER},
@@ -117,7 +117,7 @@
         REASON = #{reason,jdbcType=VARCHAR},
       </if>
       <if test="borrowRes != null" >
-        BORROW_RES = #{borrowRes,jdbcType=BIT},
+        BORROW_RES = #{borrowRes,jdbcType=INTEGER},
       </if>
       <if test="mType != null" >
         M_TYPE = #{mType,jdbcType=INTEGER},
@@ -136,7 +136,7 @@
       CONTENT = #{content,jdbcType=VARCHAR},
       DATE_TIME = #{dateTime,jdbcType=TIMESTAMP},
       REASON = #{reason,jdbcType=VARCHAR},
-      BORROW_RES = #{borrowRes,jdbcType=BIT},
+      BORROW_RES = #{borrowRes,jdbcType=INTEGER},
       M_TYPE = #{mType,jdbcType=INTEGER},
        M_BORROW_ID = #{mBorrowId,jdbcType=INTEGER}
     where MESSAGE_ID = #{messageId,jdbcType=INTEGER}
@@ -150,7 +150,7 @@
 
     from message_inf
     <where>
-      <if test="userId != null and userId != ''"> and MESSAGE_ID = #{userId} </if>
+      <if test="messageId != null and messageId != ''"> and MESSAGE_ID = #{messageId} </if>
       <if test="senderId != null and senderId != ''"> and SENDER_ID = #{senderId} </if>
       <if test="receiverId != null and receiverId != ''"> and RECEIVER_ID = #{receiverId} </if>
       <if test="content != null and content != ''"> and CONTENT = #{content} </if>
@@ -172,5 +172,9 @@
       limit #{offset}, #{limit}
     </if>
   </select>
+
+
+
+
 
 </mapper>

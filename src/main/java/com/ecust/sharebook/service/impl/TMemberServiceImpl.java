@@ -65,5 +65,15 @@ public class TMemberServiceImpl implements TMemberService {
 		return  null;
 	}
 
+	@Override
+	public List<UserInf> listPublic(Map<String, Object> map) {
+
+		List<UserInf> list = userInfMapper.listPublic(map);
+		if(list!=null && list.size()!=0){
+			return  list;
+		}
+		return  null;
+	}
+
 
 }

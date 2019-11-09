@@ -33,7 +33,7 @@
     values (#{bookId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{usrBorrowState,jdbcType=INTEGER},
     #{borrowDateTime,jdbcType=TIMESTAMP}, #{returnDateTime,jdbcType=TIMESTAMP},#{BORROW_TIME,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.ecust.sharebook.pojo.rBookUserBorrow" >
+  <insert id="insertSelective" parameterType="com.ecust.sharebook.pojo.rBookUserBorrow">
     <selectKey resultType="java.lang.Integer" keyProperty="borrowId" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>

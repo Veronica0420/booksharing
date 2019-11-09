@@ -15,7 +15,7 @@ public class MessageInf {
 
     private String reason;
 
-    private Boolean borrowRes;
+    private Integer borrowRes;
 
     private Integer mType;
 
@@ -69,11 +69,11 @@ public class MessageInf {
         this.reason = reason == null ? null : reason.trim();
     }
 
-    public Boolean getBorrowRes() {
+    public Integer getBorrowRes() {
         return borrowRes;
     }
 
-    public void setBorrowRes(Boolean borrowRes) {
+    public void setBorrowRes(Integer borrowRes) {
         this.borrowRes = borrowRes;
     }
 

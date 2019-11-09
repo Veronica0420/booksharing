@@ -14,5 +14,8 @@ public interface TBookService {
 
     public List<BookInf> findbyIsbn(Map<String, Object> map);
 
+    BookInf selectByPrimaryKey(String isbn);
+
+
 
 }

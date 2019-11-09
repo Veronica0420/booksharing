@@ -44,5 +44,10 @@ public class TBookServiceIml implements TBookService {
         return  null;
     }
 
+    @Override
+    public BookInf selectByPrimaryKey(String isbn) {
+        return tBookInfMapper.selectByPrimaryKey(isbn);
+    }
+
 
 }

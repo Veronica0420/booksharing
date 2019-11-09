@@ -2,6 +2,9 @@ package com.ecust.sharebook.mapper;
 
 import com.ecust.sharebook.pojo.PostInf;
 
+import java.util.List;
+import java.util.Map;
+
 public interface PostInfMapper {
     int deleteByPrimaryKey(Integer postId);
 
@@ -14,4 +17,6 @@ public interface PostInfMapper {
     int updateByPrimaryKeySelective(PostInf record);
 
     int updateByPrimaryKey(PostInf record);
+
+    List<PostInf> list(Map<String, Object> map);
 }

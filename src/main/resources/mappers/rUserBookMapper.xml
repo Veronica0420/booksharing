@@ -25,12 +25,12 @@
   </resultMap>
 
 
+
   <resultMap type="com.ecust.sharebook.pojo.util.shelf.myShelf" id="otherShelfResultMap">
     <id column="ISBN" property="isbn"/>
     <collection property="myShelfLists" ofType="com.ecust.sharebook.pojo.util.shelf.myShelfList">
       <id column="BOOK_ID" property="bookId"/>
       <result column="ADD_TIME" property="addTime"/>
-
     </collection>
   </resultMap>
 
@@ -261,17 +261,27 @@
 
 
 
-  <select id="listByState" resultType="java.lang.Integer">
-    SELECT
-    BORROW_ID
-    FROM r_user_book,r_book_user_borrow
-    <where>
-      r_user_book.BOOK_ID = r_book_user_borrow.BOOK_ID
-      <if test="bookId != null and bookId != ''"> and r_user_book.BOOK_ID = #{bookId} </if>
-      <if test="usrBorrowState != null and usrBorrowState != ''"> and USR_BORROW_STATE IN (1,2,3)</if>
-      <if test="ownerId != null and ownerId != ''"> and OWNER_ID = #{ownerId} </if>
-    </where>
 
+  <select id="listByState1" resultType="com.ecust.sharebook.pojo.MessageInf">
+    SELECT
+    MESSAGE_ID, SENDER_ID, RECEIVER_ID, CONTENT, DATE_TIME, REASON, BORROW_RES,M_TYPE,M_BORROW_ID
+    FROM   r_book_user_borrow , message_inf
+    WHERE r_book_user_borrow.BORROW_ID = message_inf.M_BORROW_ID
+    AND r_book_user_borrow.USR_BORROW_STATE = 1
+    AND  r_book_user_borrow.BOOK_ID = #{bookId}
+    <if test="offset != null and limit != null">
+      limit #{offset}, #{limit}
+    </if>
+  </select>
+
+
+  <select id="listByState2" resultType="com.ecust.sharebook.pojo.MessageInf">
+    SELECT
+    MESSAGE_ID, SENDER_ID, RECEIVER_ID, CONTENT, DATE_TIME, REASON, BORROW_RES,M_TYPE,M_BORROW_ID
+    FROM   r_book_user_borrow , message_inf
+    WHERE r_book_user_borrow.BORROW_ID = message_inf.M_BORROW_ID
+    AND r_book_user_borrow.USR_BORROW_STATE IN(2,3)
+    AND  r_book_user_borrow.BOOK_ID = #{bookId}
     <if test="offset != null and limit != null">
       limit #{offset}, #{limit}
     </if>

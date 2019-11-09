@@ -2,6 +2,7 @@ package com.ecust.sharebook.controller.app;
 
 
 import com.ecust.sharebook.pojo.*;
+import com.ecust.sharebook.pojo.util.chat.applyMessage;
 import com.ecust.sharebook.pojo.util.chat.messageBookId;
 import com.ecust.sharebook.service.*;
 import com.ecust.sharebook.utils.Jwt.JwtUtil;
@@ -13,10 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Controller
 @RequestMapping("/small")
@@ -35,6 +34,8 @@ public class chatController {
 
     @Autowired
     private TBookUserBorrowService tBookUserBorrowService;
+    @Autowired
+    private optService toptService;
 
 
 
@@ -63,6 +64,7 @@ public class chatController {
             Map<String, Object> status = new HashMap<>();
             Map<String, Object> userInfos = new HashMap<>();  //自己的信息
             Map<String, Object> fuserInfos = new HashMap<>();
+
             if(mode.equals("oself")){
 
                 try{
@@ -96,8 +98,6 @@ public class chatController {
                             if(bookInfTemp2!=null){
                                 status.put("is_exist",2); //成功查阅到书籍信息
 
-
-
                             }else status.put("is_exist",1); //查阅到书籍信息失败
                         } catch (Exception e){
                             System.out.println("bdother-self bookInfTemp==null");
@@ -112,73 +112,134 @@ public class chatController {
                 }
 
                 r.put("status",status);
-            }else if(mode.equals("self")){
-                param.put("openId",openId);
-                UserInf userInf=tMemberService.list(param).get(0);//右
+            }else if(mode.equals("self")) {
+                System.out.println("mode---self");
+                param.put("bookId", id);
+                rUserBook rUserBookTemp = tUserBookService.list(param).get(0);
+                param.put("isbn", rUserBookTemp.getIsbn());
+                BookInf bookInfTemp = tBookService.list(param).get(0); //r
+                List<messageBookId> messageBookIdList = new ArrayList<>();
 
-                param.put("bookId",id);
-                param.put("limit",Integer.valueOf(params.get("limited").toString()));
-                param.put("offset",Integer.valueOf(params.get("offset").toString()));
+                if (rUserBookTemp.getBorrowState().equals(Integer.valueOf(1))) {
+                    System.out.println("待处理1");
+                    //待处理
+                   List<MessageInf> messageInfList = tUserBookService.listByState1(param);
 
-                //查看借阅中的书籍
-                param.put("usrBorrowState",Integer.valueOf(1)) ;//1,2,3
-                param.put("ownerId",userInf.getUserId());
+                   for(MessageInf me : messageInfList){
+                       messageBookId messageBookIdTemp = new messageBookId();
+                       param.clear();
+                       param.put("userId",me.getSenderId());
+                       UserInf frUserInf =tMemberService.list(param).get(0);
+                       messageBookIdTemp.setOther(frUserInf.getUserId(),
+                               frUserInf.getNickName(),frUserInf.getAvatarUrl(),me);
+                       messageBookIdList.add(messageBookIdTemp);
+                   }
+                    applyMessage  applyMessageTemp = new applyMessage(
+                            bookInfTemp.getBookName(),
+                            bookInfTemp.getAuthor(),
+                            bookInfTemp.getPicPath(),
+                            messageBookIdList,
+                            0,messageBookIdList.size());
+                    status.put("is_exist",2);
+                    r.put("status",status);
+                    r.put("data",applyMessageTemp);
 
-                System.out.println(param);
-                try{
-                    List<Integer> borrowIdlists = tUserBookService.listByState(param);
-                    List <messageBookId> messageBookIdLists = new ArrayList<>();
-                    //一个borrowid 对应两个 messageId (申请/归还)
-                    if(borrowIdlists.size()!=0 && borrowIdlists!=null){
+                } else if (rUserBookTemp.getBorrowState().equals(Integer.valueOf(2))) {
+                    System.out.println("//已借出3");
+                    //已借出
+                    List<MessageInf> messageInfList =tUserBookService.listByState2(param);//借阅中，归还中，23  唯一；
 
-                        for(Integer is : borrowIdlists){
-                            System.out.println("borrowIdlists--!null"+is);
-                            param.clear();
-                            param.put("mBorrowId",is);
-                            List<MessageInf> messageInfs = tMessageService.list(param);
-                            MessageInf current = new MessageInf();
-                            if(messageInfs!=null&& messageInfs.size()!=0){
-                                if(messageInfs.size()==2){
-                                    for(MessageInf mis :messageInfs ){
-                                        if(mis.getmType().equals(Integer.valueOf(1))){
-                                            current = mis;
-                                        }
-                                    }
 
-                                }else
-                                    current = messageInfs.get(0);
-
-                                messageBookId messageBookIdTemp = new messageBookId(
-                                        Integer.valueOf(tMemberService.get(current.getReceiverId()).getUserId().toString()),
-                                        tMemberService.get(current.getReceiverId()).getNickName(),
-                                        tMemberService.get(current.getReceiverId()).getAvatarUrl(),
-                                        current
-                                );
-                                messageBookIdLists.add(messageBookIdTemp);
-                            }else{
-                                System.out.println("null");
-                            }
-
-                        }
-                    }else{
-                        System.out.println("borrowIdlists--null");
+                    for(MessageInf me : messageInfList){
+                        messageBookId messageBookIdTemp = new messageBookId();
+                        param.clear();
+                        param.put("userId",me.getSenderId());
+                        UserInf frUserInf =tMemberService.list(param).get(0);
+                        messageBookIdTemp.setOther(frUserInf.getUserId(),
+                                frUserInf.getNickName(),frUserInf.getAvatarUrl(),me);
+                        messageBookIdList.add(messageBookIdTemp);
                     }
+                    applyMessage  applyMessageTemp = new applyMessage(
+                            bookInfTemp.getBookName(),
+                            bookInfTemp.getAuthor(),
+                            bookInfTemp.getPicPath(),
+                            messageBookIdList,
+                            1,messageBookIdList.size());
 
+                    status.put("is_exist",2);
+                    r.put("status",status);
+                    r.put("data",applyMessageTemp);
 
-                    r.put("data",messageBookIdLists);
-                    status.put("is_exist",2);
-                }catch (Exception e){
-                    e.printStackTrace();
-                    status.put("is_exist",2);
-                    System.out.println("无正在借阅书籍");
+                } else if (rUserBookTemp.getBorrowState().equals(Integer.valueOf(0))) {
+                    //无申请
+                    status.put("is_exist",3);
+                    r.put("status",status);
+
                 }
-                r.put("status",status);
 
-
-
-            }else{
 
             }
+
+
+        }catch (Exception e){
+            e.printStackTrace();
+            return R.error();
+        }
+        return r;
+    }
+
+    /**
+     * chat-apply 聊天界面 通过借阅
+     * params:messageId,mode
+     * res ：status:is_exist
+     *       userBook
+     *       bookInf
+     *       userInfo{ nickName,avatarUrl }
+     *       borrow(other)
+     *
+     **/
+    @ResponseBody
+    @GetMapping({"/chat/opt"})
+    public R chatOpt(@RequestParam Map<String, Object> params){
+        R r=new R();
+        System.out.println("/chat/opt");
+        try {
+
+            Integer messageId = Integer.valueOf(params.get("messageId").toString());
+            String mode = params.get("mode").toString();
+            String type = params.get("type").toString();
+            String dateTime = params.get("dateTime").toString();
+            SimpleDateFormat format =  new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date date = format.parse(dateTime);
+
+
+            Map<String , Object> param = new HashMap<>();
+            Map<String, Object> status = new HashMap<>();
+
+            Boolean i =false;
+
+            param.put("messageId",messageId);
+            if(mode.equals("apply")){
+                if(type.equals("pass"))
+                     i = toptService.updateByOpt(messageId,true,true,date);
+                else //reject
+                    i = toptService.updateByOpt(messageId,true,false,date);
+
+            }else{
+                //return
+                if(type.equals("pass"))
+                    i = toptService.updateByOpt(messageId,false,true,date);
+                else
+                    i = toptService.updateByOpt(messageId,false,false,date);
+
+            }
+
+            if(i){
+                status.put("success",1);
+            }else{
+                status.put("success",0);
+            }
+            r.put("status",status);
 
 
         }catch (Exception e){

@@ -64,31 +64,6 @@ public class TBookUserBorrowServiceImpl implements TBookUserBorrowService {
         return tBookUserBorrowMapper.updateByPrimaryKeySelective(record);
     }
 
-    @Transactional
-    @Override
-    public int save(rBookUserBorrow rBookUserBorrows, rUserBook record, MessageInf message) {
-
-        Map<String,Integer> map = new HashMap<>();
-
-
-        Integer borrowId = tBookUserBorrowMapper.insertSelective(rBookUserBorrows);
-
-        //更新 rUserBook 状态为待处理
-        int j = tUserBookService.updateByPrimaryKeySelective(record);
-
-        int result = 0;
-        //创建Message type = 0（申请）
-        if(borrowId>0 && j ==1){
-            message.setmBorrowId(borrowId);
-            int  m= tMessageService.insertSelective(message);
-            result = 1;
-        }else
-            result = 0;
-
-
-
-        return  result;
-    }
 
     @Override
     public List<rBookUserBorrow> listByState(Map<String, Object> map) {
@@ -97,6 +72,16 @@ public class TBookUserBorrowServiceImpl implements TBookUserBorrowService {
             return  list;
         }
         return null;
+    }
+
+    @Override
+    public int insertSelective(rBookUserBorrow record) {
+        return tBookUserBorrowMapper.insertSelective(record);
+    }
+
+    @Override
+    public rBookUserBorrow selectByPrimaryKey(Integer borrowId) {
+        return tBookUserBorrowMapper.selectByPrimaryKey(borrowId);
     }
 
 

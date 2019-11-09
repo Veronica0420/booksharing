@@ -7,6 +7,8 @@ public class rBcircleMember {
 
     private Integer memberId;
 
+    private  UserInf userInf;
+
     public Integer getBcMemId() {
         return bcMemId;
     }
@@ -29,5 +31,13 @@ public class rBcircleMember {
 
     public void setMemberId(Integer memberId) {
         this.memberId = memberId;
+    }
+
+    public UserInf getUserInf() {
+        return userInf;
+    }
+
+    public void setUserInf(UserInf userInf) {
+        this.userInf = userInf;
     }
 }

@@ -19,9 +19,12 @@ public interface TBookUserBorrowService {
 
     int updateByPrimaryKeySelective(rBookUserBorrow record);
 
-    int  save(rBookUserBorrow rBookUserBorrows, rUserBook record, MessageInf message);
-
     List<rBookUserBorrow> listByState(Map<String, Object> map);
+
+    int insertSelective(rBookUserBorrow record);
+
+    rBookUserBorrow selectByPrimaryKey(Integer borrowId);
+
 
 
 }

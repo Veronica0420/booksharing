@@ -1,6 +1,7 @@
 package com.ecust.sharebook.service.impl;
 
 import com.ecust.sharebook.mapper.FriendInfMapper;
+import com.ecust.sharebook.pojo.FriendInf;
 import com.ecust.sharebook.pojo.util.friend.friendList;
 import com.ecust.sharebook.service.TFriendService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,5 +22,15 @@ public class TFriendServiceImpl  implements TFriendService {
             return list;
         }
         return  null;
+    }
+
+    @Override
+    public int insert(FriendInf record) {
+        return friendInfMapper.insert(record);
+    }
+
+    @Override
+    public int insertSelective(FriendInf record) {
+        return friendInfMapper.insertSelective(record);
     }
 }
