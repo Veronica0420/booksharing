@@ -19,7 +19,9 @@ import org.springframework.web.multipart.MultipartFile;
  *
  * 未完成
  */
+
 @Controller
+@RequestMapping("/small")
 
 @ConfigurationProperties(prefix = "web")
 
@@ -39,24 +41,8 @@ public class FileUploadController {
 
 
 
-    /**
-     * @return 跳转到文件上传页面
-     */
-    @RequestMapping("/up1")
-    public String index(){
-        return "up";
-    }
 
-    /**
-     * @return 跳转到文件上传页面
-     */
-    @RequestMapping("/show1")
-    public String index1(){
-        return "show";
-    }
-    /**
-
-     *
+   /**
      * @param file 上传的文件
      * @return
      */
@@ -79,6 +65,10 @@ public class FileUploadController {
         System.out.println(warning);
         return "上传成功";
     }
+
+
+
+
 
     /**
      * 显示图片

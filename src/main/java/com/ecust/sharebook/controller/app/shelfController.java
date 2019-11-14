@@ -146,6 +146,7 @@ public class shelfController {
                     }
                     result.put("isSuccess", 1);  //查寻成功
                     r.put("data", data);
+                    r.put("myUserId",me.getUserId());
 
                 }
             } catch (Exception e) {
@@ -474,7 +475,8 @@ public class shelfController {
             param.put("openId", openId);
             UserInf userInf = tMemberService.listPublic(param).get(0);
             param.clear();
-            param.put("userId", ownerId);
+            rUserBook rUserBook = tUserBookService.selectByPrimaryKey(rBookUserBorrowTemp.getBookId());
+            param.put("userId", rUserBook.getOwnerId());
             UserInf fuserInf = tMemberService.listPublic(param).get(0);
             rBookUserBorrowTemp = transferUtil.setBorrow(rBookUserBorrowTemp);
             bookInfTemp = transferUtil.setBookInf(bookInfTemp);
