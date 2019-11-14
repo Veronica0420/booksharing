@@ -25,8 +25,8 @@ public class TBookCircleServiceIml implements TBookCircleService {
     private vBookMemberBcircleMapper tvBookMemberBcircleMapper;
 
     @Override
-    public int insert(BookCircleInf record) {
-        int result = tBookCircleInfMapper.insert(record);
+    public int insert(Map<String, Object> bcInf) {
+        int result = tBookCircleInfMapper.insert(bcInf);
         return result;
     }
 
@@ -47,8 +47,8 @@ public class TBookCircleServiceIml implements TBookCircleService {
     }
 
     @Override
-    public List<BookCircleInf> selectfromMemberID(Map<String, Object> params) {
-        List<BookCircleInf> list = new ArrayList<>();
+    public List<BookCircleInf> selectbyCreaterID(Map<String, Object> params) {
+        List<BookCircleInf> list = tBookCircleInfMapper.listBycreaterID(params);
         List<Integer> list_id = trBcircleMemberMapper.selectByMemberId(params);
         for (int i = 0; i < list_id.size(); i++) {
             System.out.println("map.put  list_id" + i + "=" + list_id.get(i));
@@ -62,8 +62,8 @@ public class TBookCircleServiceIml implements TBookCircleService {
     }
 
     @Override
-    public List<BookCircleInf> selectbyNotMember(Map<String, Object> params) {//本用户不是图书圈成员的所有图书圈ID的list
-        List<Integer> list_id = trBcircleMemberMapper.selectByMemberId(params);
+    public List<BookCircleInf> selectbyNotCreaterIDMemberID(Map<String, Object> params) {
+        List<Integer> list_id = trBcircleMemberMapper.selectByMemberId(params);  //本用户不是图书圈成员的所有图书圈ID的list
         Map<String, Object> map = new HashMap<>();
         map.put("list_id", list_id);
         List<BookCircleInf> list = tBookCircleInfMapper.listByNotcreaterID(params);
@@ -90,8 +90,13 @@ public class TBookCircleServiceIml implements TBookCircleService {
      */
     @Override
     public List<BookCircleInf> seletbybName_bc(Map<String, Object> params) {
-      //  List<Integer> list1=tvBookCreaterBcircleMapper.selectByBookName(params);
-        List<Integer> list1=tvBookMemberBcircleMapper.selectByBookName(params);
+        List<Integer> list1=tvBookCreaterBcircleMapper.selectByBookName(params);
+        System.out.println("list.size==="+list1.size());
+        List<Integer> list2=tvBookMemberBcircleMapper.selectByBookName(params);
+        list1.addAll(list2);
+        HashSet h = new HashSet(list1);
+        list1.clear();
+        list1.addAll(h);
 
         List<BookCircleInf> result=new ArrayList<>();
         for(int i=0;i<list1.size();i++){

@@ -37,14 +37,6 @@ public class rBcircleMember {
         this.memberId = memberId;
     }
 
-    public Integer getIfCreater() {
-        return ifCreater;
-    }
-
-    public void setIfCreater(Integer ifCreater) {
-        this.ifCreater = ifCreater;
-    }
-
     public UserInf getUserInf() {
         return userInf;
     }
