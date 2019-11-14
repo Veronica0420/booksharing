@@ -63,10 +63,10 @@ public class BookCircleController {
                     param.put("createrId", seMember.getUserId());
                     param.put("memberId", seMember.getUserId());
                     System.out.println("----------USER_ID=" + param);
-                    //查询所有我创建的图书圈
-                    my_book_circle_list = tBookCircleService.selectbyCreaterID(param);
+                    //查询所有我加入的图书圈
+                    my_book_circle_list = tBookCircleService.selectfromMemberID(param);
                     //查询所有我未加入的图书圈
-                    other_book_circle_list = tBookCircleService.selectbyNotCreaterIDMemberID(param);
+                    other_book_circle_list=tBookCircleService.selectbyNotMember(param);
                     param.clear();
                 }
             }
@@ -85,38 +85,46 @@ public class BookCircleController {
 
     @ResponseBody
     @GetMapping("/newBookCircle")
-    public R newBookCircle(@RequestParam Map<String, Object> params) {
+    public R newBookCircle(@RequestParam Map<String,Object> params){
         System.out.println("<--newBookCircle  start----->");
-        System.out.println("params:" + params);
-        String bcName = new String();
-        String intro = new String();
-        Date establishTime = new Date();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        R r = new R();
+        System.out.println("params:"+params);
+        String bcName=new String();
+        String intro=new String();
+        Date establishTime=new Date();
+        SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd");
+        R r=new R();
         try {
             String openId = new String();
             openId = jwtUtil.getWxOpenIdByToken(params.get("access_token").toString());
-            bcName = params.get("bcName").toString();
-            intro = params.get("intro").toString();
-            if (openId != null) {
+            bcName=params.get("bcName").toString();
+            intro=params.get("intro").toString();
+            if(openId != null) {
                 Map<String, Object> param = new HashMap<>();
                 param.put("openId", openId);
                 UserInf seMember = tMemberService.selectOne(param);
                 param.clear();
                 if (seMember != null) {
-                    param.put("createrId", seMember.getUserId());
-                    param.put("bcName", bcName);
-                    param.put("intro", intro);
-                    param.put("establishTime", dateFormat.format(establishTime));
-                    System.out.println("param::::::" + param);
-                    r.put("result", tBookCircleService.insert(param));
-                    param.clear();
+                    BookCircleInf bookCircleInf=new BookCircleInf();
+                    bookCircleInf.setCreaterId(seMember.getUserId());
+                    bookCircleInf.setBcName(bcName);
+                    bookCircleInf.setIntro(intro);
+                    bookCircleInf.setEstablishTime(establishTime);
+
+                    int insertid=tBookCircleService.insert(bookCircleInf);
+                    r.put("result",insertid);
+                    System.out.println("bookCircleInf.getBookCircleId()="+bookCircleInf.getBookCircleId());
+                    Map<String, Object> param2 = new HashMap<>();
+                    param2.put("bookCircleId",bookCircleInf.getBookCircleId());
+                    param2.put("memberId",seMember.getUserId());
+                    param2.put("ifCreater",1);
+                    r.put("resultMember",tBcircleMemberService.insertmap(param2));
+                    param2.clear();
                 }
             }
 
             System.out.println("<-----newBookCircle end---->");
 
-        } catch (Exception e) {
+        }catch (Exception e){
             e.printStackTrace();
             return R.error();
         }
@@ -126,22 +134,22 @@ public class BookCircleController {
 
     @ResponseBody
     @GetMapping("/searchBookCircleBName")
-    public R searchBookCircleBName(@RequestParam Map<String, Object> params) {
+    public R searchBookCircleBName(@RequestParam Map<String,Object> params){
         System.out.println("<--searchBookCircle BName  start----->");
-        System.out.println("params:" + params);
-        String bName = new String();
-        List<BookCircleInf> searchBCInf = new ArrayList<>();
-        R r = new R();
+        System.out.println("params:"+params);
+        String bName=new String();
+        List<BookCircleInf> searchBCInf=new ArrayList<>();
+        R r=new R();
         try {
-            bName = params.get("bName").toString();
-            System.out.println("bcName=========" + bName);
+            bName=params.get("bName").toString();
+            System.out.println("bcName========="+bName);
             Map<String, Object> param = new HashMap<>();
-            param.put("bName", bName);
-            searchBCInf = tBookCircleService.seletbybName_bc(param);
+            param.put("bName",bName);
+            searchBCInf=tBookCircleService.seletbybName_bc(param);
             param.clear();
-            r.put("searchBCInf", searchBCInf);
+            r.put("searchBCInf",searchBCInf);
             System.out.println("<--searchBookCircle  end----->");
-        } catch (Exception e) {
+        }catch (Exception e){
             e.printStackTrace();
             return R.error();
         }

@@ -24,9 +24,10 @@ public class TBookCircleServiceIml implements TBookCircleService {
     @Autowired
     private vBookMemberBcircleMapper tvBookMemberBcircleMapper;
 
+
     @Override
-    public int insert(Map<String, Object> bcInf) {
-        int result = tBookCircleInfMapper.insert(bcInf);
+    public int insert(BookCircleInf record) {
+        int result = tBookCircleInfMapper.insert(record);
         return result;
     }
 
@@ -47,8 +48,8 @@ public class TBookCircleServiceIml implements TBookCircleService {
     }
 
     @Override
-    public List<BookCircleInf> selectbyCreaterID(Map<String, Object> params) {
-        List<BookCircleInf> list = tBookCircleInfMapper.listBycreaterID(params);
+    public List<BookCircleInf> selectfromMemberID(Map<String, Object> params) {
+        List<BookCircleInf> list = new ArrayList<>();
         List<Integer> list_id = trBcircleMemberMapper.selectByMemberId(params);
         for (int i = 0; i < list_id.size(); i++) {
             System.out.println("map.put  list_id" + i + "=" + list_id.get(i));
@@ -62,8 +63,8 @@ public class TBookCircleServiceIml implements TBookCircleService {
     }
 
     @Override
-    public List<BookCircleInf> selectbyNotCreaterIDMemberID(Map<String, Object> params) {
-        List<Integer> list_id = trBcircleMemberMapper.selectByMemberId(params);  //本用户不是图书圈成员的所有图书圈ID的list
+    public List<BookCircleInf> selectbyNotMember(Map<String, Object> params) {//本用户不是图书圈成员的所有图书圈ID的list
+        List<Integer> list_id = trBcircleMemberMapper.selectByMemberId(params);
         Map<String, Object> map = new HashMap<>();
         map.put("list_id", list_id);
         List<BookCircleInf> list = tBookCircleInfMapper.listByNotcreaterID(params);
