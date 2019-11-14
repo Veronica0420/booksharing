@@ -1,104 +1,236 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.ecust.sharebook.mapper.FriendInfMapper" >
-  <resultMap id="BaseResultMap" type="com.ecust.sharebook.pojo.FriendInf" >
-    <id column="FDRIEND_ID" property="fdriendId" jdbcType="INTEGER" />
-    <result column="UID" property="uid" jdbcType="INTEGER" />
-    <result column="FID" property="fid" jdbcType="INTEGER" />
-    <result column="ALIAS" property="alias" jdbcType="VARCHAR" />
-  </resultMap>
+<mapper namespace="com.ecust.sharebook.mapper.FriendInfMapper">
+    <resultMap id="BaseResultMap" type="com.ecust.sharebook.pojo.FriendInf">
+        <id column="FRIEND_ID" property="friendId" jdbcType="INTEGER"/>
+        <result column="UID" property="uid" jdbcType="INTEGER"/>
+        <result column="FID" property="fid" jdbcType="INTEGER"/>
+        <result column="ALIASU" property="aliasu" jdbcType="VARCHAR"/>
+        <result column="ALIASF" property="aliasf" jdbcType="VARCHAR"/>
+        <result column="OPT_TYPE" property="optType" jdbcType="INTEGER"/>
+        <result column="ADD_TIME" property="addTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
 
-  <resultMap type="com.ecust.sharebook.pojo.util.friend.friendList" id="listResultMap">
+    <resultMap type="com.ecust.sharebook.pojo.FriendInf" id="listResultMap">
+        <id column="FRIEND_ID" property="friendId"/>
+        <result column="FID" property="fid"/>
+        <result column="UID" property="uid"/>
+        <result column="ALIASU" property="aliasu"/>
+        <result column="ALIASF" property="aliasf"/>
+        <result column="NICK_NAME" property="nickName"/>
+        <result column="AVATARUrl" property="avatarUrl"/>
+        <result column="OPT_TYPE" property="optType"/>
+    </resultMap>
 
-    <id column="FID" property="fid"/>
-    <result column="ALIAS" property="alias"/>
-    <result column="NICK_NAME" property="nickName"/>
-    <result column="AVATARUrl" property="avatarUrl"/>
-
-
-  </resultMap>
-
-  <sql id="Base_Column_List" >
-    FDRIEND_ID, UID, FID, ALIAS
+    <sql id="Base_Column_List">
+    FRIEND_ID, UID, FID, ALIAS
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
-    <include refid="Base_Column_List" />
-    from friend_inf
-    where FDRIEND_ID = #{fdriendId,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from friend_inf
+        where FRIEND_ID = #{friendId,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from friend_inf
-    where FDRIEND_ID = #{fdriendId,jdbcType=INTEGER}
+    where FRIEND_ID = #{friendId,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.ecust.sharebook.pojo.FriendInf" >
-    <selectKey resultType="java.lang.Integer" keyProperty="fdriendId" order="AFTER" >
-      SELECT LAST_INSERT_ID()
-    </selectKey>
-    insert into friend_inf (UID, FID, ALIAS
-      )
-    values (#{uid,jdbcType=INTEGER}, #{fid,jdbcType=INTEGER}, #{alias,jdbcType=VARCHAR}
-      )
-  </insert>
-  <insert id="insertSelective" parameterType="com.ecust.sharebook.pojo.FriendInf" >
-    <selectKey resultType="java.lang.Integer" keyProperty="fdriendId" order="AFTER" >
-      SELECT LAST_INSERT_ID()
-    </selectKey>
-    insert into friend_inf
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="uid != null" >
-        UID,
-      </if>
-      <if test="fid != null" >
-        FID,
-      </if>
-      <if test="alias != null" >
-        ALIAS,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="uid != null" >
-        #{uid,jdbcType=INTEGER},
-      </if>
-      <if test="fid != null" >
-        #{fid,jdbcType=INTEGER},
-      </if>
-      <if test="alias != null" >
-        #{alias,jdbcType=VARCHAR},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.ecust.sharebook.pojo.FriendInf" >
-    update friend_inf
-    <set >
-      <if test="uid != null" >
-        UID = #{uid,jdbcType=INTEGER},
-      </if>
-      <if test="fid != null" >
-        FID = #{fid,jdbcType=INTEGER},
-      </if>
-      <if test="alias != null" >
-        ALIAS = #{alias,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where FDRIEND_ID = #{fdriendId,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.ecust.sharebook.pojo.FriendInf" >
+    <insert id="insert" parameterType="com.ecust.sharebook.pojo.FriendInf">
+        <selectKey resultType="java.lang.Integer" keyProperty="friendId" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into friend_inf (UID, FID, ALIASU,ALIASF,OPT_TYPE,ADD_TIME
+        )
+        values (#{uid,jdbcType=INTEGER}, #{fid,jdbcType=INTEGER}, #{aliasu,jdbcType=VARCHAR},
+        #{aliasf,jdbcType=VARCHAR},#{optType,jdbcType=INTEGER},#{addTime,jdbcType=TIMESTAMP}
+        )
+    </insert>
+    <insert id="insertSelective" parameterType="com.ecust.sharebook.pojo.FriendInf">
+        <selectKey resultType="java.lang.Integer" keyProperty="friendId" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into friend_inf
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="uid != null">
+                UID,
+            </if>
+            <if test="fid != null">
+                FID,
+            </if>
+            <if test="aliasu != null">
+                ALIASU,
+            </if>
+            <if test="aliasf != null">
+                ALIASF,
+            </if>
+            <if test="optType != null">
+                OPT_TYPE,
+            </if>
+            <if test="addTime != null">
+                ADD_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="uid != null">
+                #{uid,jdbcType=INTEGER},
+            </if>
+            <if test="fid != null">
+                #{fid,jdbcType=INTEGER},
+            </if>
+
+            <if test="aliasu != null">
+                #{aliasu,jdbcType=VARCHAR},
+            </if>
+            <if test="aliasf != null">
+                #{aliasf,jdbcType=VARCHAR},
+            </if>
+            <if test="optType != null">
+                #{optType,jdbcType=INTEGER},
+            </if>
+            <if test="addTime != null">
+                #{addTime,jdbcType=TIMESTAMP},
+            </if>
+
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.ecust.sharebook.pojo.FriendInf">
+        update friend_inf
+        <set>
+            <if test="uid != null">
+                UID = #{uid,jdbcType=INTEGER},
+            </if>
+            <if test="fid != null">
+                FID = #{fid,jdbcType=INTEGER},
+            </if>
+            <if test="aliasu != null">
+                ALIASU = #{aliasu,jdbcType=VARCHAR},
+            </if>
+            <if test="aliasf != null">
+                ALIASF = #{aliasf,jdbcType=VARCHAR},
+            </if>
+            <if test="optType != null">
+                OPT_TYPE = #{optType,jdbcType=INTEGER},
+            </if>
+            <if test="addTime != null">
+                ADD_TIME = #{addTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where FRIEND_ID = #{friendId,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.ecust.sharebook.pojo.FriendInf">
     update friend_inf
     set UID = #{uid,jdbcType=INTEGER},
       FID = #{fid,jdbcType=INTEGER},
-      ALIAS = #{alias,jdbcType=VARCHAR}
-    where FDRIEND_ID = #{fdriendId,jdbcType=INTEGER}
+      ALIASU = #{aliasu,jdbcType=VARCHAR}
+      ALIASF = #{aliasf,jdbcType=VARCHAR}
+      OPT_TYPE = #{optType,jdbcType=INTEGER}
+      ADD_TIME = #{addTime,jdbcType=TIMESTAMP}
+    where FRIEND_ID = #{friendId,jdbcType=INTEGER}
   </update>
 
 
-  <select id="getList" resultMap="listResultMap">
-    SELECT
-	  FID,ALIAS,NICK_NAME,AVATARUrl
-    FROM  friend_inf , user_inf
-    WHERE friend_inf.FID = user_inf.USER_ID
-    AND  friend_inf.UID = #{userId}
+    <select id="list" resultType="com.ecust.sharebook.pojo.FriendInf">
+        select FRIEND_ID ,UID, FID, ALIASU,ALIASF,OPT_TYPE,ADD_TIME
+        from friend_inf
+        <where>
+            <if test="friendId != null and friendId != ''">and FRIEND_ID = #{friendId}</if>
+            <if test="uid != null and uid != ''">and UID = #{uid}</if>
+            <if test="fid != null and fid != ''">and FID = #{fid}</if>
+            <if test="optType != null and optType != ''">and OPT_TYPE = #{optType}</if>
 
+        </where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+            <otherwise>
+                order by FRIEND_ID desc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+
+    <select id="getList" resultMap="listResultMap">
+    SELECT
+	  FRIEND_ID,UID,FID,ALIASU,ALIASF,NICK_NAME,AVATARUrl, friend_inf.OPT_TYPE
+    FROM  friend_inf , user_inf
+    WHERE friend_inf.OPT_TYPE = 1
+		 AND(
+		(friend_inf.FID = user_inf.USER_ID
+    AND  friend_inf.UID =  #{userId})
+	OR (friend_inf.UID = user_inf.USER_ID
+	AND friend_inf.FID =  #{userId}))
 	</select>
+
+    <select id="messageList" resultMap="listResultMap">
+    SELECT
+	  FRIEND_ID,UID,FID,ALIASU,ALIASF,NICK_NAME,AVATARUrl, friend_inf.OPT_TYPE
+    FROM  friend_inf , user_inf
+	 WHERE
+		((friend_inf.FID = user_inf.USER_ID
+    AND  friend_inf.UID = #{userId})
+	OR (friend_inf.UID = user_inf.USER_ID
+	AND friend_inf.FID = #{userId}))
+	AND friend_inf.OPT_TYPE = 0
+
+		ORDER BY friend_inf.ADD_TIME DESC
+	</select>
+
+
+    <select id="messageAllList" resultMap="listResultMap">
+    SELECT
+	  FRIEND_ID,UID,FID,ALIASU,ALIASF,NICK_NAME,AVATARUrl,friend_inf.OPT_TYPE
+    FROM  friend_inf , user_inf
+    WHERE (friend_inf.FID = user_inf.USER_ID
+    AND  friend_inf.UID = #{userId})
+		OR (friend_inf.UID = user_inf.USER_ID
+		AND friend_inf.FID = #{userId})
+		ORDER BY friend_inf.ADD_TIME DESC
+	</select>
+
+    <select id="friendInfo" resultType="java.util.Map">
+    SELECT NICK_NAME as nickName,FID as fid,ALIASU as aliasu,ALIASF as aliasf,UID as uid,
+    COUNTRY as country,GENDER as gender,AVATARUrl as avatarurl
+    FROM user_inf , friend_inf
+    WHERE
+    (user_inf.USER_ID = friend_inf.FID
+    AND USER_ID = #{fid}
+    AND UID =  #{mid})
+    OR (user_inf.USER_ID = friend_inf.UID
+    AND USER_ID = #{fid}
+    AND FID =  #{mid})
+	</select>
+
+
+    <select id="list2" resultType="com.ecust.sharebook.pojo.FriendInf">
+    select FRIEND_ID ,UID, FID, ALIASU,ALIASF,OPT_TYPE,ADD_TIME
+    FROM friend_inf
+    WHERE(
+    FID= #{fid}
+    AND UID = #{mid}
+    OR
+    UID =#{fid}
+    AND FID =#{mid}
+    )
+    <![CDATA[AND OPT_TYPE <> 2]]>
+	</select>
+
+
+    <select id="list3" resultType="com.ecust.sharebook.pojo.FriendInf">
+    select FRIEND_ID ,UID, FID, ALIASU,ALIASF,OPT_TYPE,ADD_TIME
+    FROM friend_inf
+    WHERE(
+    FID= #{fid}
+    AND UID = #{mid}
+    OR
+    UID =#{fid}
+    AND FID =#{mid}
+    )
+    AND OPT_TYPE = 1
+    </select>
+
 
 </mapper>

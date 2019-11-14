@@ -79,6 +79,9 @@
             <if test="createrId != null">
                 CREATER_ID = #{createrId,jdbcType=INTEGER},
             </if>
+            <if test="intro != null">
+                intro = #{intro,jdbcType=VARCHAR},
+            </if>
         </set>
         where BOOK_CIRCLE_ID = #{bookCircleId,jdbcType=INTEGER}
     </update>

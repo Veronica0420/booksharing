@@ -106,7 +106,7 @@
         order by ${sort} ${order}
       </when>
       <otherwise>
-        order by COMMENT_ID desc
+        order by COMT_TIME desc
       </otherwise>
     </choose>
     <if test="offset != null and limit != null">

@@ -9,6 +9,22 @@
     <result column="CONTENT" property="content" jdbcType="VARCHAR" />
     <result column="BOOK_CIRCLE_ID" property="bookCircleId" jdbcType="INTEGER" />
   </resultMap>
+
+  <resultMap id="totalResultMap" type="com.ecust.sharebook.pojo.PostInf" >
+    <id column="POST_ID" property="postId" jdbcType="INTEGER" />
+    <result column="PUBLISHER_ID" property="publisherId" jdbcType="INTEGER" />
+    <result column="PUB_TIME" property="pubTime" jdbcType="TIMESTAMP" />
+    <result column="TITLE" property="title" jdbcType="VARCHAR" />
+    <result column="CONTENT" property="content" jdbcType="VARCHAR" />
+    <result column="BOOK_CIRCLE_ID" property="bookCircleId" jdbcType="INTEGER" />
+    <result column="total" property="count" jdbcType="INTEGER" />
+
+  </resultMap>
+
+
+
+
+
   <sql id="Base_Column_List" >
     POST_ID, PUBLISHER_ID, PUB_TIME, TITLE, CONTENT, BOOK_CIRCLE_ID
   </sql>
@@ -125,6 +141,26 @@
     <if test="offset != null and limit != null">
       limit #{offset}, #{limit}
     </if>
+  </select>
+
+
+
+  <select id="Plist" resultMap="totalResultMap">
+    SELECT
+    post_inf.POST_ID, PUBLISHER_ID, PUB_TIME, TITLE,post_inf.CONTENT, BOOK_CIRCLE_ID,COUNT(*) as total
+    FROM post_inf LEFT JOIN comment_inf
+		ON post_inf.POST_ID = comment_inf.POST_ID
+		WHERE BOOK_CIRCLE_ID = #{bookCircleId}
+		GROUP BY post_inf.POST_ID
+  </select>
+
+  <select id="post" resultMap="totalResultMap">
+    SELECT
+    post_inf.POST_ID, PUBLISHER_ID, PUB_TIME, TITLE,post_inf.CONTENT, BOOK_CIRCLE_ID,COUNT(*) as total
+    FROM post_inf LEFT JOIN comment_inf
+		ON post_inf.POST_ID = comment_inf.POST_ID
+		WHERE post_inf.POST_ID = #{postId}
+
   </select>
 
 </mapper>

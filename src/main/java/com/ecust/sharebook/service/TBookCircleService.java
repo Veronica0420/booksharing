@@ -14,4 +14,13 @@ public interface TBookCircleService {
     List<BookCircleInf> selectfromMemberID(Map<String, Object> params);
     List<BookCircleInf> selectbyNotMember(Map<String, Object> params);
     List<BookCircleInf> seletbybName_bc(Map<String, Object> params);
+
+
+    int deleteByPrimaryKey(Integer bookCircleId);
+
+    int insertSelective(BookCircleInf record);
+
+    int updateByPrimaryKeySelective(BookCircleInf record);
+
+    int updateByPrimaryKey(BookCircleInf record);
 }

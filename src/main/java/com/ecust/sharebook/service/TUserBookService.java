@@ -4,12 +4,22 @@ package com.ecust.sharebook.service;
 import com.ecust.sharebook.pojo.MessageInf;
 import com.ecust.sharebook.pojo.rBookUserBorrow;
 import com.ecust.sharebook.pojo.rUserBook;
+import com.ecust.sharebook.pojo.util.shelf.book;
 import com.ecust.sharebook.pojo.util.shelf.myShelf;
 
 import java.util.List;
 import java.util.Map;
 
 public interface TUserBookService {
+
+    List<book> borrowShelf (Map<String, Object> map);
+
+    List<book> ownershelf (Map<String, Object> map);
+
+    List<Map<String , Object>>findOwnerBookList(Map<String, Object> map);
+
+    List<Map<String , Object>>findBorrowBookList(Map<String, Object> map);
+
 
     List<Map<String, Object>>  selectByOwId(Map<String, Object> params);
 

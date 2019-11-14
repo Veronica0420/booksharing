@@ -9,4 +9,24 @@ public interface TPostInfService {
 
 
     List<PostInf> list(Map<String, Object> map);
+
+    List<PostInf> Plist(Map<String, Object> map);
+
+    PostInf post(Map<String, Object> map);
+
+
+    int deleteByPrimaryKey(Integer postId);
+
+    int insert(PostInf record);
+
+    int insertSelective(PostInf record);
+
+    PostInf selectByPrimaryKey(Integer postId);
+
+    int updateByPrimaryKeySelective(PostInf record);
+
+    int updateByPrimaryKey(PostInf record);
+
+
+
 }

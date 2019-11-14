@@ -13,7 +13,11 @@ public class CommentInf {
 
     private Date comtTime;
 
+    private String comtTimeS;
+
     private  UserInf userInf;
+
+    private  int flag; //0 自己 1 陌生人
 
     public Integer getCommentId() {
         return commentId;
@@ -61,5 +65,21 @@ public class CommentInf {
 
     public void setUserInf(UserInf userInf) {
         this.userInf = userInf;
+    }
+
+    public int getFlag() {
+        return flag;
+    }
+
+    public void setFlag(int flag) {
+        this.flag = flag;
+    }
+
+    public String getComtTimeS() {
+        return comtTimeS;
+    }
+
+    public void setComtTimeS(String comtTimeS) {
+        this.comtTimeS = comtTimeS;
     }
 }

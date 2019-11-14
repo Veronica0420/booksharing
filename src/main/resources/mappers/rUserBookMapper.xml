@@ -1,159 +1,166 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.ecust.sharebook.mapper.rUserBookMapper" >
-  <resultMap id="BaseResultMap" type="com.ecust.sharebook.pojo.rUserBook" >
-    <id column="BOOK_ID" property="bookId" jdbcType="INTEGER" />
-    <result column="ISBN" property="isbn" jdbcType="CHAR" />
-    <result column="OWNER_ID" property="ownerId" jdbcType="INTEGER" />
-    <result column="PRIVACY" property="privacy" jdbcType="BIT" />
-    <result column="BORROW_STATE" property="borrowState" jdbcType="BIT" />
-    <result column="ADD_TIME" property="addTime" jdbcType="TIMESTAMP" />
-    <result column="DELETE_BOOK" property="deleteBook" jdbcType="BIT" />
-  </resultMap>
+<mapper namespace="com.ecust.sharebook.mapper.rUserBookMapper">
+    <resultMap id="BaseResultMap" type="com.ecust.sharebook.pojo.rUserBook">
+        <id column="BOOK_ID" property="bookId" jdbcType="INTEGER"/>
+        <result column="ISBN" property="isbn" jdbcType="CHAR"/>
+        <result column="OWNER_ID" property="ownerId" jdbcType="INTEGER"/>
+        <result column="PRIVACY" property="privacy" jdbcType="INTEGER"/>
+        <result column="BORROW_STATE" property="borrowState" jdbcType="INTEGER"/>
+        <result column="ADD_TIME" property="addTime" jdbcType="TIMESTAMP"/>
+        <result column="DELETE_BOOK" property="deleteBook" jdbcType="INTEGER"/>
+    </resultMap>
 
 
-  <resultMap type="com.ecust.sharebook.pojo.util.shelf.myShelf" id="myShelfResultMap">
-    <id column="ISBN" property="isbn"/>
-    <collection property="myShelfLists" ofType="com.ecust.sharebook.pojo.util.shelf.myShelfList">
-      <id column="BOOK_ID" property="bookId"/>
-      <result column="ADD_TIME" property="addTime"/>
-      <result column="OWNER_ID" property="ownerId"/>
-      <result column="BORROW_TIME" property="borrowTime"/>
-      <result column="BORROW_ID" property="borrowId"/>
-      <result column="USER_ID" property="userId"/>
-    </collection>
-  </resultMap>
+    <resultMap type="com.ecust.sharebook.pojo.util.shelf.book" id="shelfResultMap">
+        <id column="ISBN" property="isbn"/>
+        <result column="sortTime" property="sortTime"/>
+        <result column="total" property="count"/>
+      <result column="id" property="id"/>
+        <result column="ownerId" property="ownerId"/>
+    </resultMap>
+
+    <resultMap type="com.ecust.sharebook.pojo.util.shelf.myShelf" id="myShelfResultMap">
+        <id column="ISBN" property="isbn"/>
+        <collection property="myShelfLists" ofType="com.ecust.sharebook.pojo.util.shelf.myShelfList">
+            <id column="BOOK_ID" property="bookId"/>
+            <result column="ADD_TIME" property="addTime"/>
+            <result column="OWNER_ID" property="ownerId"/>
+            <result column="BORROW_TIME" property="borrowTime"/>
+            <result column="BORROW_ID" property="borrowId"/>
+            <result column="USER_ID" property="userId"/>
+        </collection>
+    </resultMap>
 
 
+    <resultMap type="com.ecust.sharebook.pojo.util.shelf.myShelf" id="otherShelfResultMap">
+        <id column="ISBN" property="isbn"/>
+        <collection property="myShelfLists" ofType="com.ecust.sharebook.pojo.util.shelf.myShelfList">
+            <id column="BOOK_ID" property="bookId"/>
+            <result column="ADD_TIME" property="addTime"/>
+        </collection>
+    </resultMap>
 
-  <resultMap type="com.ecust.sharebook.pojo.util.shelf.myShelf" id="otherShelfResultMap">
-    <id column="ISBN" property="isbn"/>
-    <collection property="myShelfLists" ofType="com.ecust.sharebook.pojo.util.shelf.myShelfList">
-      <id column="BOOK_ID" property="bookId"/>
-      <result column="ADD_TIME" property="addTime"/>
-    </collection>
-  </resultMap>
-
-  <sql id="Base_Column_List" >
+    <sql id="Base_Column_List">
     BOOK_ID, ISBN, OWNER_ID, PRIVACY, BORROW_STATE, ADD_TIME, DELETE_BOOK
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
-    <include refid="Base_Column_List" />
-    from r_user_book
-    where BOOK_ID = #{bookId,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from r_user_book
+        where BOOK_ID = #{bookId,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from r_user_book
     where BOOK_ID = #{bookId,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.ecust.sharebook.pojo.rUserBook" >
-    <selectKey resultType="java.lang.Integer" keyProperty="bookId" order="AFTER" >
-      SELECT LAST_INSERT_ID()
-    </selectKey>
-    insert into r_user_book (ISBN, OWNER_ID, PRIVACY, 
-      BORROW_STATE, ADD_TIME, DELETE_BOOK
-      )
-    values (#{isbn,jdbcType=CHAR}, #{ownerId,jdbcType=INTEGER}, #{privacy,jdbcType=BIT}, 
-      #{borrowState,jdbcType=BIT}, #{addTime,jdbcType=TIMESTAMP}, #{deleteBook,jdbcType=BIT}
-      )
-  </insert>
-  <insert id="insertSelective" parameterType="com.ecust.sharebook.pojo.rUserBook" >
-    <selectKey resultType="java.lang.Integer" keyProperty="bookId" order="AFTER" >
-      SELECT LAST_INSERT_ID()
-    </selectKey>
-    insert into r_user_book
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="isbn != null" >
-        ISBN,
-      </if>
-      <if test="ownerId != null" >
-        OWNER_ID,
-      </if>
-      <if test="privacy != null" >
-        PRIVACY,
-      </if>
-      <if test="borrowState != null" >
-        BORROW_STATE,
-      </if>
-      <if test="addTime != null" >
-        ADD_TIME,
-      </if>
-      <if test="deleteBook != null" >
-        DELETE_BOOK,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="isbn != null" >
-        #{isbn,jdbcType=CHAR},
-      </if>
-      <if test="ownerId != null" >
-        #{ownerId,jdbcType=INTEGER},
-      </if>
-      <if test="privacy != null" >
-        #{privacy,jdbcType=BIT},
-      </if>
-      <if test="borrowState != null" >
-        #{borrowState,jdbcType=BIT},
-      </if>
-      <if test="addTime != null" >
-        #{addTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="deleteBook != null" >
-        #{deleteBook,jdbcType=BIT},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.ecust.sharebook.pojo.rUserBook" >
-    update r_user_book
-    <set >
-      <if test="isbn != null" >
-        ISBN = #{isbn,jdbcType=CHAR},
-      </if>
-      <if test="ownerId != null" >
-        OWNER_ID = #{ownerId,jdbcType=INTEGER},
-      </if>
-      <if test="privacy != null" >
-        PRIVACY = #{privacy,jdbcType=BIT},
-      </if>
-      <if test="borrowState != null" >
-        BORROW_STATE = #{borrowState,jdbcType=BIT},
-      </if>
-      <if test="addTime != null" >
-        ADD_TIME = #{addTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="deleteBook != null" >
-        DELETE_BOOK = #{deleteBook,jdbcType=BIT},
-      </if>
-    </set>
-    where BOOK_ID = #{bookId,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.ecust.sharebook.pojo.rUserBook" >
+    <insert id="insert" parameterType="com.ecust.sharebook.pojo.rUserBook">
+        <selectKey resultType="java.lang.Integer" keyProperty="bookId" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into r_user_book (ISBN, OWNER_ID, PRIVACY,
+        BORROW_STATE, ADD_TIME, DELETE_BOOK
+        )
+        values (#{isbn,jdbcType=CHAR}, #{ownerId,jdbcType=INTEGER}, #{privacy,jdbcType=INTEGER},
+        #{borrowState,jdbcType=INTEGER}, #{addTime,jdbcType=TIMESTAMP}, #{deleteBook,jdbcType=INTEGER}
+        )
+    </insert>
+    <insert id="insertSelective" parameterType="com.ecust.sharebook.pojo.rUserBook">
+        <selectKey resultType="java.lang.Integer" keyProperty="bookId" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into r_user_book
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="isbn != null">
+                ISBN,
+            </if>
+            <if test="ownerId != null">
+                OWNER_ID,
+            </if>
+            <if test="privacy != null">
+                PRIVACY,
+            </if>
+            <if test="borrowState != null">
+                BORROW_STATE,
+            </if>
+            <if test="addTime != null">
+                ADD_TIME,
+            </if>
+            <if test="deleteBook != null">
+                DELETE_BOOK,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="isbn != null">
+                #{isbn,jdbcType=CHAR},
+            </if>
+            <if test="ownerId != null">
+                #{ownerId,jdbcType=INTEGER},
+            </if>
+            <if test="privacy != null">
+                #{privacy,jdbcType=INTEGER},
+            </if>
+            <if test="borrowState != null">
+                #{borrowState,jdbcType=INTEGER},
+            </if>
+            <if test="addTime != null">
+                #{addTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deleteBook != null">
+                #{deleteBook,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.ecust.sharebook.pojo.rUserBook">
+        update r_user_book
+        <set>
+            <if test="isbn != null">
+                ISBN = #{isbn,jdbcType=CHAR},
+            </if>
+            <if test="ownerId != null">
+                OWNER_ID = #{ownerId,jdbcType=INTEGER},
+            </if>
+            <if test="privacy != null">
+                PRIVACY = #{privacy,jdbcType=INTEGER},
+            </if>
+            <if test="borrowState != null">
+                BORROW_STATE = #{borrowState,jdbcType=INTEGER},
+            </if>
+            <if test="addTime != null">
+                ADD_TIME = #{addTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deleteBook != null">
+                DELETE_BOOK = #{deleteBook,jdbcType=INTEGER},
+            </if>
+        </set>
+        where BOOK_ID = #{bookId,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.ecust.sharebook.pojo.rUserBook">
     update r_user_book
     set ISBN = #{isbn,jdbcType=CHAR},
       OWNER_ID = #{ownerId,jdbcType=INTEGER},
-      PRIVACY = #{privacy,jdbcType=BIT},
-      BORROW_STATE = #{borrowState,jdbcType=BIT},
+      PRIVACY = #{privacy,jdbcType=INTEGER},
+      BORROW_STATE = #{borrowState,jdbcType=INTEGER},
       ADD_TIME = #{addTime,jdbcType=TIMESTAMP},
-      DELETE_BOOK = #{deleteBook,jdbcType=BIT}
+      DELETE_BOOK = #{deleteBook,jdbcType=INTEGER}
     where BOOK_ID = #{bookId,jdbcType=INTEGER}
   </update>
 
-  <select id="list1" resultType="java.util.HashMap">
+    <select id="list1" resultType="java.util.HashMap">
     select `ISBN`,`ADD_TIME` from r_user_book
     where OWNER_ID = #{ownerId}
 </select>
 
-  <select id="SelectByIsbn" resultType="com.ecust.sharebook.pojo.rUserBook">
-    select * from r_user_book
-    <where>
-      <if test="ownerId != null and ownerId != ''"> and OWNER_ID = #{ownerId} </if>
-      <if test="isbn != null and isbn != ''"> and ISBN = #{isbn} </if>
-    </where>
-</select>
+    <select id="SelectByIsbn" resultType="com.ecust.sharebook.pojo.rUserBook">
+        select * from r_user_book
+        <where>
+            <if test="ownerId != null and ownerId != ''">and OWNER_ID = #{ownerId}</if>
+            <if test="isbn != null and isbn != ''">and ISBN = #{isbn}</if>
+        </where>
+    </select>
 
 
-  <insert id="save"  useGeneratedKeys="true" keyProperty="bookId">
+    <insert id="save" useGeneratedKeys="true" keyProperty="bookId">
 		insert into r_user_book
 		(
 		`OWNER_ID`,
@@ -171,8 +178,7 @@
 	</insert>
 
 
-
-  <select id="findShelf" resultMap="myShelfResultMap">
+    <select id="findShelf" resultMap="myShelfResultMap">
   SELECT
     r_user_book.ISBN,
     r_user_book.OWNER_ID,
@@ -189,8 +195,7 @@
   </select>
 
 
-
-  <select id="findOtherShelf" resultMap="otherShelfResultMap">
+    <select id="findOtherShelf" resultMap="otherShelfResultMap">
   SELECT
     ISBN,
     BOOK_ID,
@@ -201,8 +206,7 @@
   </select>
 
 
-
-  <select id="findOtherShelfCateLog" resultMap="otherShelfResultMap">
+    <select id="findOtherShelfCateLog" resultMap="otherShelfResultMap">
     SELECT
     ISBN,
     BOOK_ID,
@@ -214,8 +218,7 @@
   </select>
 
 
-
-  <select id="findShelfCateLog" resultMap="myShelfResultMap">
+    <select id="findShelfCateLog" resultMap="myShelfResultMap">
   SELECT
     r_user_book.ISBN,
     r_user_book.OWNER_ID,
@@ -233,62 +236,103 @@
   </select>
 
 
-
-  <select id="list" resultType="com.ecust.sharebook.pojo.rUserBook">
-    select BOOK_ID, ISBN, OWNER_ID, PRIVACY, BORROW_STATE, ADD_TIME, DELETE_BOOK
-    from r_user_book
-    <where>
-      <if test="bookId != null and bookId != ''"> and BOOK_ID = #{bookId} </if>
-      <if test="isbn != null and isbn != ''"> and ISBN = #{isbn} </if>
-      <if test="ownerId != null and ownerId != ''"> and OWNER_ID = #{ownerId} </if>
-      <if test="privacy != null and privacy != ''"> and PRIVACY = #{privacy} </if>
-      <if test="borrowState != null and borrowState != ''"> and BORROW_STATE = #{borrowState} </if>
-      <if test="addTime != null and addTime != ''"> and ADD_TIME = #{addTime} </if>
-      <if test="deleteBook != null and deleteBook != ''"> and DELETE_BOOK = #{deleteBook} </if>
-    </where>
-    <choose>
-      <when test="sort != null and sort.trim() != ''">
-        order by ${sort} ${order}
-      </when>
-      <otherwise>
-        order by BOOK_ID desc
-      </otherwise>
-    </choose>
-    <if test="offset != null and limit != null">
-      limit #{offset}, #{limit}
-    </if>
-  </select>
-
+    <select id="list" resultType="com.ecust.sharebook.pojo.rUserBook">
+        select BOOK_ID, ISBN, OWNER_ID, PRIVACY, BORROW_STATE, ADD_TIME, DELETE_BOOK
+        from r_user_book
+        <where>
+            <if test="bookId != null and bookId != ''">and BOOK_ID = #{bookId}</if>
+            <if test="isbn != null and isbn != ''">and ISBN = #{isbn}</if>
+            <if test="ownerId != null and ownerId != ''">and OWNER_ID = #{ownerId}</if>
+            <if test="privacy != null and privacy != ''">and PRIVACY = #{privacy}</if>
+            <if test="borrowState != null and borrowState != ''">and BORROW_STATE = #{borrowState}</if>
+            <if test="addTime != null and addTime != ''">and ADD_TIME = #{addTime}</if>
+            <if test="deleteBook != null and deleteBook != ''">and DELETE_BOOK = #{deleteBook}</if>
+        </where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+            <otherwise>
+                order by BOOK_ID desc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
 
 
+    <select id="listByState1" resultType="com.ecust.sharebook.pojo.MessageInf">
+        SELECT
+        MESSAGE_ID, SENDER_ID, RECEIVER_ID, CONTENT, DATE_TIME, REASON, BORROW_RES,M_TYPE,M_BORROW_ID
+        FROM r_book_user_borrow , message_inf
+        WHERE r_book_user_borrow.BORROW_ID = message_inf.M_BORROW_ID
+        AND r_book_user_borrow.USR_BORROW_STATE = 1
+        AND r_book_user_borrow.BOOK_ID = #{bookId}
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
 
-  <select id="listByState1" resultType="com.ecust.sharebook.pojo.MessageInf">
+
+    <select id="listByState2" resultType="com.ecust.sharebook.pojo.MessageInf">
+        SELECT
+        MESSAGE_ID, SENDER_ID, RECEIVER_ID, CONTENT, DATE_TIME, REASON, BORROW_RES,M_TYPE,M_BORROW_ID
+        FROM r_book_user_borrow , message_inf
+        WHERE r_book_user_borrow.BORROW_ID = message_inf.M_BORROW_ID
+        AND r_book_user_borrow.USR_BORROW_STATE IN(2,3)
+        AND r_book_user_borrow.BOOK_ID = #{bookId}
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+
+    <select id="ownershelf" resultMap="shelfResultMap">
+        SELECT r_user_book.ISBN as isbn, max(ADD_TIME) as sortTime,COUNT(*)as total,BOOK_ID as id,r_user_book.OWNER_ID as ownerId
+        FROM r_user_book LEFT JOIN r_book_category
+        ON r_user_book.ISBN = r_book_category.ISBN
+        <where>
+            OWNER_ID= #{ownerId}
+            <if test="bCatgId != null and bCatgId != ''">and MCATG_ID = #{bCatgId}</if>
+            <if test="privacy != null and privacy != ''">and PRIVACY = #{privacy}</if>
+        </where>
+        GROUP BY r_user_book.ISBN
+    </select>
+
+    <select id="borrowShelf" resultMap="shelfResultMap">
+        SELECT r_user_book. ISBN, max(BORROW_TIME) sortTime,COUNT(*)as total,r_book_user_borrow.BORROW_ID as id,r_user_book.OWNER_ID as ownerId
+        FROM r_book_user_borrow
+        JOIN r_user_book
+        ON r_user_book.BOOK_ID = r_book_user_borrow.BOOK_ID
+        LEFT JOIN r_book_category
+        ON r_user_book.ISBN = r_book_category.ISBN
+        <where>
+            USER_ID = #{ownerId}
+            <if test="bCatgId != null and bCatgId != ''">and MCATG_ID = #{bCatgId}</if>
+        </where>
+        GROUP BY r_user_book. ISBN
+    </select>
+
+
+    <select id="findOwnerBookList" resultType="java.util.Map">
     SELECT
-    MESSAGE_ID, SENDER_ID, RECEIVER_ID, CONTENT, DATE_TIME, REASON, BORROW_RES,M_TYPE,M_BORROW_ID
-    FROM   r_book_user_borrow , message_inf
-    WHERE r_book_user_borrow.BORROW_ID = message_inf.M_BORROW_ID
-    AND r_book_user_borrow.USR_BORROW_STATE = 1
-    AND  r_book_user_borrow.BOOK_ID = #{bookId}
-    <if test="offset != null and limit != null">
-      limit #{offset}, #{limit}
-    </if>
+    BOOK_ID as id,BOOK_NAME as bookName,PIC_PATH as picPath,AUTHOR as author,ADD_TIME as sortTime,BORROW_STATE as borrowState,PRIVACY as privacy,book_inf.ISBN as isbn,r_user_book.OWNER_ID as ownerId
+    FROM  r_user_book,book_inf
+    WHERE r_user_book.ISBN = book_inf.ISBN
+    AND OWNER_ID = #{ownerId}
+    AND  r_user_book.ISBN = #{isbn}
   </select>
 
-
-  <select id="listByState2" resultType="com.ecust.sharebook.pojo.MessageInf">
+    <select id="findBorrowBookList" resultType="java.util.Map">
     SELECT
-    MESSAGE_ID, SENDER_ID, RECEIVER_ID, CONTENT, DATE_TIME, REASON, BORROW_RES,M_TYPE,M_BORROW_ID
-    FROM   r_book_user_borrow , message_inf
-    WHERE r_book_user_borrow.BORROW_ID = message_inf.M_BORROW_ID
-    AND r_book_user_borrow.USR_BORROW_STATE IN(2,3)
-    AND  r_book_user_borrow.BOOK_ID = #{bookId}
-    <if test="offset != null and limit != null">
-      limit #{offset}, #{limit}
-    </if>
+    BORROW_ID as id,BOOK_NAME as bookName,AUTHOR as author,PIC_PATH as picPath,BORROW_TIME as sortTime,USR_BORROW_STATE as usrBorrowState,book_inf.ISBN as isbn,r_user_book.OWNER_ID as ownerId
+    FROM  r_book_user_borrow,book_inf,r_user_book
+    WHERE r_user_book.ISBN = book_inf.ISBN
+    AND r_book_user_borrow.BOOK_ID = r_user_book.BOOK_ID
+    AND USER_ID = #{ownerId}
+    AND  r_user_book.ISBN = #{isbn}
   </select>
-
-
-
 
 
 

@@ -1,9 +1,11 @@
 package com.ecust.sharebook;
 
+import com.ecust.sharebook.mapper.FriendInfMapper;
 import com.ecust.sharebook.mapper.rBcircleMemberMapper;
 import com.ecust.sharebook.pojo.*;
 import com.ecust.sharebook.pojo.util.circle.circleCatgBook;
 import com.ecust.sharebook.pojo.util.circle.shelfByCatg;
+import com.ecust.sharebook.pojo.util.shelf.book;
 import com.ecust.sharebook.service.*;
 import com.ecust.sharebook.utils.Jwt.JwtUtil;
 import com.ecust.sharebook.utils.common.R;
@@ -38,6 +40,23 @@ public class SharebookApplicationTests {
     private JwtUtil jwtUtil;
     @Autowired
     private TBookCircleService tBookCircleService;
+    @Autowired
+    private TUserBookService tUserBookService;
+
+    @Autowired
+    private TMessageService tMessageService;
+
+    @Autowired
+    private TBookUserBorrowService tBookUserBorrowService;
+    @Autowired
+    private optService toptService;
+
+    @Autowired
+    private TFriendService tFriendService;
+    @Autowired
+    private FriendInfMapper friendInfMapper;
+
+
 
 
 
@@ -50,32 +69,24 @@ public class SharebookApplicationTests {
 
 
 
-        Integer bookCircleId = Integer.valueOf(2);
-        //String isbn = "9787121355950";
-        param.put("bookCircleId", bookCircleId);
+        Integer fid = Integer.valueOf(29);
+        Integer mid = Integer.valueOf(23);
 
-        Integer userId = Integer.valueOf(23);
-        param.put("userId", userId);;
+        param.put("fid", fid);
+        param.put("mid",mid);
 
-        UserInf me = tMemberService.list(param).get(0); //查询用户信息（根据openId 查询 userId）
-        rBcircleMember rBcircleMemberTemp = new rBcircleMember();
-        rBcircleMemberTemp.setBookCircleId(bookCircleId);
-        rBcircleMemberTemp.setMemberId(me.getUserId());
+        List<Map<String,Object>>  mm = friendInfMapper.friendInfo(param);
+      Map<String,Object>  m1m = tFriendService.friendInfo(param);
 
-        int i  = tBcircleMemberService.insert(rBcircleMemberTemp);
-        if(i==1){
-            result.put("is_exist", 1);
-        }else
-            result.put("is_exist", 0);
+        System.out.println(mm.size());
+        System.out.println(mm);
 
 
-        r.put("status", result);
+    }
 
 
-        System.out.println(r);
-
-
-
+    @Test
+    public void pass(){
 
 
     }

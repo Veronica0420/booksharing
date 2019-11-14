@@ -17,6 +17,10 @@ public class PostInf {
 
     private  UserInf userInf;
 
+    private Integer count;
+
+    private int flag; //0 自己  1朋友 2 陌生人
+
     public Integer getPostId() {
         return postId;
     }
@@ -71,5 +75,22 @@ public class PostInf {
 
     public void setUserInf(UserInf userInf) {
         this.userInf = userInf;
+    }
+
+    public Integer getCount() {
+        return count;
+    }
+
+    public void setCount(Integer count) {
+        this.count = count;
+    }
+
+
+    public int getFlag() {
+        return flag;
+    }
+
+    public void setFlag(int flag) {
+        this.flag = flag;
     }
 }

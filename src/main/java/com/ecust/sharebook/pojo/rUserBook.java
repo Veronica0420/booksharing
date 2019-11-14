@@ -16,7 +16,14 @@ public class rUserBook {
 
     private Date addTime;
 
-    private Boolean deleteBook;
+    private Integer deleteBook;
+
+    private String  privacyS;
+
+    private String borrowStateS;
+
+    private String time;
+
 
 
     public Integer getBookId() {
@@ -67,12 +74,35 @@ public class rUserBook {
         this.addTime = addTime;
     }
 
-    public Boolean getDeleteBook() {
+    public Integer getDeleteBook() {
         return deleteBook;
     }
 
-    public void setDeleteBook(Boolean deleteBook) {
+    public void setDeleteBook(Integer deleteBook) {
         this.deleteBook = deleteBook;
     }
 
+    public String getPrivacyS() {
+        return privacyS;
+    }
+
+    public void setPrivacyS(String privacyS) {
+        this.privacyS = privacyS;
+    }
+
+    public String getBorrowStateS() {
+        return borrowStateS;
+    }
+
+    public void setBorrowStateS(String borrowStateS) {
+        this.borrowStateS = borrowStateS;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
 }

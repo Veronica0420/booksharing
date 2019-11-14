@@ -17,6 +17,14 @@ public class rBookUserBorrow {
 
     private Date borrowTime;
 
+    private String  usrBorrowStateS;
+
+    private String  borrowTimeS;
+
+    private String  borrowDateTimeS;
+
+    private String  returnDateTimeS;
+
     public Integer getBorrowId() {
         return borrowId;
     }
@@ -72,5 +80,38 @@ public class rBookUserBorrow {
 
     public void setBorrowTime(Date borrowTime) {
         this.borrowTime = borrowTime;
+    }
+
+
+    public String getUsrBorrowStateS() {
+        return usrBorrowStateS;
+    }
+
+    public void setUsrBorrowStateS(String usrBorrowStateS) {
+        this.usrBorrowStateS = usrBorrowStateS;
+    }
+
+    public String getBorrowTimeS() {
+        return borrowTimeS;
+    }
+
+    public void setBorrowTimeS(String borrowTimeS) {
+        this.borrowTimeS = borrowTimeS;
+    }
+
+    public String getBorrowDateTimeS() {
+        return borrowDateTimeS;
+    }
+
+    public void setBorrowDateTimeS(String borrowDateTimeS) {
+        this.borrowDateTimeS = borrowDateTimeS;
+    }
+
+    public String getReturnDateTimeS() {
+        return returnDateTimeS;
+    }
+
+    public void setReturnDateTimeS(String returnDateTimeS) {
+        this.returnDateTimeS = returnDateTimeS;
     }
 }

@@ -3,6 +3,7 @@ package com.ecust.sharebook.mapper;
 import com.ecust.sharebook.pojo.CommentInf;
 import com.ecust.sharebook.pojo.rBcircleMember;
 import com.ecust.sharebook.pojo.util.circle.circleCatgBook;
+import com.ecust.sharebook.pojo.util.shelf.book;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -34,4 +35,10 @@ public interface rBcircleMemberMapper {
     List<Map<String ,Object>>findCatgShelf(Map<String ,Object> param);
 
     List<rBcircleMember> list(Map<String, Object> map);
+
+    List<book> findShelfCircle (Map<String, Object> map);
+
+    List<Map<String , Object>>findCircleBookList(Map<String, Object> map);
+
+    int delete (Map<String, Object> map);
 }

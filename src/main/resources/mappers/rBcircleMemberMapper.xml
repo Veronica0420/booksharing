@@ -6,6 +6,15 @@
         <result column="Book_Circle_ID" property="bookCircleId" jdbcType="INTEGER"/>
         <result column="MEMBER_ID" property="memberId" jdbcType="INTEGER"/>
         <result column="IF_CREATER" property="ifCreater" jdbcType="INTEGER"/>
+
+    </resultMap>
+
+    <resultMap type="com.ecust.sharebook.pojo.util.shelf.book" id="shelfResultMap">
+        <id column="ISBN" property="isbn"/>
+        <result column="sortTime" property="sortTime"/>
+        <result column="total" property="count"/>
+        <result column="id" property="id"/>
+        <result column="ownerId" property="ownerId"/>
     </resultMap>
 
     <resultMap type="com.ecust.sharebook.pojo.util.circle.circleCatgBook" id="circleCatgBook">
@@ -15,12 +24,13 @@
             <result column="bookName" property="bookName"/>
             <result column="picPath" property="picPath"/>
             <result column="briefIntro" property="briefIntro"/>
+            <result column="ifCreater" property="ifCreater"/>
 
         </collection>
     </resultMap>
 
     <sql id="Base_Column_List">
-    BC_MEM_ID, Book_Circle_ID, MEMBER_ID,IF_CREATER
+    BC_MEM_ID, Book_Circle_ID, MEMBER_ID
   </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
@@ -36,19 +46,13 @@
     delete from r_bcircle_member
     where BC_MEM_ID = #{bcMemId,jdbcType=INTEGER}
   </delete>
+
     <insert id="insert" parameterType="com.ecust.sharebook.pojo.rBcircleMember">
         <selectKey resultType="java.lang.Integer" keyProperty="bcMemId" order="AFTER">
             SELECT LAST_INSERT_ID()
         </selectKey>
         insert into r_bcircle_member (Book_Circle_ID, MEMBER_ID,IF_CREATER)
-        values (#{bookCircleId,jdbcType=INTEGER}, #{memberId,jdbcType=INTEGER},#{ifCreater,jdbcType=INTEGER})
-    </insert>
-    <insert id="insertmap">
-        <selectKey resultType="java.lang.Integer" keyProperty="bcMemId" order="AFTER">
-            SELECT LAST_INSERT_ID()
-        </selectKey>
-        insert into r_bcircle_member (Book_Circle_ID, MEMBER_ID,IF_CREATER)
-        values (#{bookCircleId,jdbcType=INTEGER}, #{memberId,jdbcType=INTEGER},#{ifCreater,jdbcType=INTEGER})
+        values (#{bookCircleId,jdbcType=INTEGER}, #{memberId,jdbcType=INTEGER}, #{ifCreater,jdbcType=INTEGER})
     </insert>
     <insert id="insertSelective" parameterType="com.ecust.sharebook.pojo.rBcircleMember">
         <selectKey resultType="java.lang.Integer" keyProperty="bcMemId" order="AFTER">
@@ -73,8 +77,8 @@
             <if test="memberId != null">
                 #{memberId,jdbcType=INTEGER},
             </if>
-            <if test="ifCreater != null">
-                #{ifCreater,jdbcType=INTEGER},
+            <if  test="ifCreater != null">
+                 #{ifCreater,jdbcType=INTEGER},
             </if>
         </trim>
     </insert>
@@ -102,6 +106,22 @@
   </update>
 
 
+    <select id="findShelfCircle" resultMap="shelfResultMap">
+        SELECT r_user_book.ISBN as isbn, max(ADD_TIME) as sortTime,COUNT(*)as total,BOOK_ID as id,r_user_book.OWNER_ID as ownerId
+        FROM r_bcircle_member JOIN r_user_book
+        ON r_bcircle_member.MEMBER_ID = r_user_book.OWNER_ID
+        LEFT JOIN r_book_category
+        ON r_user_book.ISBN = r_book_category.ISBN
+        <where>
+            r_bcircle_member.Book_Circle_ID =#{bookCircleId}
+            AND r_user_book.PRIVACY = 0
+            <if test="bCatgId != null and bCatgId != ''">and MCATG_ID = #{bCatgId}</if>
+        </where>
+        GROUP BY r_user_book.ISBN
+    </select>
+
+
+
     <select id="findShelf" resultType="java.util.Map">
     SELECT r_user_book.ISBN as isbn,count( r_user_book.ISBN) as total
     FROM r_bcircle_member  , r_user_book
@@ -110,6 +130,7 @@
     AND r_user_book.PRIVACY = 0
     GROUP BY r_user_book.ISBN
   </select>
+
 
 
     <select id="findCatg" resultMap="circleCatgBook">
@@ -122,6 +143,19 @@
         </foreach>
         AND r_book_category.ISBN = book_inf.ISBN
     </select>
+
+    <select id="findCircleBookList" resultType="java.util.Map">
+     SELECT
+    BOOK_ID as id,BOOK_NAME as bookName,PIC_PATH as picPath,AUTHOR as author,ADD_TIME as sortTime,BORROW_STATE as borrowState,
+    PRIVACY as privacy,book_inf.ISBN as isbn,r_bcircle_member.MEMBER_ID as ownerId
+    FROM r_bcircle_member,r_user_book,book_inf
+    WHERE r_bcircle_member.MEMBER_ID = r_user_book.OWNER_ID
+    AND r_user_book.ISBN = book_inf.ISBN
+    AND r_bcircle_member.Book_Circle_ID =#{bookCircleId}
+    AND  r_user_book.ISBN = #{isbn}
+    AND r_user_book.PRIVACY = 0
+
+  </select>
 
 
     <select id="findCatgShelf" resultType="java.util.Map">
@@ -143,7 +177,6 @@
             <if test="bcMemId != null and bcMemId != ''"> and BC_MEM_ID = #{bcMemId} </if>
             <if test="bookCircleId != null and bookCircleId != ''"> and Book_Circle_ID = #{bookCircleId} </if>
             <if test="memberId != null and memberId != ''"> and MEMBER_ID = #{memberId} </if>
-            <if test="ifCreater != null and ifCreater != ''" > and IF_CREATER = #{ifCreater} </if>
         </where>
         <choose>
             <when test="sort != null and sort.trim() != ''">
@@ -156,5 +189,13 @@
         <if test="offset != null and limit != null">
             limit #{offset}, #{limit}
         </if>
+    </select>
+
+    <select id="delete"  resultType="java.lang.Integer">
+    delete from r_bcircle_member
+    where Book_Circle_ID=  #{bookCircleId}
+	AND MEMBER_ID = #{memberId}
+
+
     </select>
 </mapper>

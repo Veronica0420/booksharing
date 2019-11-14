@@ -103,8 +103,6 @@ public class ShiroConfig {
 		//filterChainDefinitionMap.put("/blog", "anon");
 		//filterChainDefinitionMap.put("/blog/open/**", "anon");
 		LinkedHashMap<String, String> filterChainDefinitionMap = new LinkedHashMap<>();
-//		filterChainDefinitionMap.put("/small/tlogin", "anon");
-	//	filterChainDefinitionMap.put("/small/login", "anon");
 		filterChainDefinitionMap.put("/small/**", "anon");
 		LinkedHashMap<String, Filter> filterMap = new LinkedHashMap<String, Filter>();
 		filterMap.put("jwt", new JwtFilter());

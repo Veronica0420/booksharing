@@ -3,6 +3,7 @@ package com.ecust.sharebook.service.impl;
 import com.ecust.sharebook.mapper.rUserBookMapper;
 import com.ecust.sharebook.pojo.MessageInf;
 import com.ecust.sharebook.pojo.rUserBook;
+import com.ecust.sharebook.pojo.util.shelf.book;
 import com.ecust.sharebook.pojo.util.shelf.myShelf;
 import com.ecust.sharebook.service.TUserBookService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,26 @@ import java.util.Map;
 public class TUserBookServiceIml implements TUserBookService {
     @Autowired
     private rUserBookMapper trUserBookMapper;
+
+    @Override
+    public List<book> borrowShelf(Map<String, Object> map) {
+        return trUserBookMapper.borrowShelf(map);
+    }
+
+    @Override
+    public List<book> ownershelf(Map<String, Object> map) {
+        return trUserBookMapper.ownershelf(map);
+    }
+
+    @Override
+    public List<Map<String, Object>> findOwnerBookList(Map<String, Object> map) {
+        return trUserBookMapper.findOwnerBookList(map);
+    }
+
+    @Override
+    public List<Map<String, Object>> findBorrowBookList(Map<String, Object> map) {
+        return trUserBookMapper.findBorrowBookList(map);
+    }
 
     @Override
     public    List<Map<String, Object>> selectByOwId(Map<String, Object> params) {

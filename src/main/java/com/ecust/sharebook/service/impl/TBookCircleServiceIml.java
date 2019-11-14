@@ -104,5 +104,25 @@ public class TBookCircleServiceIml implements TBookCircleService {
         return null;
     }
 
+    @Override
+    public int deleteByPrimaryKey(Integer bookCircleId) {
+        return tBookCircleInfMapper.deleteByPrimaryKey(bookCircleId);
+    }
+
+    @Override
+    public int insertSelective(BookCircleInf record) {
+        return tBookCircleInfMapper.insertSelective(record);
+    }
+
+    @Override
+    public int updateByPrimaryKeySelective(BookCircleInf record) {
+        return tBookCircleInfMapper.updateByPrimaryKeySelective(record);
+    }
+
+    @Override
+    public int updateByPrimaryKey(BookCircleInf record) {
+        return tBookCircleInfMapper.updateByPrimaryKey(record);
+    }
+
 
 }

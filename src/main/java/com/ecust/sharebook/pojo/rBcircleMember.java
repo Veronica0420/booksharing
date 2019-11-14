@@ -11,6 +11,8 @@ public class rBcircleMember {
 
     private  UserInf userInf;
 
+    private  int friend; //身份标识 0 自己 1 好友-已申请 2-好友-同意 3不是好友
+
     public Integer getBcMemId() {
         return bcMemId;
     }
@@ -49,5 +51,22 @@ public class rBcircleMember {
 
     public void setUserInf(UserInf userInf) {
         this.userInf = userInf;
+    }
+
+    public Integer getIfCreater() {
+        return ifCreater;
+    }
+
+    public void setIfCreater(Integer ifCreater) {
+        this.ifCreater = ifCreater;
+    }
+
+
+    public int getFriend() {
+        return friend;
+    }
+
+    public void setFriend(int friend) {
+        this.friend = friend;
     }
 }

@@ -19,4 +19,10 @@ public interface PostInfMapper {
     int updateByPrimaryKey(PostInf record);
 
     List<PostInf> list(Map<String, Object> map);
+
+    List<PostInf> Plist(Map<String, Object> map);
+
+    PostInf post(Map<String, Object> map);
+
+
 }

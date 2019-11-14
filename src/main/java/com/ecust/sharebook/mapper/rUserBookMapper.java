@@ -3,6 +3,7 @@ package com.ecust.sharebook.mapper;
 
 import com.ecust.sharebook.pojo.MessageInf;
 import com.ecust.sharebook.pojo.rUserBook;
+import com.ecust.sharebook.pojo.util.shelf.book;
 import com.ecust.sharebook.pojo.util.shelf.myShelf;
 
 import java.util.List;
@@ -68,6 +69,14 @@ public interface rUserBookMapper {
      * 查询归还
      * **/
     List<MessageInf> listByState2(Map<String, Object> map);
+
+    List<book> borrowShelf (Map<String, Object> map);
+
+    List<book> ownershelf (Map<String, Object> map);
+
+    List<Map<String , Object>>findOwnerBookList(Map<String, Object> map);
+
+    List<Map<String , Object>>findBorrowBookList(Map<String, Object> map);
 
 
 

@@ -6,15 +6,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class IndexData {
-    private List<CategoryInf> cat_list ;
+    private List<CategoryInf> cat_list;
+    private List<book> books;
+    private int count;
+
+
     private List<CatgBook> catg_book_list;
+    private List<myShelf> borrow;
 
-    private   List<myShelf> borrow;
 
-public IndexData(){
-    cat_list = new ArrayList<CategoryInf>();
-    catg_book_list = new ArrayList<CatgBook>();
-}
+    public IndexData() {
+        cat_list = new ArrayList<CategoryInf>();
+        this.count = 0;
+
+    }
 
     public List<CategoryInf> getCat_list() {
         return cat_list;
@@ -38,5 +43,22 @@ public IndexData(){
 
     public void setBorrow(List<myShelf> borrow) {
         this.borrow = borrow;
+    }
+
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
+
+    public List<book> getBooks() {
+        return books;
+    }
+
+    public void setBooks(List<book> books) {
+        this.books = books;
     }
 }

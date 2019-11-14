@@ -1,14 +1,16 @@
 package com.ecust.sharebook.pojo.util.friend;
 
+import com.ecust.sharebook.pojo.FriendInf;
+
 import java.util.List;
 
 public class friendListType implements Comparable<friendListType> {
 
-    private List<friendList> friendLists;
+    private List<FriendInf> friendLists;
 
     private String firstChar;
 
-    public  friendListType(String firstChar , List<friendList> friendLists){
+    public  friendListType(String firstChar , List<FriendInf> friendLists){
         this.firstChar = firstChar;
         this.friendLists = friendLists;
     }
@@ -22,11 +24,11 @@ public class friendListType implements Comparable<friendListType> {
     }
 
 
-    public List<friendList> getFriendLists() {
+    public List<FriendInf> getFriendLists() {
         return friendLists;
     }
 
-    public void setFriendLists(List<friendList> friendLists) {
+    public void setFriendLists(List<FriendInf> friendLists) {
         this.friendLists = friendLists;
     }
 
