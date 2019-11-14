@@ -90,13 +90,9 @@ public class TBookCircleServiceIml implements TBookCircleService {
      */
     @Override
     public List<BookCircleInf> seletbybName_bc(Map<String, Object> params) {
-        List<Integer> list1=tvBookCreaterBcircleMapper.selectByBookName(params);
-        System.out.println("list.size==="+list1.size());
-        List<Integer> list2=tvBookMemberBcircleMapper.selectByBookName(params);
-        list1.addAll(list2);
-        HashSet h = new HashSet(list1);
-        list1.clear();
-        list1.addAll(h);
+
+        List<Integer> list1=tvBookMemberBcircleMapper.selectByBookName(params);
+
 
         List<BookCircleInf> result=new ArrayList<>();
         for(int i=0;i<list1.size();i++){
