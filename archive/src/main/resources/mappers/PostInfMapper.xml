@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ecust.sharebook.mapper.PostInfMapper" >
+  <resultMap id="BaseResultMap" type="com.ecust.sharebook.pojo.PostInf" >
+    <id column="POST_ID" property="postId" jdbcType="INTEGER" />
+    <result column="PUBLISHER_ID" property="publisherId" jdbcType="INTEGER" />
+    <result column="PUB_TIME" property="pubTime" jdbcType="TIMESTAMP" />
+    <result column="TITLE" property="title" jdbcType="VARCHAR" />
+    <result column="CONTENT" property="content" jdbcType="VARCHAR" />
+    <result column="BOOK_CIRCLE_ID" property="bookCircleId" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    POST_ID, PUBLISHER_ID, PUB_TIME, TITLE, CONTENT, BOOK_CIRCLE_ID
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from post_inf
+    where POST_ID = #{postId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from post_inf
+    where POST_ID = #{postId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ecust.sharebook.pojo.PostInf" >
+    <selectKey resultType="java.lang.Integer" keyProperty="postId" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into post_inf (PUBLISHER_ID, PUB_TIME, TITLE, 
+      CONTENT, BOOK_CIRCLE_ID)
+    values (#{publisherId,jdbcType=INTEGER}, #{pubTime,jdbcType=TIMESTAMP}, #{title,jdbcType=VARCHAR}, 
+      #{content,jdbcType=VARCHAR}, #{bookCircleId,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ecust.sharebook.pojo.PostInf" >
+    <selectKey resultType="java.lang.Integer" keyProperty="postId" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into post_inf
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="publisherId != null" >
+        PUBLISHER_ID,
+      </if>
+      <if test="pubTime != null" >
+        PUB_TIME,
+      </if>
+      <if test="title != null" >
+        TITLE,
+      </if>
+      <if test="content != null" >
+        CONTENT,
+      </if>
+      <if test="bookCircleId != null" >
+        BOOK_CIRCLE_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="publisherId != null" >
+        #{publisherId,jdbcType=INTEGER},
+      </if>
+      <if test="pubTime != null" >
+        #{pubTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="bookCircleId != null" >
+        #{bookCircleId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ecust.sharebook.pojo.PostInf" >
+    update post_inf
+    <set >
+      <if test="publisherId != null" >
+        PUBLISHER_ID = #{publisherId,jdbcType=INTEGER},
+      </if>
+      <if test="pubTime != null" >
+        PUB_TIME = #{pubTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="title != null" >
+        TITLE = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        CONTENT = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="bookCircleId != null" >
+        BOOK_CIRCLE_ID = #{bookCircleId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where POST_ID = #{postId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ecust.sharebook.pojo.PostInf" >
+    update post_inf
+    set PUBLISHER_ID = #{publisherId,jdbcType=INTEGER},
+      PUB_TIME = #{pubTime,jdbcType=TIMESTAMP},
+      TITLE = #{title,jdbcType=VARCHAR},
+      CONTENT = #{content,jdbcType=VARCHAR},
+      BOOK_CIRCLE_ID = #{bookCircleId,jdbcType=INTEGER}
+    where POST_ID = #{postId,jdbcType=INTEGER}
+  </update>
+
+
+
+
+  <select id="list" resultType="com.ecust.sharebook.pojo.PostInf">
+    SELECT
+    POST_ID, PUBLISHER_ID, PUB_TIME, TITLE, CONTENT, BOOK_CIRCLE_ID
+    from post_inf
+    <where>
+      <if test="postId != null and postId != ''"> and POST_ID = #{postId} </if>
+      <if test="publisherId != null and publisherId != ''"> and PUBLISHER_ID = #{publisherId} </if>
+      <if test="bookCircleId != null and bookCircleId != ''"> and BOOK_CIRCLE_ID = #{bookCircleId} </if>
+    </where>
+    <choose>
+      <when test="sort != null and sort.trim() != ''">
+        order by ${sort} ${order}
+      </when>
+      <otherwise>
+        order by POST_ID desc
+      </otherwise>
+    </choose>
+    <if test="offset != null and limit != null">
+      limit #{offset}, #{limit}
+    </if>
+  </select>
+
+</mapper>

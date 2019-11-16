@@ -61,5 +61,8 @@ wechat:
   web:
     path: /users/zl/Desktop/temp
 
+  logging:
+    file: mylog.log
+
 
 

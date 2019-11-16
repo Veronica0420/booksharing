@@ -376,6 +376,8 @@ public class BookCircleController {
                 } else {
                     result.put("is_exist", 0);
                 }
+            }else if(mode.equals("picInfo")){
+
             }
 
 

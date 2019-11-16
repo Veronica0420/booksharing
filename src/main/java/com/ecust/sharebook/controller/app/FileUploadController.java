@@ -2,6 +2,9 @@ package com.ecust.sharebook.controller.app;
 
 
 
+import com.ecust.sharebook.pojo.BookCircleInf;
+import com.ecust.sharebook.service.TBookCircleService;
+import com.ecust.sharebook.service.impl.TBookCircleServiceIml;
 import com.ecust.sharebook.utils.common.upImage.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,6 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -38,6 +45,9 @@ public class FileUploadController {
 
     private String path;
 
+    @Autowired
+    private  TBookCircleService tBookCircleService;
+
 
 
 
@@ -48,15 +58,28 @@ public class FileUploadController {
      */
     @ResponseBody
     @RequestMapping("/fileUpload")
-    public String upload(@RequestParam("file")MultipartFile file ){
+    public String upload(@RequestParam Map<String, Object> params, @RequestParam("file")MultipartFile file ){
         //1定义要上传文件 的存放路径
-        String localPath="/users/zl/Desktop/temp";
+        String localPath="/opt/lampp/htdocs/magic/BookCircle/";   //CenOS7 服务器上路径
+        //String localPath="D:/img/";   //win10本地测试
         //2获得文件名字
         String fileName=file.getOriginalFilename();
         //2上传失败提示
         String warning="";
-        if(FileUtils.upload(file, localPath, fileName)){
-            //上传成功
+        FileUtils fileUtils=new FileUtils();
+        if(fileUtils.upload(file, localPath, fileName)){
+            //上传成功,图片url更新数据库图书圈表
+
+            String picULR=fileUtils.picURL;
+            //String bookCircleId = (String) request.getParameter("bookCircleId");
+            String bookCircleId=params.get("bookCircleId").toString();
+            System.out.println("here  picURL="+picULR);
+            System.out.println("here bookcircleid:"+bookCircleId);
+
+            BookCircleInf bookCircleInf=new BookCircleInf();
+            bookCircleInf.setCirclePicPath(picULR);
+            bookCircleInf.setBookCircleId(Integer.parseInt(bookCircleId));
+            tBookCircleService.updatePicPath(bookCircleInf);
             warning="上传成功";
 
         }else{

@@ -91,8 +91,11 @@
       CREATER_ID = #{createrId,jdbcType=INTEGER}
     where BOOK_CIRCLE_ID = #{bookCircleId,jdbcType=INTEGER}
   </update>
-
-
+    <update id="updatePicPath" parameterType="com.ecust.sharebook.pojo.BookCircleInf">
+    update book_circle_inf
+    set CIRCLE_PIC_PATH = #{circlePicPath,jdbcType=VARCHAR}
+    where BOOK_CIRCLE_ID = #{bookCircleId,jdbcType=INTEGER}
+  </update>
 
 
 

@@ -54,6 +54,13 @@
         insert into r_bcircle_member (Book_Circle_ID, MEMBER_ID,IF_CREATER)
         values (#{bookCircleId,jdbcType=INTEGER}, #{memberId,jdbcType=INTEGER}, #{ifCreater,jdbcType=INTEGER})
     </insert>
+    <insert id="insertmap">
+        <selectKey resultType="java.lang.Integer" keyProperty="bcMemId" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into r_bcircle_member (Book_Circle_ID, MEMBER_ID,IF_CREATER)
+        values (#{bookCircleId,jdbcType=INTEGER}, #{memberId,jdbcType=INTEGER},#{ifCreater,jdbcType=INTEGER})
+    </insert>
     <insert id="insertSelective" parameterType="com.ecust.sharebook.pojo.rBcircleMember">
         <selectKey resultType="java.lang.Integer" keyProperty="bcMemId" order="AFTER">
             SELECT LAST_INSERT_ID()

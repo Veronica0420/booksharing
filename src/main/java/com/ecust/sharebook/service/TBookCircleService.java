@@ -23,4 +23,6 @@ public interface TBookCircleService {
     int updateByPrimaryKeySelective(BookCircleInf record);
 
     int updateByPrimaryKey(BookCircleInf record);
+
+    int updatePicPath(BookCircleInf record);
 }

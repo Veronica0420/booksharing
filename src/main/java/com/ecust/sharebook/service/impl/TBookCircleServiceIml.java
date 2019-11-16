@@ -126,5 +126,11 @@ public class TBookCircleServiceIml implements TBookCircleService {
         return tBookCircleInfMapper.updateByPrimaryKey(record);
     }
 
+    @Override
+    public  int updatePicPath(BookCircleInf record){
+        return tBookCircleInfMapper.updatePicPath(record);
+
+    }
+
 
 }

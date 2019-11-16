@@ -18,6 +18,8 @@ public interface BookCircleInfMapper {
 
     int updateByPrimaryKey(BookCircleInf record);
 
+    int updatePicPath(BookCircleInf record);
+
     //根据图书圈名查找相似结果  ——Sijar
     List<BookCircleInf> selectLikebcName(Map<String ,Object> map);
 
