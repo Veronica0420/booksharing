@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -53,7 +55,7 @@ public class optServiceImpl implements optService {
         MessageInf messageInfTemp = tMessageService.list(param).get(0);
         param.put("borrowId", messageInfTemp.getmBorrowId());
         rBookUserBorrow rBookUserBorrowTemp = tBookUserBorrowService.list(param).get(0);
-        param.put("bookId",rBookUserBorrowTemp.getBookId());
+        param.put("bookId", rBookUserBorrowTemp.getBookId());
 
         if (mode) {
             //申请
@@ -73,7 +75,7 @@ public class optServiceImpl implements optService {
                         rBookUserBorrowTemp2.setBorrowDateTime(date);
                         rUserBookTemp2.setBookId(rBookUserBorrowTemp.getBookId());
                         rUserBookTemp2.setBorrowState(2); //已借出
-                        Boolean resultTemp = update3(rBookUserBorrowTemp2,rUserBookTemp2,messageInfTemp2);
+                        Boolean resultTemp = update3(rBookUserBorrowTemp2, rUserBookTemp2, messageInfTemp2);
                         if (resultTemp) {
                             continue;
                         } else {
@@ -85,7 +87,7 @@ public class optServiceImpl implements optService {
                     messageInfTemp2.setBorrowRes(2); //拒绝
                     rBookUserBorrowTemp2.setBorrowId(me.getmBorrowId());
                     rBookUserBorrowTemp2.setUsrBorrowState(6); //申请不通过
-                    Boolean resultTemp2 = update2(rBookUserBorrowTemp2,messageInfTemp2);
+                    Boolean resultTemp2 = update2(rBookUserBorrowTemp2, messageInfTemp2);
 
                     if (resultTemp2) {
                         continue;
@@ -107,7 +109,7 @@ public class optServiceImpl implements optService {
                 messageInfTemp2.setBorrowRes(2); //拒绝
                 rBookUserBorrowTemp2.setBorrowId(messageInfTemp.getmBorrowId());
                 rBookUserBorrowTemp2.setUsrBorrowState(6);  //申请不通过
-                Boolean resultTemp2 = update2(rBookUserBorrowTemp2,messageInfTemp2);
+                Boolean resultTemp2 = update2(rBookUserBorrowTemp2, messageInfTemp2);
 
                 if (messageInfList.size() == 1) {
 
@@ -146,7 +148,7 @@ public class optServiceImpl implements optService {
             rUserBookTemp2.setBookId(rBookUserBorrowTemp.getBookId());
             rUserBookTemp2.setBorrowState(0);//无申请
 
-            Boolean resultTemp = update3(rBookUserBorrowTemp2,rUserBookTemp2,messageInfTemp2);
+            Boolean resultTemp = update3(rBookUserBorrowTemp2, rUserBookTemp2, messageInfTemp2);
             if (resultTemp) {
                 result = true;
                 return result;
@@ -300,5 +302,329 @@ public class optServiceImpl implements optService {
         return result;
     }
 
+    @Override
+    public Boolean appplyBook1(String muserId, String mfid, String mbookId, String mdate) throws ParseException {
 
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = format.parse(mdate);
+        Integer userId = Integer.valueOf(mbookId);
+        Integer fid = Integer.valueOf(mfid);
+        Integer bookId = Integer.valueOf(mbookId);
+
+        //insert rBookUserBorrow
+        rBookUserBorrow rBookUserBorrows = new rBookUserBorrow();
+        rBookUserBorrows.setBookId(bookId);
+        rBookUserBorrows.setBorrowTime(date);
+        rBookUserBorrows.setUserId(userId);
+        //update rUserBook
+        rUserBook rUserBooks = new rUserBook();
+        rUserBooks.setBookId(bookId);
+        rUserBooks.setBorrowState(1); //待处理
+
+        //insert message
+        MessageInf message = new MessageInf();
+        message.setmType(0);//申请
+        message.setSenderId(userId);  //我
+        message.setReceiverId(fid);
+        message.setDateTime(date);
+
+        Boolean result = appplyBook(rBookUserBorrows, rUserBooks, message);
+        return result;
+    }
+
+
+    /*************************************
+     * 申请借阅：
+     * 同意：
+     * message:
+     *      BORROW_RES 1
+     *
+     * borrow:
+     *      USR_BORROW_STATE 2
+     *      BORROW_DATE_TIME
+     * userBook:
+     *      BORROW_STATE 2
+     *
+     * 其他所有书籍：拒绝
+     *      * message:
+     *      *        BORROW_RES 2
+     *      * borrow:
+     *      *      USR_BORROW_STATE 6
+     **************************************/
+
+
+    @Override
+    public Boolean applyAgree(Integer messageId, Date date, Integer bookId) {
+        Map<String, Object> param = new HashMap<>();
+        param.put("messageId", messageId);
+        param.put("date", date);
+        int i = tMessageService.passApply(param);
+        param.clear();
+        param.put("bookId", bookId);
+        param.put("messageId", messageId);
+        int j = tMessageService.applyCancelOther(param);
+        if (i == i && j != 0) {
+            return true;
+        }
+        return false;
+    }
+
+
+    /*************************************
+     * 申请拒绝；
+     * message:
+     *        BORROW_RES 2
+     * borrow:
+     *      USR_BORROW_STATE 6
+     * userBook:
+     *      判断：BORROW_STATE
+     *      有申请：1
+     *      无申请：0
+     * *************************************/
+
+    @Override
+    public Boolean rejectApply(Integer messageId) {
+        Map<String, Object> param = new HashMap<>();
+        int total = 0;
+
+        param.put("messageId", messageId);
+        int i = tMessageService.rejectApply(param);
+        if (i != 0) {
+            try {
+                total = tBookUserBorrowService.emptyCountM(param);
+                System.out.println("total" + total);
+                if (total == 0) {
+                    int z = tMessageService.emptyCountInsertM(param);
+                    if (z != 0) {
+                        return true;
+                    }
+                } else {
+                    return true;
+
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                //无申请
+                int z = tMessageService.emptyCountInsertM(param);
+                if (z != 0) {
+                    return true;
+                }
+
+            }
+
+        }
+        return false;
+    }
+
+
+    /*************************************
+     * 申请借阅；
+     *
+     * userBook:
+     *    BORROW_STATE 1
+     *
+     * insert:message，borrow
+     * *************************************/
+
+    @Override
+    public Boolean applyBook(rBookUserBorrow rBookUserBorrowTemp, Integer ownerId) {
+
+        try {
+            int i = tBookUserBorrowService.insertSelective(rBookUserBorrowTemp);
+
+            MessageInf messageInfTemp = new MessageInf();
+            messageInfTemp.setmType(0);
+            messageInfTemp.setmBorrowId(rBookUserBorrowTemp.getBorrowId());
+            messageInfTemp.setDateTime(rBookUserBorrowTemp.getBorrowTime());
+            messageInfTemp.setSenderId(rBookUserBorrowTemp.getUserId());
+            messageInfTemp.setReceiverId(ownerId);
+            int j = tMessageService.insertSelective(messageInfTemp);
+            Map<String, Object> param = new HashMap<>();
+            param.put("bookId", rBookUserBorrowTemp.getBookId());
+            int z = tUserBookService.applyopt(param);
+
+            System.out.println("i==" + i + "j==" + j + "z==" + z);
+            if (i != 0 && j != 0 && z != 0) {
+                return true;
+            } else {
+                return false;
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+
+
+    }
+
+
+    /*************************************
+     * 归还
+     * insert:message
+     * borrow:
+     *      USR_BORROW_STATE 3
+     * *************************************/
+    @Override
+    public Boolean returnBook(MessageInf messageInf) {
+        int i = tMessageService.insertSelective(messageInf);
+        Map<String, Object> param = new HashMap<>();
+        param.put("borrowId", messageInf.getmBorrowId());
+        int j = tBookUserBorrowService.returnopt(param);
+        if (i != 0 && j != 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+    /*************************************
+     * 归还：
+     * 同意：
+     * message:
+     *      BORROW_RES 1
+     *
+     * borrow:
+     *      USR_BORROW_STATE 4
+     *     RETURN_DATE_TIME
+     * userBook:
+     *      BORROW_STATE 0
+     *
+     **************************************/
+
+    @Override
+    public Boolean returnAgree(Integer messageId, Date date) {
+        Map<String, Object> param = new HashMap<>();
+        param.put("messageId", messageId);
+        param.put("date", date);
+        int i = tMessageService.passReturn(param);
+        if (i != 0) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
+
+    /*************************************
+     * 归还：
+     * 不同意：
+     * message:
+     *      BORROW_RES 2
+     *
+     * borrow:
+     *      USR_BORROW_STATE 7
+     *     RETURN_DATE_TIME
+     * userBook:
+     *      BORROW_STATE 0
+     *
+     **************************************/
+    @Override
+    public Boolean rejectReturn(Integer messageId, Date date) {
+        Map<String, Object> param = new HashMap<>();
+        param.put("messageId", messageId);
+        param.put("date", date);
+        int i = tMessageService.cancelReturn(param);
+        if (i != 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /*************************************
+     * 取消申请--主动发起
+     * message:
+     *      BORROW_RES 3
+     *
+     * borrow:
+     *      USR_BORROW_STATE 5
+     * userBook:
+     *      判断：BORROW_STATE
+     *      有申请：1
+     *      无申请：0
+     *
+     *
+     **************************************/
+    @Override
+    public Boolean cancelApply(Integer borrowId) {
+        Map<String, Object> param = new HashMap<>();
+        Integer total = 0;
+        param.put("borrowId", borrowId);
+        int i = tMessageService.cancelApply(param);
+        System.out.println("i" + i);
+        System.out.println("borrowId" + borrowId);
+
+        if (i != 0) {
+            try {
+                total = tBookUserBorrowService.emptyCountB(param);
+                System.out.println("total" + total);
+                if (total == 0) {
+                    int z = tMessageService.emptyCountInsertB(param);
+                    if (z != 0) {
+                        return true;
+                    }
+                } else {
+                    return true;
+
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                //无申请
+                int z = tMessageService.emptyCountInsertB(param);
+                if (z != 0) {
+                    return true;
+                }
+
+            }
+
+        }
+        return false;
+
+    }
+
+    @Override
+    public Boolean opt(MessageInf messageInf) {
+        Boolean flag = false;
+        Map<String, Object> param = new HashMap<>();
+        param.put("messageId", messageInf.getMessageId());
+        rBookUserBorrow rBookUserBorrowTemp = tBookUserBorrowService.selectByMessageId(param);
+        Integer bookId = rBookUserBorrowTemp.getBookId();
+        Integer mType = messageInf.getmType();
+        Integer borrowRes = messageInf.getBorrowRes();
+        Date date = messageInf.getDateTime();
+        Integer messageId = messageInf.getMessageId();
+
+        if (mType == 0) {  //申请提醒
+            if (borrowRes == 1) {//同意
+                 flag = applyAgree(messageId, date, bookId);
+
+
+
+            } else if (borrowRes == 2) { //拒绝
+                 flag = rejectApply(messageId);
+
+            }
+
+        }
+
+        if (mType == 1) {  //归还提醒
+            if (borrowRes == 1) {//同意
+                 flag = returnAgree(messageId, date);
+
+
+            } else if (borrowRes == 2) { //拒绝
+                 flag = rejectReturn(messageId, date);
+
+            }
+
+        }
+        return  flag;
+    }
 }

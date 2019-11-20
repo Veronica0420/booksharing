@@ -176,6 +176,16 @@
   </select>
 
 
+  <select id="listCurrent" resultType="com.ecust.sharebook.pojo.rBookUserBorrow">
+    select   `BORROW_ID`, `BOOK_ID`, `USER_ID`, `USR_BORROW_STATE`, `BORROW_DATE_TIME`, `RETURN_DATE_TIME`,`BORROW_TIME`
+    from r_book_user_borrow
+    where
+       BOOK_ID = #{bookId}
+      and USER_ID = #{userId}
+      and USR_BORROW_STATE IN (1,2,3)
+  </select>
+
+
   <select id="listByState" resultType="com.ecust.sharebook.pojo.rBookUserBorrow">
     select   `BORROW_ID`, `BOOK_ID`, `USER_ID`, `USR_BORROW_STATE`, `BORROW_DATE_TIME`, `RETURN_DATE_TIME`,`BORROW_TIME`
     from r_book_user_borrow
@@ -209,6 +219,49 @@
 		)
 	</insert>
 
+  <update id="returnopt">
+UPDATE r_book_user_borrow
+SET USR_BORROW_STATE = 3
+WHERE BORROW_ID = #{borrowId}
+
+</update>
+
+<select id="emptyCountB" resultType="java.lang.Integer">
+  SELECT COUNT(*) AS total
+  FROM r_book_user_borrow
+  WHERE USR_BORROW_STATE=1
+AND BOOK_ID  IN (
+SELECT BOOK_ID
+FROM message_inf,r_book_user_borrow
+ where message_inf.M_BORROW_ID = r_book_user_borrow.BORROW_ID
+
+ and BORROW_ID = #{borrowId}
+  )
+
+</select>
+
+  <select id="emptyCountM" resultType="java.lang.Integer">
+    SELECT COUNT(*) AS total
+    FROM r_book_user_borrow
+    WHERE USR_BORROW_STATE=1
+    AND BOOK_ID  IN (
+    SELECT BOOK_ID
+    FROM message_inf,r_book_user_borrow
+  where message_inf.M_BORROW_ID = r_book_user_borrow.BORROW_ID
+      and MESSAGE_ID = #{messageId}
+  )
+
+  </select>
+
+
+  <select id="selectByMessageId" resultType="com.ecust.sharebook.pojo.rBookUserBorrow">
+
+ select   BORROW_ID, r_book_user_borrow.BOOK_ID, USER_ID, USR_BORROW_STATE, BORROW_DATE_TIME, RETURN_DATE_TIME,BORROW_TIME
+FROM r_book_user_borrow,message_inf
+WHERE r_book_user_borrow.BORROW_ID = message_inf.M_BORROW_ID
+AND MESSAGE_ID = #{messageId}
+
+  </select>
 
 
 </mapper>

@@ -1,6 +1,8 @@
 package com.ecust.sharebook.utils.weichat.phone;
 
 
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+
 import java.security.AlgorithmParameters;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -15,7 +17,7 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
+
 
 /**
  * AES加密

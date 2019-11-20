@@ -84,5 +84,30 @@ public class TBookUserBorrowServiceImpl implements TBookUserBorrowService {
         return tBookUserBorrowMapper.selectByPrimaryKey(borrowId);
     }
 
+    @Override
+    public int returnopt(Map<String, Object> map) {
+        return tBookUserBorrowMapper.returnopt(map);
+    }
+
+    @Override
+    public Integer emptyCountM(Map<String, Object> map) {
+        return  tBookUserBorrowMapper.emptyCountM(map);
+    }
+
+    @Override
+    public Integer emptyCountB(Map<String, Object> map) {
+        return  tBookUserBorrowMapper.emptyCountB(map);
+    }
+
+    @Override
+    public rBookUserBorrow listCurrent(Map<String, Object> map) {
+        return tBookUserBorrowMapper.listCurrent(map);
+    }
+
+    @Override
+    public rBookUserBorrow selectByMessageId(Map<String, Object> map) {
+        return tBookUserBorrowMapper.selectByMessageId(map);
+    }
+
 
 }

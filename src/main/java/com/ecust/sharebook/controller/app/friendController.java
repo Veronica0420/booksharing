@@ -1,12 +1,15 @@
 package com.ecust.sharebook.controller.app;
 
 import com.ecust.sharebook.pojo.FriendInf;
+import com.ecust.sharebook.pojo.MessageInf;
 import com.ecust.sharebook.pojo.UserInf;
 import com.ecust.sharebook.pojo.util.friend.friendListType;
 import com.ecust.sharebook.service.TFriendService;
 import com.ecust.sharebook.service.TMemberService;
+import com.ecust.sharebook.service.TMessageService;
 import com.ecust.sharebook.utils.common.R;
 import com.ecust.sharebook.utils.Jwt.JwtUtil;
+import com.ecust.sharebook.utils.common.transferUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,6 +33,8 @@ public class friendController {
 
     @Autowired
     private JwtUtil jwtUtil;
+    @Autowired
+    private TMessageService tMessageService;
 
 
     /**
@@ -111,7 +116,7 @@ public class friendController {
         param.put("fid", fid);
         int flag = -1;
         if (fid == userInf.getUserId()) {
-            flag=0;
+            flag = 0;
             r.put("flag", 0); //self
         } else {
             try {
@@ -122,7 +127,7 @@ public class friendController {
                         flag = 2;
                         r.put("flag", 2); //agree
                     } else {
-                        flag =1;
+                        flag = 1;
                         r.put("flag", 1); // apply
                     }
                 }
@@ -134,13 +139,13 @@ public class friendController {
             }
         }
 
-        if(flag==2){
+        if (flag == 2) {
             try {
                 Map<String, Object> friendInfo = tFriendService.friendInfo(param);
                 if (friendInfo != null) {
                     String name = "";
                     if (Integer.valueOf(friendInfo.get("fid").toString()).equals(fid)) {
-                        if (friendInfo.get("aliasu") != null&&friendInfo.get("aliasu").toString().length()!=0) {
+                        if (friendInfo.get("aliasu") != null && friendInfo.get("aliasu").toString().length() != 0) {
                             name = friendInfo.get("aliasu").toString();
                         } else {
                             name = "暂无";
@@ -151,7 +156,7 @@ public class friendController {
                     } else {
                         friendInfo.put("id", friendInfo.get("uid"));
                         r.put("mid", friendInfo.get("fid"));
-                        if (friendInfo.get("aliasf") != null&&friendInfo.get("aliasf").toString().length()!=0) {
+                        if (friendInfo.get("aliasf") != null && friendInfo.get("aliasf").toString().length() != 0) {
                             name = friendInfo.get("aliasf").toString();
                         } else {
                             name = "暂无";
@@ -170,13 +175,12 @@ public class friendController {
                 e.printStackTrace();
                 result.put("is_exist", 0);
             }
-        }
-        else{
+        } else {
             param.put("userId", fid);
             try {
                 List<UserInf> userInfs = tMemberService.listPublic(param);
                 if (userInfs != null && userInfs.size() != 0) {
-                    r.put("mid",userInf.getUserId());
+                    r.put("mid", userInf.getUserId());
                     r.put("data", userInfs.get(0));
                     result.put("is_exist", 1);
                 } else {
@@ -449,5 +453,8 @@ public class friendController {
         return r;
 
     }
+
+
+
 
 }

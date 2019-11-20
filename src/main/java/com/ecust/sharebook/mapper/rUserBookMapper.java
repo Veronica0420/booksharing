@@ -79,5 +79,8 @@ public interface rUserBookMapper {
     List<Map<String , Object>>findBorrowBookList(Map<String, Object> map);
 
 
+    int applyopt(Map<String, Object> map);
+
+
 
 }

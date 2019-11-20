@@ -21,4 +21,13 @@ public interface BookInfMapper {
     List<BookInf> list(Map<String, Object> map);
 
     List<BookInf> findbyIsbn(Map<String, Object> map);
+
+    List<BookInf> ScanResult(Map<String, Object> map);
+
+    BookInf fingByMessageId(Map<String,Object> map);
+
+
+
+
+
 }

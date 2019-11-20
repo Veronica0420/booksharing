@@ -1,14 +1,13 @@
 package com.ecust.sharebook.controller.app;
 
 import com.ecust.sharebook.pojo.*;
-import com.ecust.sharebook.pojo.util.shelf.CatgBook;
 import com.ecust.sharebook.pojo.util.shelf.IndexData;
 import com.ecust.sharebook.pojo.util.shelf.book;
 import com.ecust.sharebook.pojo.util.shelf.myShelf;
 import com.ecust.sharebook.service.*;
 import com.ecust.sharebook.utils.Jwt.JwtUtil;
 import com.ecust.sharebook.utils.common.R;
-import com.ecust.sharebook.utils.shiro.UserRealm;
+import com.ecust.sharebook.utils.common.transferUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Controller
@@ -41,18 +39,32 @@ public class shelfController {
     private TMessageService tMessageService;
     @Autowired
     private optService toptService;
+    @Autowired
+    private TFriendService tFriendService;
 
 
     /**
-     * shelfIndex  加载书架
-     * params：access_token
-     * res: data:IndexData 1
-     * status:isSuccess 1 0
-     **/
+     * shelfIndex
+     * 加载所有书籍，包括
+     * 借阅的书籍：若有多个书籍--跳转进入为列表，否则直接进入详情界面
+     * 我的书籍：若有多个书籍--跳转进入为列表
+     * url:api.shelf.shelfIndex
+     * data:bCatgId：分类（0-所有）
+     * privacy：公开0 私密1 所有2
+     * isself：我的1 借阅2 所有0
+     * 返回：data: IndexData{
+     * 分类列表cat_list
+     * 书籍列表books
+     * 书籍总数count}
+     * <p>
+     * status:isSuccess（1-成功）（0-失败）
+     * myUserId---myUserId
+     */
 
     @ResponseBody
     @GetMapping("/shelfIndex")
     public R shelfIndex(@RequestParam Map<String, Object> params) {
+
         System.out.println("/shelfIndex");
         System.out.println(params);
         IndexData data = new IndexData();
@@ -70,8 +82,14 @@ public class shelfController {
 
 
         if (openId != null) {
+            if (params.size() == 5) {
+                Integer userId = Integer.valueOf(params.get("userId").toString());
+                param.put("userId", userId);
 
-            param.put("openId", openId);
+            } else {
+                param.put("openId", openId);
+            }
+
 
             try {
                 UserInf me = tMemberService.listPublic(param).get(0); //查询用户信息（根据openId 查询 userId）
@@ -79,21 +97,23 @@ public class shelfController {
                     Integer ownerId = me.getUserId();
                     param.clear();
 
+                    /**
+                     *  查询所有分类,添加分类-所有
+                     * **/
+
+                    cat_list = tCateService.list();
+                    CategoryInf categoryInfTemp = new CategoryInf();
+                    categoryInfTemp.setCatgId(0);
+                    categoryInfTemp.setCatgName("所有");
+                    cat_list.add(0, categoryInfTemp);
+                    data.setCat_list(cat_list);
+
                     if (bCatgId != 0) {
                         //所有分类
                         param.put("bCatgId", bCatgId);
                     }
 
                     param.put("ownerId", ownerId);
-                    //查询所有分类
-                    cat_list = tCateService.list();
-
-                    //添加分类-所有
-                    CategoryInf categoryInfTemp = new CategoryInf();
-                    categoryInfTemp.setCatgId(0);
-                    categoryInfTemp.setCatgName("所有");
-                    cat_list.add(0, categoryInfTemp);
-                    data.setCat_list(cat_list);
 
                     List<book> bookM = new ArrayList<>();
                     List<book> bookB = new ArrayList<>();
@@ -146,13 +166,100 @@ public class shelfController {
                     }
                     result.put("isSuccess", 1);  //查寻成功
                     r.put("data", data);
-                    r.put("myUserId",me.getUserId());
+                    r.put("myUserId", me.getUserId());
 
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 result.put("isSuccess", 0); //查寻不到用户
             }
+        }
+
+        r.put("status", result);
+
+
+        return r;
+    }
+
+
+    /**
+     * search
+     * 查询书籍-模糊查询
+     * url:api.shelf.search
+     * data:bookName：名称
+     * ownerId：用户id
+     * <p>
+     * 返回：data: IndexData{
+     * 书籍列表books
+     * 书籍总数count}
+     * status:isSuccess（1-成功）（0-失败）
+     */
+
+    @ResponseBody
+    @GetMapping("/search")
+    public R search(@RequestParam Map<String, Object> params) {
+        System.out.println("/search");
+        System.out.println(params);
+        IndexData data = new IndexData();
+        R r = new R();
+        Map<String, Object> param = new HashMap<>();
+        Map<String, Object> result = new HashMap<>();
+
+
+        List<book> bookM = new ArrayList<>();
+        List<book> bookB = new ArrayList<>();
+        List<book> bookFinal = new ArrayList<>();
+
+
+        Integer ownerId = Integer.valueOf(params.get("ownerId").toString()); //ownerId
+        String bookName = params.get("bookName").toString();
+
+        if (bookName != null && ownerId != null) {
+
+            param.put("bookName", bookName);
+            param.put("ownerId", ownerId);
+
+            try {
+                bookM = tUserBookService.ownershelf(param);
+
+                for (book bookMtemp : bookM) {
+                    BookInf bookInf = tBookService.selectByPrimaryKey(bookMtemp.getIsbn());
+                    bookMtemp.setAuthor(bookInf.getAuthor());
+                    bookMtemp.setBookName(bookInf.getBookName());
+                    bookMtemp.setPicPath(bookInf.getPicPath());
+                    bookMtemp.setType(true);
+                    bookFinal.add(bookMtemp);
+                }
+            } catch (Exception e) {
+                System.out.println("bookM--null");
+            }
+
+            try {
+
+                bookB = tUserBookService.borrowShelf(param);
+                for (book bookBtemp : bookB) {
+                    BookInf bookInf = tBookService.selectByPrimaryKey(bookBtemp.getIsbn());
+                    bookBtemp.setAuthor(bookInf.getAuthor());
+                    bookBtemp.setBookName(bookInf.getBookName());
+                    bookBtemp.setPicPath(bookInf.getPicPath());
+                    bookBtemp.setType(false);
+                    bookFinal.add(bookBtemp);
+                }
+            } catch (Exception e) {
+                System.out.println("bookB--null");
+            }
+
+            if (bookFinal != null && bookFinal.size() != 0) {
+                data.setCount(bookFinal.size());
+                data.setBooks(bookFinal);
+                result.put("isSuccess", 1);  //查寻成功
+                r.put("data", data);
+            } else {
+                result.put("isSuccess", 0);  //无书
+            }
+
+        } else {
+            result.put("isSuccess", 0); //查寻失败
         }
 
         r.put("status", result);
@@ -192,10 +299,10 @@ public class shelfController {
 
                     List<Map<String, Object>> bookList = new ArrayList<>();
                     //查询借阅的书籍和拥有的书籍
-                    if (mode.equals("owner")||mode.equals("other")) {
-                        if(mode.equals("owner")){
+                    if (mode.equals("owner") || mode.equals("other")) {
+                        if (mode.equals("owner")) {
                             param.put("ownerId", userId);
-                        }else {
+                        } else {
                             Integer ownerId = Integer.valueOf(params.get("ownerId").toString());
                             param.put("ownerId", ownerId);
                         }
@@ -212,7 +319,7 @@ public class shelfController {
                                 temp.put("type", transferUtil.privacy(Integer.valueOf(temp.get("privacy").toString())));
                             }
                         }
-                    } else if(mode.equals("borrow")){
+                    } else if (mode.equals("borrow")) {
                         param.put("ownerId", userId);
                         bookList = tUserBookService.findBorrowBookList(param);
                         for (Map<String, Object> temp : bookList) {
@@ -465,24 +572,44 @@ public class shelfController {
         Map<String, Object> status = new HashMap<>();
         System.out.println("/asecond/bdother");
         try {
-            String openId = jwtUtil.getWxOpenIdByToken(params.get("access_token").toString());
             Integer borrowId = Integer.valueOf(params.get("borrowId").toString());
             Integer ownerId = Integer.valueOf(params.get("ownerId").toString());
             String isbn = params.get("isbn").toString();
 
             rBookUserBorrow rBookUserBorrowTemp = tBookUserBorrowService.selectByPrimaryKey(borrowId);
-            BookInf bookInfTemp = tBookService.selectByPrimaryKey(isbn);
-            param.put("openId", openId);
-            UserInf userInf = tMemberService.listPublic(param).get(0);
+            param.put("isbn", isbn);
+            BookInf bookInfTemp = tBookService.findbyIsbn(param).get(0);
             param.clear();
             rUserBook rUserBook = tUserBookService.selectByPrimaryKey(rBookUserBorrowTemp.getBookId());
             param.put("userId", rUserBook.getOwnerId());
             UserInf fuserInf = tMemberService.listPublic(param).get(0);
-            rBookUserBorrowTemp = transferUtil.setBorrow(rBookUserBorrowTemp);
+            rBookUserBorrowTemp.setUsrBorrowStateS(transferUtil.usrBorrowState(rBookUserBorrowTemp.getUsrBorrowState()));
             bookInfTemp = transferUtil.setBookInf(bookInfTemp);
+            param.clear();
+            param.put("fid", ownerId);
+            param.put("mid", rUserBook.getOwnerId());
+            try {
+                FriendInf friendInf = tFriendService.list3(param).get(0);
+                if (friendInf != null) {
+                    if(friendInf.getUid()==ownerId){
+                        if(friendInf.getAliasu()!=null&&friendInf.getAliasu().length()!=0){
+                            fuserInf.setNickName(friendInf.getAliasu());
+                        }
+                    }else{
+                        if(friendInf.getAliasf()!=null&&friendInf.getAliasf().length()!=0){
+                            fuserInf.setNickName(friendInf.getAliasf());
+                        }
+                    }
+                    r.put("flag", true);
+                } else {
+                    r.put("flag", false);
+                }
+            } catch (Exception e) {
+                r.put("flag", false);
+            }
+            r.put("borrow", true);
             r.put("userBook", rBookUserBorrowTemp);
             r.put("bookInf", bookInfTemp);
-            r.put("userInfo", userInf);
             r.put("fuserInfo", fuserInf);
             status.put("is_exist", 1);
         } catch (Exception e) {
@@ -514,14 +641,12 @@ public class shelfController {
             Integer ownerId = Integer.valueOf(params.get("ownerId").toString());
             String openId = jwtUtil.getWxOpenIdByToken(params.get("access_token").toString());
 
-
             //根据bookid 查询 isbn
             rUserBook rUserBookTemp = tUserBookService.selectByPrimaryKey(bookId);
             if (rUserBookTemp != null) {
                 param.put("isbn", isbn);
                 BookInf bookInfTemp = tBookService.findbyIsbn(param).get(0);
                 if (bookInfTemp != null) {
-                    status.put("is_exist", 2); //成功查阅到书籍信息
                     param.put("openId", openId);
                     UserInf userInf = tMemberService.listPublic(param).get(0);
                     rUserBookTemp = transferUtil.setRUserBook(rUserBookTemp);
@@ -529,21 +654,66 @@ public class shelfController {
                     param.clear();
                     param.put("userId", ownerId);
                     UserInf fuserInf = tMemberService.listPublic(param).get(0);
+                    param.clear();
+                    param.put("bookId", bookId);
+                    param.put("userId", userInf.getUserId());
+                    try {
+
+                        rBookUserBorrow rBookUserBorrowTemp = tBookUserBorrowService.listCurrent(param);
+                        rBookUserBorrowTemp.setUsrBorrowStateS(transferUtil.usrBorrowState(rBookUserBorrowTemp.getUsrBorrowState()));
+
+                        if (rBookUserBorrowTemp != null) {
+                            System.out.println("notnull");
+                            r.put("userBook", rBookUserBorrowTemp);
+                            r.put("borrow", true);
+                        } else {
+                            System.out.println("null");
+                            r.put("userBook", rUserBookTemp);
+                            r.put("borrow", false);
+                        }
+                    } catch (Exception e) {
+                        System.out.println("null1");
+                        r.put("userBook", rUserBookTemp);
+                        r.put("borrow", false);
+                    }
+
+                    param.clear();
+                    param.put("fid", ownerId);
+                    param.put("mid", userInf.getUserId());
+                    try {
+                        FriendInf friendInf = tFriendService.list3(param).get(0);
+                        if (friendInf != null) {
+                            if(friendInf.getUid()== userInf.getUserId()){
+                                if(friendInf.getAliasu()!=null&&friendInf.getAliasu().length()!=0){
+                                    fuserInf.setNickName(friendInf.getAliasu());
+                                }
+                            }else{
+                                if(friendInf.getAliasf()!=null&&friendInf.getAliasf().length()!=0){
+                                    fuserInf.setNickName(friendInf.getAliasf());
+                                }
+                            }
+                            r.put("flag", true);
+                        } else {
+                            r.put("flag", false);
+                        }
+                    } catch (Exception e) {
+                        r.put("flag", false);
+                    }
                     r.put("fuserInfo", fuserInf);
-                    r.put("userBook", rUserBookTemp);
                     r.put("bookInf", bookInfTemp);
-                    r.put("userInfo", userInf);
 
-                } else status.put("is_exist", 1); //查阅到书籍信息失败
-            } else
-                status.put("is_exist", 0); //bookid 不存在
+                    r.put("userId", userInf.getUserId());
+                    status.put("is_exist", 1);
+                }
+            }
 
-            r.put("status", status);
 
         } catch (Exception e) {
             e.printStackTrace();
-            return R.error();
+            status.put("is_exist", 0);
         }
+
+        r.put("status", status);
         return r;
     }
 
@@ -671,113 +841,6 @@ public class shelfController {
                 result.put("isSuccess", -1);  //fid == null
             r.put("status", result);
 
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return R.error();
-        }
-        return r;
-    }
-
-
-    /**
-     * asecond/bdother/opt  申请借阅,取消申请,归还
-     **/
-
-    @ResponseBody
-    @GetMapping({"/asecond/bdother/opt"})
-    public R opt(@RequestParam Map<String, Object> params) {
-        System.out.println("/asecond/bdother/opt");
-        R r = new R();
-        try {
-            Map<String, Object> result = new HashMap<>();
-            result.put("save_success", -1);
-            String openId = jwtUtil.getWxOpenIdByToken(params.get("access_token").toString());
-            //id值   apply :bookId ; other:  borrowId
-            Integer id = Integer.valueOf(params.get("id").toString());
-            String mode = params.get("mode").toString();
-            String time = params.get("time").toString();
-            Integer fid = Integer.valueOf(params.get("fid").toString());
-
-            Map<String, Object> param = new HashMap<>();
-
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            Date date = format.parse(time);
-
-            param.put("openId", openId);
-            UserInf seMember = tMemberService.listPublic(param).get(0);
-            param.clear();
-
-            if (mode.equals("apply")) {
-
-                //insert rBookUserBorrow
-                rBookUserBorrow rBookUserBorrows = new rBookUserBorrow();
-                rBookUserBorrows.setBookId(id);
-                rBookUserBorrows.setBorrowTime(date);
-                rBookUserBorrows.setUserId(seMember.getUserId());
-                //update rUserBook
-                rUserBook rUserBooks = new rUserBook();
-                rUserBooks.setBookId(id);
-                rUserBooks.setBorrowState(1); //待处理
-
-                //insert message
-                MessageInf message = new MessageInf();
-                message.setmType(0);//申请
-                message.setSenderId(seMember.getUserId());  //我
-                message.setReceiverId(fid);
-                message.setDateTime(date);
-
-                Boolean re = toptService.appplyBook(rBookUserBorrows, rUserBooks, message);
-                if (re) {
-                    result.put("save_success", 1); //更新成功
-                } else {
-                    result.put("save_success", 0); //更新失败
-                }
-
-
-            } else if (mode.equals("cancel")) { //取消申请
-
-                //update rBookUserBorrow
-                rBookUserBorrow rBookUserBorrows = new rBookUserBorrow();
-                rBookUserBorrows.setBorrowId(id);
-                rBookUserBorrows.setUsrBorrowState(5);//取消申请
-
-
-                Boolean re = toptService.cancelApply(rBookUserBorrows);
-                if (re) {
-                    result.put("save_success", 1); //更新成功
-                } else {
-                    result.put("save_success", 0); //更新失败
-                }
-
-            } else {
-                //return
-
-                //update rBookUserBorrow
-                rBookUserBorrow rBookUserBorrows = new rBookUserBorrow();
-                rBookUserBorrows.setBorrowId(id);
-                rBookUserBorrows.setUsrBorrowState(3);//归还中
-
-                //insert message
-                MessageInf message = new MessageInf();
-                message.setmType(1);//归还
-                message.setSenderId(seMember.getUserId());  //我
-                message.setReceiverId(fid);
-                message.setDateTime(date);
-                message.setmBorrowId(id);
-
-                Boolean re = toptService.returnBook(rBookUserBorrows, message);
-                if (re) {
-                    result.put("save_success", 1); //更新成功
-                } else {
-                    result.put("save_success", 0); //更新失败
-                }
-
-
-            }
-
-
-            r.put("data", result);
 
         } catch (Exception e) {
             e.printStackTrace();

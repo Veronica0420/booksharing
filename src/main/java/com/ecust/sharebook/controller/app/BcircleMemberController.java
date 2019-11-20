@@ -7,6 +7,7 @@ import com.ecust.sharebook.pojo.util.shelf.book;
 import com.ecust.sharebook.service.*;
 import com.ecust.sharebook.utils.Jwt.JwtUtil;
 import com.ecust.sharebook.utils.common.R;
+import com.ecust.sharebook.utils.common.transferUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -444,9 +445,31 @@ public class BcircleMemberController {
 
                 param.put("fid", rBcircleMemberTemp.getMemberId());
                 param.put("mid", me.getUserId());
+
                 if (rBcircleMemberTemp.getMemberId().equals(me.getUserId())) {
                     rBcircleMemberTemp.setFriend(0);
                 } else {
+
+                    try {
+                        FriendInf friendInf = tFriendService.list3(param).get(0);
+                        if (friendInf != null) {
+                            if (friendInf.getUid() == me.getUserId() ){
+                                if (friendInf.getAliasu() != null && friendInf.getAliasu().length() != 0) {
+                                    rBcircleMemberTemp.getUserInf().setNickName(friendInf.getAliasu());
+
+                                }
+
+                            }else {
+                                if (friendInf.getAliasf() != null && friendInf.getAliasf().length() != 0) {
+                                    rBcircleMemberTemp.getUserInf().setNickName(friendInf.getAliasf());
+
+                                }
+                            }
+                        }
+
+                    } catch (Exception e) {
+
+                    }
                     try {
                         List<FriendInf> lists = tFriendService.list2(param);
                         if (lists != null && lists.size() != 0) {
@@ -621,16 +644,16 @@ public class BcircleMemberController {
         Map<String, Object> result = new HashMap<>();
         String list = params.get("list").toString();
 
-        List<Integer> lists= JSONArray.parseArray(list,Integer.class);
-      //  System.out.println(lists);
-        try{
+        List<Integer> lists = JSONArray.parseArray(list, Integer.class);
+        //  System.out.println(lists);
+        try {
             int i = tBcircleMemberService.deletelist(lists);
-            if(i==1){
+            if (i == 1) {
                 result.put("is_exist", 1);
-            }else {
+            } else {
                 result.put("is_exist", 0);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             System.out.println("deleteCMember---null");
         }
@@ -639,7 +662,6 @@ public class BcircleMemberController {
         return r;
 
     }
-
 
 
     @ResponseBody

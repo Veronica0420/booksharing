@@ -1,5 +1,6 @@
 package com.ecust.sharebook.mapper;
 
+import com.ecust.sharebook.pojo.BookInf;
 import com.ecust.sharebook.pojo.rBookUserBorrow;
 
 import java.util.List;
@@ -33,7 +34,20 @@ public interface rBookUserBorrowMapper {
 
     List<rBookUserBorrow> list(Map<String, Object> map);
 
+    rBookUserBorrow listCurrent(Map<String, Object> map);
+
     int save(rBookUserBorrow rBookUserBorrows);
 
     List<rBookUserBorrow> listByState(Map<String, Object> map);
+
+
+    int returnopt(Map<String, Object> map);
+
+    Integer  emptyCountM(Map<String, Object> map);
+
+    Integer  emptyCountB(Map<String, Object> map);
+
+    rBookUserBorrow selectByMessageId(Map<String,Object> map);
 }
+
+

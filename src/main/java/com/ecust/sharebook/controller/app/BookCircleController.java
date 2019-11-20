@@ -1,7 +1,5 @@
 package com.ecust.sharebook.controller.app;
 
-import com.alibaba.fastjson.parser.SymbolTable;
-import com.ecust.sharebook.mapper.BookCircleInfMapper;
 import com.ecust.sharebook.pojo.*;
 import com.ecust.sharebook.service.TBcircleMemberService;
 import com.ecust.sharebook.service.TBookCircleService;
@@ -16,8 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -229,8 +225,32 @@ public class BookCircleController {
                 param.clear();
                 param.put("userId", rBcircleMemberTemp.getMemberId());
                 userInf = tMemberService.listPublic(param).get(0);
-                rBcircleMemberTemp.setUserInf(userInf);
                 param.clear();
+                param.put("fid",rBcircleMemberTemp.getMemberId());
+                param.put("mid",me.getUserId());
+
+                try {
+                    FriendInf friendInf = tFriendService.list3(param).get(0);
+                    if (friendInf != null) {
+                           if (friendInf.getUid() == me.getUserId() ){
+                            if (friendInf.getAliasu() != null && friendInf.getAliasu().length() != 0) {
+                                userInf.setNickName(friendInf.getAliasu());
+
+                            }
+                           } else {
+                               if (friendInf.getAliasf() != null && friendInf.getAliasf().length() != 0) {
+                                   userInf.setNickName(friendInf.getAliasf());
+                               }
+
+
+
+                        }
+                    }
+
+                } catch (Exception e) { }
+                rBcircleMemberTemp.setUserInf(userInf);
+
+
                 if (me.getUserId() == rBcircleMemberTemp.getMemberId()) {
                     if (rBcircleMemberTemp.getIfCreater() == 1) {
                         flag = 1;

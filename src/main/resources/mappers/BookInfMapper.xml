@@ -31,6 +31,24 @@
     </collection>
   </resultMap>
 
+  <resultMap id="scanResultMap" type="com.ecust.sharebook.pojo.BookInf" >
+    <id column="BISBN" property="isbn" jdbcType="CHAR" />
+    <result column="BOOK_NAME" property="bookName" jdbcType="VARCHAR" />
+    <result column="AUTHOR" property="author" jdbcType="VARCHAR" />
+    <result column="TRANSLATOR" property="translator" jdbcType="VARCHAR" />
+    <result column="PUBLISHER" property="publisher" jdbcType="VARCHAR" />
+    <result column="PUB_TIME" property="pubTime" jdbcType="VARCHAR" />
+    <result column="PRICE" property="price" jdbcType="VARCHAR" />
+    <result column="PIC_PATH" property="picPath" jdbcType="VARCHAR" />
+    <result column="BRIEF_INTRO" property="briefIntro" jdbcType="VARCHAR" />
+    <result column="CONTENTS" property="contents" jdbcType="VARCHAR" />
+    <result column="BOOK_ID" property="bookId" jdbcType="INTEGER" />
+    <collection property="categoryInfList"  javaType="ArrayList" ofType="com.ecust.sharebook.pojo.CategoryInf">
+      <id column="CATG_ID" property="catgId" jdbcType="INTEGER" />
+      <result column="CATG_NAME" property="catgName" jdbcType="VARCHAR" />
+    </collection>
+  </resultMap>
+
 
 
   <sql id="Base_Column_List" >
@@ -69,6 +87,9 @@
       <if test="bookName != null" >
         BOOK_NAME,
       </if>
+      <if test="isbn != null" >
+        ISBN,
+      </if>
       <if test="author != null" >
         AUTHOR,
       </if>
@@ -97,6 +118,9 @@
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="bookName != null" >
         #{bookName,jdbcType=VARCHAR},
+      </if>
+      <if test="isbn != null" >
+        #{isbn,jdbcType=VARCHAR},
       </if>
       <if test="author != null" >
         #{author,jdbcType=VARCHAR},
@@ -178,7 +202,7 @@
     from book_inf
     <where>
       <if test="isbn != null and isbn != ''"> and ISBN = #{isbn} </if>
-      <if test="bookName != null and bookName != ''"> and BOOK_NAME = #{bookName} </if>
+      <if test="bookName != null and bookName != ''"> and BOOK_NAME LIKE CONCAT('%',#{bookName},'%')</if>
       <if test="author != null and author != ''"> and AUTHOR = #{author} </if>
       <if test="translator != null and translator != ''"> and TRANSLATOR = #{translator} </if>
       <if test="publisher != null and publisher != ''"> and PUBLISHER = #{publisher} </if>
@@ -210,6 +234,29 @@
   WHERE book_inf.ISBN =#{isbn}
 </select>
 
+  <select id="ScanResult" resultMap="scanResultMap">
+  SELECT
+  book_inf.ISBN AS BISBN, BOOK_NAME, AUTHOR, TRANSLATOR, PUBLISHER, PUB_TIME, PRICE, PIC_PATH, BRIEF_INTRO,CONTENTS,
+  CATG_NAME,IFNULL(CATG_ID,-1)as CATG_ID,IFNULL(BOOK_ID,-1)as BOOK_ID
+  FROM book_inf LEFT JOIN  r_user_book
+	ON book_inf.ISBN = r_user_book.ISBN
+	LEFT JOIN  r_book_category
+  ON book_inf.ISBN =  r_book_category.ISBN
+  LEFT JOIN category_inf
+  ON CATG_ID = MCATG_ID
+  WHERE book_inf.ISBN =#{isbn}
+</select>
+
+  <select id="fingByMessageId" resultType="com.ecust.sharebook.pojo.BookInf">
+
+SELECT  book_inf.ISBN, BOOK_NAME, AUTHOR, TRANSLATOR, PUBLISHER, PUB_TIME, PRICE, PIC_PATH, BRIEF_INTRO,
+    CONTENTS
+FROM r_book_user_borrow,r_user_book,message_inf,book_inf
+WHERE r_book_user_borrow.BOOK_ID = r_user_book.BOOK_ID
+AND r_book_user_borrow.BORROW_ID = message_inf.M_BORROW_ID
+AND book_inf.ISBN = r_user_book.isbn
+AND MESSAGE_ID = #{messageId}
+  </select>
 
 
 </mapper>

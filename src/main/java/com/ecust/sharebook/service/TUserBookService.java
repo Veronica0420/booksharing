@@ -14,7 +14,7 @@ public interface TUserBookService {
 
     List<book> borrowShelf (Map<String, Object> map);
 
-    List<book> ownershelf (Map<String, Object> map);
+    List<book> ownershelf (Map<String, Object> map);  //1
 
     List<Map<String , Object>>findOwnerBookList(Map<String, Object> map);
 
@@ -75,6 +75,18 @@ public interface TUserBookService {
      * 查询归还
      * **/
     List<MessageInf> listByState2(Map<String, Object> map);
+
+
+
+    int insert(rUserBook record);
+
+    int insertSelective(rUserBook record);
+
+
+    int updateByPrimaryKey(rUserBook record);
+
+
+    int applyopt(Map<String, Object> map);
 
 
 }

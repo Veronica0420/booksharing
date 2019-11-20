@@ -20,7 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class SharebookApplicationTests {
 
 
@@ -53,8 +53,9 @@ public class SharebookApplicationTests {
 
     @Autowired
     private TFriendService tFriendService;
-    @Autowired
-    private FriendInfMapper friendInfMapper;
+
+
+
 
 
 
@@ -64,22 +65,18 @@ public class SharebookApplicationTests {
     @Test
     public void contextLoads() throws ParseException {
         R r = new R();
-       Map<String, Object> result = new HashMap<>();
-        Map<String, Object> param = new HashMap<>();
+        MessageInf messageInf = new MessageInf();
+        messageInf.setSenderId(23);
+        messageInf.setReceiverId(29);
+        messageInf.setContent("测试");
+        messageInf.setmType(2);
+
+       int i = tMessageService.insertSelective(messageInf);
+        int j = tMessageService.insert(messageInf);
+
+       System.out.println(i+""+j);
 
 
-
-        Integer fid = Integer.valueOf(29);
-        Integer mid = Integer.valueOf(23);
-
-        param.put("fid", fid);
-        param.put("mid",mid);
-
-        List<Map<String,Object>>  mm = friendInfMapper.friendInfo(param);
-      Map<String,Object>  m1m = tFriendService.friendInfo(param);
-
-        System.out.println(mm.size());
-        System.out.println(mm);
 
 
     }

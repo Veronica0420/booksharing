@@ -43,6 +43,82 @@ public class TMessageServiceImpl implements TMessageService {
         return messageInfMapper.updateByPrimaryKeySelective(record);
     }
 
+    @Override
+    public int deleteByPrimaryKey(Integer messageId) {
+        return messageInfMapper.deleteByPrimaryKey(messageId);
+    }
+
+    @Override
+    public int insert(MessageInf record) {
+        return messageInfMapper.insert(record);
+    }
+
+    @Override
+    public MessageInf selectByPrimaryKey(Integer messageId) {
+        return messageInfMapper.selectByPrimaryKey(messageId);
+    }
+
+    @Override
+    public int updateByPrimaryKey(MessageInf record) {
+        return messageInfMapper.updateByPrimaryKey(record);
+    }
+
+    @Override
+    public List<MessageInf> listAll(Map<String, Object> map) {
+        return messageInfMapper.listAll(map);
+    }
+
+    @Override
+    public List<MessageInf> findCurrentBMessage(Map<String, Object> map) {
+        return messageInfMapper.findCurrentBMessage(map);
+    }
+
+    @Override
+    public List<MessageInf> findHistory(Map<String, Object> map) {
+        return messageInfMapper.findHistory(map);
+    }
+
+    @Override
+    public int applyCancelOther(Map<String, Object> map) {
+        return messageInfMapper.applyCancelOther(map);
+    }
+
+    @Override
+    public int cancelReturn(Map<String, Object> map) {
+        return messageInfMapper.cancelReturn(map);
+    }
+
+    @Override
+    public int passReturn(Map<String, Object> map) {
+        return messageInfMapper.passReturn(map);
+    }
+
+    @Override
+    public int rejectApply(Map<String, Object> map) {
+        return messageInfMapper.rejectApply(map);
+    }
+
+    @Override
+    public int passApply(Map<String, Object> map) {
+        return messageInfMapper.passApply(map);
+    }
+
+    @Override
+    public int cancelApply(Map<String, Object> map) {
+        return messageInfMapper.cancelApply(map);
+    }
+
+    @Override
+    public int emptyCountInsertB(Map<String, Object> map) {
+        return messageInfMapper.emptyCountInsertB(map) ;
+    }
+
+    @Override
+    public int emptyCountInsertM(Map<String, Object> map) {
+        return messageInfMapper.emptyCountInsertM(map);
+    }
+
+
 
 
 

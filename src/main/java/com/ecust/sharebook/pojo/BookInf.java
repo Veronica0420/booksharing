@@ -25,6 +25,8 @@ public class BookInf {
 
     private List<CategoryInf> categoryInfList;
 
+    private Integer bookId; //  -1未在书架上
+
     public String getIsbn() {
         return isbn;
     }
@@ -111,5 +113,14 @@ public class BookInf {
 
     public void setCategoryInfList(List<CategoryInf> categoryInfList) {
         this.categoryInfList = categoryInfList;
+    }
+
+
+    public Integer getBookId() {
+        return bookId;
+    }
+
+    public void setBookId(Integer bookId) {
+        this.bookId = bookId;
     }
 }

@@ -274,7 +274,6 @@
         </if>
     </select>
 
-
     <select id="listByState2" resultType="com.ecust.sharebook.pojo.MessageInf">
         SELECT
         MESSAGE_ID, SENDER_ID, RECEIVER_ID, CONTENT, DATE_TIME, REASON, BORROW_RES,M_TYPE,M_BORROW_ID
@@ -292,10 +291,13 @@
         SELECT r_user_book.ISBN as isbn, max(ADD_TIME) as sortTime,COUNT(*)as total,BOOK_ID as id,r_user_book.OWNER_ID as ownerId
         FROM r_user_book LEFT JOIN r_book_category
         ON r_user_book.ISBN = r_book_category.ISBN
+        JOIN book_inf
+        ON book_inf.ISBN = r_user_book.ISBN
         <where>
             OWNER_ID= #{ownerId}
             <if test="bCatgId != null and bCatgId != ''">and MCATG_ID = #{bCatgId}</if>
             <if test="privacy != null and privacy != ''">and PRIVACY = #{privacy}</if>
+            <if test="bookName != null and bookName != ''"> and BOOK_NAME LIKE CONCAT('%',#{bookName},'%')</if>
         </where>
         GROUP BY r_user_book.ISBN
     </select>
@@ -307,9 +309,13 @@
         ON r_user_book.BOOK_ID = r_book_user_borrow.BOOK_ID
         LEFT JOIN r_book_category
         ON r_user_book.ISBN = r_book_category.ISBN
+        JOIN book_inf
+        ON book_inf.ISBN = r_user_book.ISBN
         <where>
             USER_ID = #{ownerId}
             <if test="bCatgId != null and bCatgId != ''">and MCATG_ID = #{bCatgId}</if>
+            <if test="bookName != null and bookName != ''"> and BOOK_NAME LIKE CONCAT('%',#{bookName},'%')</if>
+
         </where>
         GROUP BY r_user_book. ISBN
     </select>
@@ -333,6 +339,18 @@
     AND USER_ID = #{ownerId}
     AND  r_user_book.ISBN = #{isbn}
   </select>
+
+<update id="applyopt">
+
+UPDATE r_user_book
+SET BORROW_STATE = 1
+WHERE BOOK_ID = #{bookId}
+AND BORROW_STATE = 0
+
+</update>
+
+
+
 
 
 

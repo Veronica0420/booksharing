@@ -21,6 +21,22 @@ public class MessageInf {
 
     private Integer mBorrowId;
 
+    private  int flag;
+
+    private BookInf bookInf;
+
+
+    // 发送者信息
+
+
+    private String nickName;
+
+    private String avatarUrl;
+
+    public MessageInf() {
+    }
+
+
     public Integer getMessageId() {
         return messageId;
     }
@@ -92,5 +108,38 @@ public class MessageInf {
 
     public void setmBorrowId(Integer mBorrowId) {
         this.mBorrowId = mBorrowId;
+    }
+
+    public int getFlag() {
+        return flag;
+    }
+
+    public void setFlag(int flag) {
+        this.flag = flag;
+    }
+
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
+    }
+
+    public BookInf getBookInf() {
+        return bookInf;
+    }
+
+    public void setBookInf(BookInf bookInf) {
+        this.bookInf = bookInf;
     }
 }

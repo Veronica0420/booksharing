@@ -1,135 +1,136 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.ecust.sharebook.mapper.MessageInfMapper" >
-  <resultMap id="BaseResultMap" type="com.ecust.sharebook.pojo.MessageInf" >
-    <id column="MESSAGE_ID" property="messageId" jdbcType="INTEGER" />
-    <result column="SENDER_ID" property="senderId" jdbcType="INTEGER" />
-    <result column="RECEIVER_ID" property="receiverId" jdbcType="INTEGER" />
-    <result column="CONTENT" property="content" jdbcType="VARCHAR" />
-    <result column="DATE_TIME" property="dateTime" jdbcType="TIMESTAMP" />
-    <result column="REASON" property="reason" jdbcType="VARCHAR" />
-    <result column="BORROW_RES" property="borrowRes" jdbcType="INTEGER" />
-    <result column="M_TYPE" property="mType" jdbcType="INTEGER" />
-    <result column="M_BORROW_ID" property="mBorrowId" jdbcType="INTEGER" />
+<mapper namespace="com.ecust.sharebook.mapper.MessageInfMapper">
+    <resultMap id="BaseResultMap" type="com.ecust.sharebook.pojo.MessageInf">
+        <id column="MESSAGE_ID" property="messageId" jdbcType="INTEGER"/>
+        <result column="SENDER_ID" property="senderId" jdbcType="INTEGER"/>
+        <result column="RECEIVER_ID" property="receiverId" jdbcType="INTEGER"/>
+        <result column="CONTENT" property="content" jdbcType="VARCHAR"/>
+        <result column="DATE_TIME" property="dateTime" jdbcType="TIMESTAMP"/>
+        <result column="REASON" property="reason" jdbcType="VARCHAR"/>
+        <result column="BORROW_RES" property="borrowRes" jdbcType="INTEGER"/>
+        <result column="M_TYPE" property="mType" jdbcType="INTEGER"/>
+        <result column="M_BORROW_ID" property="mBorrowId" jdbcType="INTEGER"/>
+    </resultMap>
 
-  </resultMap>
-  <sql id="Base_Column_List" >
+    <sql id="Base_Column_List">
     MESSAGE_ID, SENDER_ID, RECEIVER_ID, CONTENT, DATE_TIME, REASON, BORROW_RES,M_TYPE,M_BORROW_ID
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select
-    <include refid="Base_Column_List" />
-    from message_inf
-    where MESSAGE_ID = #{messageId,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from message_inf
+        where MESSAGE_ID = #{messageId,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from message_inf
     where MESSAGE_ID = #{messageId,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.ecust.sharebook.pojo.MessageInf" >
-    <selectKey resultType="java.lang.Integer" keyProperty="messageId" order="AFTER" >
-      SELECT LAST_INSERT_ID()
-    </selectKey>
-    insert into message_inf (SENDER_ID, RECEIVER_ID, CONTENT,
-      DATE_TIME, REASON, BORROW_RES,M_TYPE,M_BORROW_ID
-      )
-    values (#{senderId,jdbcType=INTEGER}, #{receiverId,jdbcType=INTEGER}, #{content,jdbcType=VARCHAR},
-      #{dateTime,jdbcType=TIMESTAMP}, #{reason,jdbcType=VARCHAR}, #{borrowRes,jdbcType=INTEGER}, #{mType,jdbcType=INTEGER},
-     #{mBorrowId,jdbcType=INTEGER}
-      )
-  </insert>
-  <insert id="insertSelective" parameterType="com.ecust.sharebook.pojo.MessageInf" >
-    <selectKey resultType="java.lang.Integer" keyProperty="messageId" order="AFTER" >
-      SELECT LAST_INSERT_ID()
-    </selectKey>
-    insert into message_inf
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="senderId != null" >
-        SENDER_ID,
-      </if>
-      <if test="receiverId != null" >
-        RECEIVER_ID,
-      </if>
-      <if test="content != null" >
-        CONTENT,
-      </if>
-      <if test="dateTime != null" >
-        DATE_TIME,
-      </if>
-      <if test="reason != null" >
-        REASON,
-      </if>
-      <if test="borrowRes != null" >
-        BORROW_RES,
-      </if>
-      <if test="mType != null" >
-        M_TYPE,
-      </if>
+    <insert id="insert" parameterType="com.ecust.sharebook.pojo.MessageInf">
+        <selectKey resultType="java.lang.Integer" keyProperty="messageId" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into message_inf (SENDER_ID, RECEIVER_ID, CONTENT,
+        DATE_TIME, REASON, BORROW_RES,M_TYPE,M_BORROW_ID
+        )
+        values (#{senderId,jdbcType=INTEGER}, #{receiverId,jdbcType=INTEGER}, #{content,jdbcType=VARCHAR},
+        #{dateTime,jdbcType=TIMESTAMP}, #{reason,jdbcType=VARCHAR}, #{borrowRes,jdbcType=INTEGER},
+        #{mType,jdbcType=INTEGER},
+        #{mBorrowId,jdbcType=INTEGER}
+        )
+    </insert>
+    <insert id="insertSelective" parameterType="com.ecust.sharebook.pojo.MessageInf">
+        <selectKey resultType="java.lang.Integer" keyProperty="messageId" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into message_inf
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="senderId != null">
+                SENDER_ID,
+            </if>
+            <if test="receiverId != null">
+                RECEIVER_ID,
+            </if>
+            <if test="content != null">
+                CONTENT,
+            </if>
+            <if test="dateTime != null">
+                DATE_TIME,
+            </if>
+            <if test="reason != null">
+                REASON,
+            </if>
+            <if test="borrowRes != null">
+                BORROW_RES,
+            </if>
+            <if test="mType != null">
+                M_TYPE,
+            </if>
 
-      <if test="mBorrowId != null" >
-        M_BORROW_ID,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="senderId != null" >
-        #{senderId,jdbcType=INTEGER},
-      </if>
-      <if test="receiverId != null" >
-        #{receiverId,jdbcType=INTEGER},
-      </if>
-      <if test="content != null" >
-        #{content,jdbcType=VARCHAR},
-      </if>
-      <if test="dateTime != null" >
-        #{dateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="reason != null" >
-        #{reason,jdbcType=VARCHAR},
-      </if>
-      <if test="borrowRes != null" >
-        #{borrowRes,jdbcType=INTEGER},
-      </if>
-      <if test="mType != null" >
-         #{mType,jdbcType=INTEGER},
-      </if>
+            <if test="mBorrowId != null">
+                M_BORROW_ID,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="senderId != null">
+                #{senderId,jdbcType=INTEGER},
+            </if>
+            <if test="receiverId != null">
+                #{receiverId,jdbcType=INTEGER},
+            </if>
+            <if test="content != null">
+                #{content,jdbcType=VARCHAR},
+            </if>
+            <if test="dateTime != null">
+                #{dateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="reason != null">
+                #{reason,jdbcType=VARCHAR},
+            </if>
+            <if test="borrowRes != null">
+                #{borrowRes,jdbcType=INTEGER},
+            </if>
+            <if test="mType != null">
+                #{mType,jdbcType=INTEGER},
+            </if>
 
-      <if test="mBorrowId != null" >
-        #{mBorrowId,jdbcType=INTEGER},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.ecust.sharebook.pojo.MessageInf" >
-    update message_inf
-    <set >
-      <if test="senderId != null" >
-        SENDER_ID = #{senderId,jdbcType=INTEGER},
-      </if>
-      <if test="receiverId != null" >
-        RECEIVER_ID = #{receiverId,jdbcType=INTEGER},
-      </if>
-      <if test="content != null" >
-        CONTENT = #{content,jdbcType=VARCHAR},
-      </if>
-      <if test="dateTime != null" >
-        DATE_TIME = #{dateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="reason != null" >
-        REASON = #{reason,jdbcType=VARCHAR},
-      </if>
-      <if test="borrowRes != null" >
-        BORROW_RES = #{borrowRes,jdbcType=INTEGER},
-      </if>
-      <if test="mType != null" >
-        M_TYPE = #{mType,jdbcType=INTEGER},
-      </if>
+            <if test="mBorrowId != null">
+                #{mBorrowId,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.ecust.sharebook.pojo.MessageInf">
+        update message_inf
+        <set>
+            <if test="senderId != null">
+                SENDER_ID = #{senderId,jdbcType=INTEGER},
+            </if>
+            <if test="receiverId != null">
+                RECEIVER_ID = #{receiverId,jdbcType=INTEGER},
+            </if>
+            <if test="content != null">
+                CONTENT = #{content,jdbcType=VARCHAR},
+            </if>
+            <if test="dateTime != null">
+                DATE_TIME = #{dateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="reason != null">
+                REASON = #{reason,jdbcType=VARCHAR},
+            </if>
+            <if test="borrowRes != null">
+                BORROW_RES = #{borrowRes,jdbcType=INTEGER},
+            </if>
+            <if test="mType != null">
+                M_TYPE = #{mType,jdbcType=INTEGER},
+            </if>
 
-      <if test="mBorrowId != null" >
-        M_BORROW_ID = #{mBorrowId,jdbcType=INTEGER},
-      </if>
-    </set>
-    where MESSAGE_ID = #{messageId,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.ecust.sharebook.pojo.MessageInf" >
+            <if test="mBorrowId != null">
+                M_BORROW_ID = #{mBorrowId,jdbcType=INTEGER},
+            </if>
+        </set>
+        where MESSAGE_ID = #{messageId,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.ecust.sharebook.pojo.MessageInf">
     update message_inf
     set SENDER_ID = #{senderId,jdbcType=INTEGER},
       RECEIVER_ID = #{receiverId,jdbcType=INTEGER},
@@ -143,38 +144,196 @@
   </update>
 
 
+    <select id="list" resultType="com.ecust.sharebook.pojo.MessageInf">
+        select MESSAGE_ID, SENDER_ID, RECEIVER_ID, CONTENT, DATE_TIME, REASON, BORROW_RES,M_TYPE,M_BORROW_ID
 
+        from message_inf
+        <where>
+            <if test="messageId != null and messageId != ''">and MESSAGE_ID = #{messageId}</if>
+            <if test="senderId != null and senderId != ''">and SENDER_ID = #{senderId}</if>
+            <if test="receiverId != null and receiverId != ''">and RECEIVER_ID = #{receiverId}</if>
+            <if test="content != null and content != ''">and CONTENT = #{content}</if>
+            <if test="dateTime != null and dateTime != ''">and DATE_TIME = #{dateTime}</if>
+            <if test="reason != null and reason != ''">and REASON = #{reason}</if>
+            <if test="borrowRes != null and borrowRes != ''">and BORROW_RES = #{borrowRes}</if>
+            <if test="mType != null and mType != ''">and M_TYPE = #{mType}</if>
+            <if test="mBorrowId != null and mBorrowId != ''">and M_BORROW_ID = #{mBorrowId}</if>
+        </where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+            <otherwise>
+                order by DATE_TIME desc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
 
-  <select id="list" resultType="com.ecust.sharebook.pojo.MessageInf">
-    select   MESSAGE_ID, SENDER_ID, RECEIVER_ID, CONTENT, DATE_TIME, REASON, BORROW_RES,M_TYPE,M_BORROW_ID
+    <select id="listAll" resultType="com.ecust.sharebook.pojo.MessageInf">
+        SELECT MESSAGE_ID, SENDER_ID, RECEIVER_ID, CONTENT, DATE_TIME, REASON, BORROW_RES,M_TYPE,M_BORROW_ID
+        FROM message_inf
+        WHERE (SENDER_ID = #{senderId} AND RECEIVER_ID=#{receiverId})
+        OR(RECEIVER_ID = #{senderId} AND SENDER_ID =#{receiverId})
+        ORDER BY DATE_TIME
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
 
-    from message_inf
-    <where>
-      <if test="messageId != null and messageId != ''"> and MESSAGE_ID = #{messageId} </if>
-      <if test="senderId != null and senderId != ''"> and SENDER_ID = #{senderId} </if>
-      <if test="receiverId != null and receiverId != ''"> and RECEIVER_ID = #{receiverId} </if>
-      <if test="content != null and content != ''"> and CONTENT = #{content} </if>
-      <if test="dateTime != null and dateTime != ''"> and DATE_TIME = #{dateTime} </if>
-      <if test="reason != null and reason != ''"> and REASON = #{reason} </if>
-      <if test="borrowRes != null and borrowRes != ''"> and BORROW_RES = #{borrowRes} </if>
-      <if test="mType != null and mType != ''"> and M_TYPE = #{mType} </if>
-      <if test="mBorrowId != null and mBorrowId != ''"> and M_BORROW_ID = #{mBorrowId} </if>
-    </where>
-    <choose>
-      <when test="sort != null and sort.trim() != ''">
-        order by ${sort} ${order}
-      </when>
-      <otherwise>
-        order by MESSAGE_ID desc
-      </otherwise>
-    </choose>
-    <if test="offset != null and limit != null">
-      limit #{offset}, #{limit}
-    </if>
+    <select id="findCurrentBMessage" resultType="com.ecust.sharebook.pojo.MessageInf">
+        SELECT
+        MESSAGE_ID, SENDER_ID, RECEIVER_ID, CONTENT, DATE_TIME, REASON, BORROW_RES,M_TYPE,M_BORROW_ID
+        M_BORROW_ID
+        FROM r_book_user_borrow ,message_inf ,r_user_book
+        <where>r_book_user_borrow.BORROW_ID = message_inf.M_BORROW_ID
+            AND r_user_book.BOOK_ID = r_book_user_borrow.BOOK_ID
+            AND ((message_inf.BORROW_RES =0
+            <![CDATA[ AND message_inf.M_TYPE<>2]]>
+            OR ( message_inf.BORROW_RES=1
+            AND r_book_user_borrow.USR_BORROW_STATE=2))
+
+            AND r_book_user_borrow.BOOK_ID = #{bookId})
+            <if test="ownerId != null and ownerId != null">
+                AND RECEIVER_ID = #{ownerId}
+            </if>
+        </where>
+        ORDER BY message_inf.DATE_TIME DESC
+    </select>
+
+    <select id="findHistory" resultType="com.ecust.sharebook.pojo.MessageInf">
+        SELECT
+        MESSAGE_ID,
+        SENDER_ID,
+        RECEIVER_ID,
+        CONTENT,
+        DATE_TIME,
+        REASON,
+        BORROW_RES,
+        M_TYPE,
+        M_BORROW_ID M_BORROW_ID
+        FROM
+        r_book_user_borrow,
+        message_inf,
+        r_user_book
+        WHERE
+        r_book_user_borrow.BORROW_ID = message_inf.M_BORROW_ID
+        AND r_user_book.BOOK_ID = r_book_user_borrow.BOOK_ID
+        AND r_book_user_borrow.BOOK_ID = #{bookId}
+        ORDER BY
+        message_inf.DATE_TIME DESC
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="findCurrentApplyBMessage" resultType="com.ecust.sharebook.pojo.MessageInf">
+    SELECT
+    MESSAGE_ID, SENDER_ID, RECEIVER_ID, CONTENT, DATE_TIME, REASON, BORROW_RES,M_TYPE,M_BORROW_ID
+    M_BORROW_ID
+    FROM r_book_user_borrow ,message_inf ,r_user_book
+    WHERE r_book_user_borrow.BORROW_ID = message_inf.M_BORROW_ID
+      AND r_user_book.BOOK_ID = r_book_user_borrow.BOOK_ID
+      AND (message_inf.BORROW_RES =0
+      AND message_inf.M_TYPE<![CDATA[ <>]]> 2
+      AND r_book_user_borrow.BOOK_ID = #{bookId})
+
   </select>
 
 
+    <update id="cancelReturn">
+UPDATE r_book_user_borrow,r_user_book,message_inf
+SET message_inf.BORROW_RES=2,
+    r_book_user_borrow.USR_BORROW_STATE=7,
+		r_book_user_borrow.RETURN_DATE_TIME= #{date},
+		r_user_book.BORROW_STATE = 0
+WHERE r_book_user_borrow.BOOK_ID = r_user_book.BOOK_ID
+AND r_book_user_borrow.BORROW_ID = message_inf.M_BORROW_ID
+AND MESSAGE_ID = #{messageId}
+
+</update>
 
 
+    <update id="passReturn">
+
+UPDATE r_book_user_borrow,r_user_book,message_inf
+SET message_inf.BORROW_RES=1,
+    r_book_user_borrow.USR_BORROW_STATE=4,
+		r_book_user_borrow.RETURN_DATE_TIME= #{date},
+		r_user_book.BORROW_STATE = 0
+WHERE r_book_user_borrow.BOOK_ID = r_user_book.BOOK_ID
+AND r_book_user_borrow.BORROW_ID = message_inf.M_BORROW_ID
+AND MESSAGE_ID = #{messageId}
+
+</update>
+
+
+    <update id="passApply">
+UPDATE r_book_user_borrow,r_user_book,message_inf
+SET message_inf.BORROW_RES=1,
+    r_book_user_borrow.USR_BORROW_STATE=2,
+		r_book_user_borrow.BORROW_DATE_TIME=#{date},
+		r_user_book.BORROW_STATE = 2
+WHERE r_book_user_borrow.BOOK_ID = r_user_book.BOOK_ID
+AND r_book_user_borrow.BORROW_ID = message_inf.M_BORROW_ID
+AND MESSAGE_ID =  #{messageId}
+</update>
+
+    <update id="rejectApply">
+
+UPDATE message_inf , r_book_user_borrow
+SET BORROW_RES = 2,
+    USR_BORROW_STATE = 6
+WHERE message_inf.M_BORROW_ID = r_book_user_borrow.BORROW_ID
+AND MESSAGE_ID = #{messageId}
+
+</update>
+
+    <update id="cancelApply">
+
+
+UPDATE message_inf , r_book_user_borrow
+SET BORROW_RES = 3,
+    USR_BORROW_STATE = 5
+WHERE message_inf.M_BORROW_ID = r_book_user_borrow.BORROW_ID
+AND BORROW_ID = #{borrowId}
+
+</update>
+
+
+    <update id="applyCancelOther">
+
+    UPDATE message_inf , r_book_user_borrow,r_user_book
+    SET BORROW_RES = 2,
+    USR_BORROW_STATE = 6
+    WHERE message_inf.M_BORROW_ID = r_book_user_borrow.BORROW_ID
+    AND r_user_book.BOOK_ID = r_book_user_borrow.BOOK_ID
+    AND BORROW_RES=0
+    <![CDATA[ AND MESSAGE_ID <> #{messageId}]]>
+    AND r_user_book.BOOK_ID= #{bookId}
+
+</update>
+
+    <update id="emptyCountInsertB">
+ UPDATE r_user_book
+SET BORROW_STATE=0
+ WHERE BOOK_ID =(
+SELECT BOOK_ID
+ FROM message_inf,r_book_user_borrow
+  where message_inf.M_BORROW_ID = r_book_user_borrow.BORROW_ID
+   and BORROW_ID = #{borrowId}     )
+</update>
+
+    <update id="emptyCountInsertM">
+ UPDATE r_user_book
+SET BORROW_STATE=0
+ WHERE BOOK_ID =(
+SELECT BOOK_ID
+ FROM message_inf,r_book_user_borrow
+  where message_inf.M_BORROW_ID = r_book_user_borrow.BORROW_ID
+   and MESSAGE_ID = #{messageId}        )
+</update>
 
 </mapper>

@@ -18,7 +18,7 @@ public class book {
 
     private int count;
 
-    private boolean type;
+    private boolean type;  //true  我的 false 借阅
 
     private boolean isMe;
 

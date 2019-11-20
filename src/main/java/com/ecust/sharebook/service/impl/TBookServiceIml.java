@@ -49,5 +49,40 @@ public class TBookServiceIml implements TBookService {
         return tBookInfMapper.selectByPrimaryKey(isbn);
     }
 
+    @Override
+    public List<BookInf> ScanResult(Map<String, Object> map) {
+        return tBookInfMapper.ScanResult(map);
+    }
+
+    @Override
+    public int deleteByPrimaryKey(String isbn) {
+        return tBookInfMapper.deleteByPrimaryKey(isbn);
+    }
+
+    @Override
+    public int insert(BookInf record) {
+        return tBookInfMapper.insert(record);
+    }
+
+    @Override
+    public int insertSelective(BookInf record) {
+        return tBookInfMapper.insertSelective(record);
+    }
+
+    @Override
+    public int updateByPrimaryKeySelective(BookInf record) {
+        return tBookInfMapper.updateByPrimaryKeySelective(record);
+    }
+
+    @Override
+    public int updateByPrimaryKey(BookInf record) {
+        return tBookInfMapper.updateByPrimaryKey(record);
+    }
+
+    @Override
+    public BookInf fingByMessageId(Map<String, Object> map) {
+        return tBookInfMapper.fingByMessageId(map);
+    }
+
 
 }

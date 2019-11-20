@@ -25,6 +25,13 @@ public interface TBookUserBorrowService {
 
     rBookUserBorrow selectByPrimaryKey(Integer borrowId);
 
+    int returnopt(Map<String, Object> map);
 
+    Integer emptyCountM(Map<String, Object> map);
+    Integer emptyCountB(Map<String, Object> map);
+
+    rBookUserBorrow listCurrent(Map<String, Object> map);
+
+    rBookUserBorrow selectByMessageId(Map<String,Object> map);
 
 }

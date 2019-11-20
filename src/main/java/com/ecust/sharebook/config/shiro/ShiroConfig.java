@@ -104,6 +104,7 @@ public class ShiroConfig {
 		//filterChainDefinitionMap.put("/blog/open/**", "anon");
 		LinkedHashMap<String, String> filterChainDefinitionMap = new LinkedHashMap<>();
 		filterChainDefinitionMap.put("/small/**", "anon");
+		filterChainDefinitionMap.put("/websocket", "anon");
 		LinkedHashMap<String, Filter> filterMap = new LinkedHashMap<String, Filter>();
 		filterMap.put("jwt", new JwtFilter());
 		shiroFilterFactoryBean.setFilters(filterMap);

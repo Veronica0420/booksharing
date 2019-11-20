@@ -156,5 +156,25 @@ public class TUserBookServiceIml implements TUserBookService {
         return  null;
     }
 
+    @Override
+    public int insert(rUserBook record) {
+        return trUserBookMapper.insert(record);
+    }
+
+    @Override
+    public int insertSelective(rUserBook record) {
+        return trUserBookMapper.insertSelective(record);
+    }
+
+    @Override
+    public int updateByPrimaryKey(rUserBook record) {
+        return trUserBookMapper.updateByPrimaryKeySelective(record);
+    }
+
+    @Override
+    public int applyopt(Map<String, Object> map) {
+        return trUserBookMapper.applyopt(map);
+    }
+
 
 }
