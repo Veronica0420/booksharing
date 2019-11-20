@@ -24,7 +24,7 @@ public class FileUtils {
     private static String name = FileUtils.class.getName();
     private static Logger log = Logger.getLogger(name);
     // 生成新的文件名
-    public static String picURL = "http://101.37.173.235/magic/BookCircle/";
+    public static String picURL="";
     public static boolean upload(MultipartFile file, String path, String fileName){
 
          log.info("oldFileNam:"+fileName);
@@ -32,6 +32,7 @@ public class FileUtils {
         String newName=FileNameUtils.getFileName(fileName);
         String realPath = path + "/" +newName;
         log.info("newName:"+newName);
+        picURL = "http://101.37.173.235/magic/BookCircle/";
         picURL=picURL.concat(newName);
         log.info("picURL:"+picURL);
 
